@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+
+<wicket:extend>
+
+    <div wicket:id="feedback" style="z-index: 99999999"></div>
+    <wicket:child></wicket:child>
+
+    <div class="container">
+
+        <div class="btn-group p-2">
+            <button wicket:id="btn-new-row" class="btn btn-light border">
+                <i class="fa fa-plus"/>
+                <span><wicket:message key="message.entity.new"/></span>
+            </button>
+        </div>
+        <div class="card">
+            <table class="table table-sm table-striped" wicket:id="table">
+            </table>
+        </div>
+    </div>
+
+    <div wicket:id="modal" class="modal fade" tabindex="-1" role="dialog">
+        <div wicket:id="modal-size" class="modal-dialog" role="document">
+            <div class="modal-content" wicket:id="modal-container">
+                <wicket:container wicket:id="modal-content"></wicket:container>
+            </div>
+        </div>
+    </div>
+
+    <wicket:fragment wicket:id="form-input-fragment">
+        <form wicket:id="form-save">
+            <div wicket:id="input-panel" class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button wicket:id="btn-save" class="btn btn-primary" type="button">
+                    <i class="fa fa-save"/>
+                    <span><wicket:message key="message.entity.save"/></span>
+                </button>
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                    <i class="fa fa-ban"/>
+                    <span><wicket:message key="message.cancel"/></span>
+                </button>
+            </div>
+        </form>
+    </wicket:fragment>
+    <wicket:fragment wicket:id="form-delete-fragment">
+        <form wicket:id="form-delete">
+            <div wicket:id="details-panel" class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button wicket:id="btn-delete" class="btn btn-primary" type="button">
+                    <i class="fa fa-close"/>
+                    <span><wicket:message key="message.entity.delete"/></span>
+                </button>
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                    <i class="fa fa-ban"/>
+                    <span><wicket:message key="message.cancel"/></span>
+
+                </button>
+            </div>
+        </form>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="edit-panel-fragment">
+        <a href="#" class="btn btn-light border" wicket:id="edit" wicket:message="title:message.entity.edit"><i class="fa fa-pencil"/></a>
+        <a href="#" class="btn btn-light border" wicket:id="delete" wicket:message="title:message.entity.delete"><i class="fa fa-close"/></a>
+    </wicket:fragment>
+</wicket:extend>
+</body>
+</html>
