@@ -3,7 +3,6 @@ package com.bochkov.duty.planning.model;
 import com.bochkov.duty.jpa.entity.DutyType;
 import com.bochkov.duty.jpa.entity.Report;
 import com.bochkov.duty.jpa.entity.UiOptions;
-import lombok.*;
 import lombok.experimental.Accessors;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;

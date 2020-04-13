@@ -3,7 +3,6 @@ package com.bochkov.duty.wicket.component.select2;
 import com.google.common.collect.ImmutableList;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.Optional;
 

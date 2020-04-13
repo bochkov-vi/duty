@@ -1,7 +1,5 @@
 package com.bochkov.duty.wicket;
 
-import com.bochkov.duty.jpa.entity.*;
-import com.bochkov.duty.jpa.repository.*;
 import com.bochkov.duty.wicket.page.home.HomePage;
 import com.google.common.primitives.Ints;
 import de.agilecoders.wicket.webjars.WicketWebjars;

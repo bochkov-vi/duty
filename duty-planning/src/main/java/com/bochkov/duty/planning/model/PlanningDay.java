@@ -3,7 +3,6 @@ package com.bochkov.duty.planning.model;
 import com.bochkov.duty.jpa.entity.Day;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDate;

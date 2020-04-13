@@ -2,7 +2,6 @@ package com.bochkov.duty.planning.model;
 
 import com.bochkov.duty.jpa.entity.Person;
 import com.google.common.base.Objects;
-import lombok.*;
 import lombok.experimental.Accessors;
 
 @Getter
