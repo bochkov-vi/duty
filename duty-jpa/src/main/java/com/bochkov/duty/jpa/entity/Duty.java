@@ -1,6 +1,5 @@
 package com.bochkov.duty.jpa.entity;
 
-import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -80,8 +79,8 @@ public class Duty extends AbstractAuditableEntity<DutyPK> {
 
     @PrePersist
     public void prePersist() {
-        if (dutyType == null && day!=null && day.getPeriods() != null) {
-            setPeriods(Sets.newHashSet(day.getPeriods()));
+        if (dutyType == null && day != null) {
+            setDutyType(day.getDutyType());
         }
     }
 

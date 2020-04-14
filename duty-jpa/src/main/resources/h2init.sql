@@ -2,7 +2,8 @@ drop table if exists DAY cascade;
 
 create table if not exists DAY
 (
-    DATE              DATE not null,
+    DATE              DATE    not null,
+    ID_DUTY_TYPE      INTEGER ,
     DAYS_FROM_WEEKEND INTEGER,
     DAYS_TO_WEEKEND   INTEGER,
     NEXT              DATE,
@@ -73,7 +74,8 @@ create table if not exists DUTY_TYPE_DAYS_TO_WEEKEND
 
 
 INSERT INTO DUTY_TYPE (ID_DUTY_TYPE, DUTY_TYPE, FA_ICON, HTML_CLASS, PLAIN_TEXT, CREATED_DATE)
-VALUES (1, 'Обычный рабочий день', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
+VALUES (0, 'Выходной', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
+       (1, 'Обычный рабочий день', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
        (2, 'Рабочий день перед выходным', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
        (3, 'ПОДКНО', NULL, NULL, 'X', CURRENT_TIMESTAMP());
 
@@ -86,7 +88,8 @@ VALUES (1, '9:00', 240),
 ;
 
 insert into DUTY_TYPE_DAYS_TO_WEEKEND (ID_DUTY_TYPE, DAYS_TO_WEEKEND)
-VALUES (2, 1),
+VALUES (0, 0),
+       (2, 1),
        (1, 2),
        (1, 3),
        (1, 4),
@@ -183,13 +186,16 @@ VALUES ('bochkov', 1),
        ('bochkov', 3);
 
 
+drop table if exists DUTY_NEXT;
+drop table if exists DUTY_PERIOD;
 drop table if exists DUTY cascade;
+
 create table if not exists DUTY
 (
     ID_PERSON          VARCHAR(15) not null,
     DATE               DATE        not null,
-    CREATED_DATE       TIMESTAMP,
     ID_DUTY_TYPE       INTEGER,
+    CREATED_DATE       TIMESTAMP,
     CREATED_BY         VARCHAR(255),
     LAST_MODIFIED_BY   VARCHAR(255),
     LAST_MODIFIED_DATE TIMESTAMP,
@@ -198,7 +204,16 @@ create table if not exists DUTY
     constraint DUTY_DUTY_TYPE_FQ foreign key (ID_DUTY_TYPE) references DUTY_TYPE (ID_DUTY_TYPE)
 );
 
-drop table if exists DUTY_PERIOD;
+create table DUTY_NEXT
+(
+    ID_PERSON      VARCHAR(15) not null,
+    DATE           DATE        not null,
+    ID_PERSON_NEXT VARCHAR(15) not null,
+    DATE_NEXT      DATE        not null,
+    constraint DUTY_NEXT_CURRENT_FK foreign key (ID_PERSON, DATE) references DUTY (ID_PERSON, DATE) on update cascade on delete cascade,
+    constraint DUTY_NEXT_FK foreign key (ID_PERSON_NEXT, DATE_NEXT) references DUTY (ID_PERSON, DATE) on update cascade on delete cascade
+);
+
 create table if not exists DUTY_PERIOD
 (
     ID_PERSON VARCHAR not null,

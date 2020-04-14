@@ -1,6 +1,8 @@
 package com.bochkov.duty;
 
 import com.bochkov.duty.jpa.DutyJpaConfig;
+import com.bochkov.duty.jpa.entity.Day;
+import com.bochkov.duty.jpa.entity.Duty;
 import com.bochkov.duty.jpa.entity.Person;
 import com.bochkov.duty.jpa.repository.DayRepository;
 import com.bochkov.duty.jpa.repository.DutyRepository;
@@ -13,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
@@ -40,9 +43,10 @@ public class DutyRepositoryTests {
     public void saveWithChilds() {
         //Day day = dayRepository.findOrCreate(date);
         Person person = personRepository.findById("bochkov").get();
-        Stream.iterate(LocalDate.now(), d -> d.minusDays(1)).limit(7)
-                .map(date -> dayRepository.findOrCreate(date))
-                .forEach(day -> repository.findOrCreate(person, day));
+        for (Day day : Stream.iterate(LocalDate.now(), d -> d.minusDays(1)).limit(30)
+                .map(date -> dayRepository.findOrCreate(date)).collect(Collectors.toList())) {
+            Duty duty = repository.findOrCreate(person, day);
+        }
         //Duty duty = new Duty(personRepository.findById("bochkov").get(), day);
         ;
     }

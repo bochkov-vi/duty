@@ -30,6 +30,7 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
             day.setDaysFromWeekend(daysFromWeekend);
             int daysToWeekend = calculateDaysToWeekend(day, 1);
             day.setDaysToWeekend(daysToWeekend);
+            _setupDutyType(day);
         }
         return saveAll(days);
     }
@@ -40,6 +41,7 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
         day.setDaysFromWeekend(daysFromWeekend);
         int daysToWeekend = calculateDaysToWeekend(day, 1);
         day.setDaysToWeekend(daysToWeekend);
+        _setupDutyType(day);
         return save(day);
     }
 
@@ -73,6 +75,7 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
 
     @Transactional
     default Day _save(Day day) {
+        _setupDutyType(day);
         day = _saveWithChilds(day);
         day = _saveWithWeekendRelationCalculate(day);
         _saveWithWeekendRelationCalculate(findChain(day, -5));
@@ -89,6 +92,13 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
             Day.setupDutyTypeTimeUsage(day, dutyType);
         }
         return save(day);
+    }
+
+    @Transactional
+    default Day _setupDutyType(Day day) {
+        DutyType dutyType = findDutyTypeByDaysToWeekend(day.getDaysToWeekend());
+        day.setDutyType(dutyType);
+        return day;
     }
 
     @Transactional

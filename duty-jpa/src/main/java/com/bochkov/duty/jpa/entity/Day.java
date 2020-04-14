@@ -54,6 +54,10 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
     @CollectionTable(name = "day_period", joinColumns = @JoinColumn(name = "date", referencedColumnName = "date"), foreignKey = @ForeignKey(name = "day_time_usage_fk", foreignKeyDefinition = "foreign key (DATE) references DAY (DATE)"))
     protected Set<Period> periods;
 
+    @ManyToOne
+    @JoinColumn(name = "id_duty_type", referencedColumnName = "id_duty_type")
+    DutyType dutyType;
+
     public Day(LocalDate date) {
         this.id = date;
         weekend = isWeekendDate(date);
