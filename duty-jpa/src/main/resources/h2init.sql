@@ -2,15 +2,16 @@ drop table if exists DAY cascade;
 
 create table if not exists DAY
 (
-    DATE              DATE    not null,
-    ID_DUTY_TYPE      INTEGER ,
-    DAYS_FROM_WEEKEND INTEGER,
-    DAYS_TO_WEEKEND   INTEGER,
-    NEXT              DATE,
-    WEEKEND           BOOLEAN,
-    CREATED_DATE      TIMESTAMP,
-    primary key (DATE),
-    constraint NEXT_DAY_FK foreign key (DATE) references DAY (DATE)
+    DATE                 DATE not null,
+    ID_DUTY_TYPE_DEFAULT INTEGER,
+    DAYS_FROM_WEEKEND    INTEGER,
+    DAYS_TO_WEEKEND      INTEGER,
+    NEXT                 DATE,
+    WEEKEND              BOOLEAN,
+    CREATED_DATE         TIMESTAMP,
+    constraint DAY_PRIMARY_KEY primary key (DATE),
+    constraint NEXT_DAY_FK foreign key (DATE) references DAY (DATE),
+    constraint DAY_DEFAULT_DUTY_TYPE_FK foreign key (ID_DUTY_TYPE_DEFAULT) references DUTY_TYPE (ID_DUTY_TYPE)
 );
 
 drop table if exists DAY_PERIOD cascade;
@@ -178,14 +179,42 @@ create table if not exists PERSON_DUTY_TYPE
     constraint PERSON_DUTY_TYPE_PERSON_FK foreign key (ID_PERSON) references PERSON (ID_PERSON) on update cascade on delete cascade,
     constraint PERSON_DUTY_TYPE_DUTY_TYPE_FK foreign key (ID_DUTY_TYPE) references DUTY_TYPE (ID_DUTY_TYPE) on update cascade on delete cascade
 );
-insert into PERSON (ID_PERSON, FIRST_NAME, LAST_NAME, MIDDLE_NAME, POST, ID_PERSON_GROUP, ID_RANG, CREATED_DATE)
-values ('bochkov', 'Виктор', 'Бочков', 'Иванович', 'офицер', 2, 25, CURRENT_TIMESTAMP());
-insert into PERSON_DUTY_TYPE (ID_PERSON, ID_DUTY_TYPE)
-VALUES ('bochkov', 1),
-       ('bochkov', 2),
-       ('bochkov', 3);
+merge into PERSON (ID_PERSON, FIRST_NAME, LAST_NAME, MIDDLE_NAME, POST, ID_PERSON_GROUP, ID_RANG, CREATED_DATE)
+    key (ID_PERSON)
+    values ('bochkov', 'Виктор', 'Бочков', 'Иванович', 'офицер', 2, 25, CURRENT_TIMESTAMP()),
+           ('pisarenko', 'Иван', 'Писаренко', 'Иванович', 'офицер', 2, 22, CURRENT_TIMESTAMP()),
+           ('skabina', 'Дмитрий', 'Скабина', 'Васильевич', 'офицер', 2, 23, CURRENT_TIMESTAMP()),
+           ('konstantinov', 'Егор', 'Константинов', 'Леонидович', 'офицер', 2, 23, CURRENT_TIMESTAMP());
 
+MERGE INTO PUBLIC.PERSON (ID_PERSON, FIRST_NAME, LAST_NAME, MIDDLE_NAME, POST, ID_PERSON_GROUP, ID_RANG,
+                          CREATED_DATE) key (ID_PERSON)
+    VALUES ('bochkov', 'Борис', 'Бочков', 'Борисович', 'офицер', 2, 25, '2020-04-14 03:43:01.002906'),
+           ('afanasyev', 'Агафон', 'Афанасьев', 'Абрамович', 'офицер', 2, 23, '2020-04-14 03:43:01.002906'),
+           ('vasukov', 'Владимир', 'Васюков', 'Викторович', 'офицер', 2, 23, '2020-04-14 03:43:01.002906'),
+           ('gashporenko', 'Григорий', 'Гашпоренко', 'Геннадьевич', 'офицер', 2, 23, '2020-04-14 03:43:01.002906'),
+           ('demidov', 'Денис', 'Демидов', 'Дмитриевич', 'офицер', 2, 23, '2020-04-14 03:43:01.002906');
 
+merge into PERSON_DUTY_TYPE (ID_PERSON, ID_DUTY_TYPE) key (ID_PERSON, ID_DUTY_TYPE)
+    VALUES ('bochkov', 0),
+           ('bochkov', 1),
+           ('bochkov', 2),
+           ('bochkov', 3),
+           ('afanasyev', 0),
+           ('afanasyev', 1),
+           ('afanasyev', 2),
+           ('afanasyev', 3),
+           ('vasukov', 0),
+           ('vasukov', 1),
+           ('vasukov', 2),
+           ('vasukov', 3),
+           ('gashporenko', 0),
+           ('gashporenko', 1),
+           ('gashporenko', 2),
+           ('gashporenko', 3),
+           ('demidov', 0),
+           ('demidov', 1),
+           ('demidov', 2),
+           ('demidov', 3);
 drop table if exists DUTY_NEXT;
 drop table if exists DUTY_PERIOD;
 drop table if exists DUTY cascade;

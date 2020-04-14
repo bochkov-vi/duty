@@ -6,7 +6,7 @@
     <modules>
         <module>duty-h2-server</module>
         <module>duty-jpa</module>
-
+        <module>duty-planning</module>
     </modules>
     <groupId>com.bochkov</groupId>
     <artifactId>duty</artifactId>

@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>duty-planing</artifactId>
+    <artifactId>duty-planning</artifactId>
     <properties>
         <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
     </properties>
@@ -17,10 +17,12 @@
             <dependency>
                 <groupId>org.optaplanner</groupId>
                 <artifactId>optaplanner-bom</artifactId>
-                <version>7.34.0.Final</version>
+                <version>7.36.0.20200331</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
+
+
         </dependencies>
     </dependencyManagement>
     <dependencies>

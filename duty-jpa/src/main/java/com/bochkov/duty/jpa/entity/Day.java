@@ -55,7 +55,7 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
     protected Set<Period> periods;
 
     @ManyToOne
-    @JoinColumn(name = "id_duty_type", referencedColumnName = "id_duty_type")
+    @JoinColumn(name = "id_duty_type_default", referencedColumnName = "id_duty_type")
     DutyType dutyType;
 
     public Day(LocalDate date) {

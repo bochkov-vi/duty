@@ -26,6 +26,6 @@
     <!-- Optimization algorithms configuration -->
     <termination>
         <secondsSpentLimit>15</secondsSpentLimit>
-       <!-- <stepCountLimit>100000</stepCountLimit>-->
+        <!-- <stepCountLimit>100000</stepCountLimit>-->
     </termination>
 </solver>
