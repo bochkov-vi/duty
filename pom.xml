@@ -6,7 +6,6 @@
     <modules>
         <module>duty-h2-server</module>
         <module>duty-jpa</module>
-        <module>duty-planning</module>
     </modules>
     <groupId>com.bochkov</groupId>
     <artifactId>duty</artifactId>
@@ -29,7 +28,15 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.optaplanner</groupId>
+                <artifactId>optaplanner-bom</artifactId>
+                <version>7.36.0.20200331</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
         </dependencies>
+
     </dependencyManagement>
     <dependencies>
         <dependency>

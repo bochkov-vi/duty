@@ -66,6 +66,7 @@ public class Period implements Serializable, Comparable<Period> {
         return Range.closed(d1, d2);
     }
 
+
     @Override
     public int compareTo(Period period) {
         return start.compareTo(period.start);

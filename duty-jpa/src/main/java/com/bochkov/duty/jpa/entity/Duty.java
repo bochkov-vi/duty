@@ -16,6 +16,7 @@ public class Duty extends AbstractAuditableEntity<DutyPK> {
     @EmbeddedId
     DutyPK id;
 
+
     @ManyToOne
     @JoinColumn(name = "id_person", nullable = false, insertable = false, updatable = false, foreignKey = @ForeignKey(name = "DUTY_PERSON_FK"))
     Person person;

@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -57,6 +58,13 @@ public class DutyType extends AbstractEntity<Integer> {
         this.name = name;
         Period period = Period.of(hStart, mStart, hDuration, mDuration);
         setPeriods(Sets.newHashSet(period));
+    }
+
+    public Period lastPeriod() {
+        if (periods != null) {
+            return Collections.max(periods);
+        }
+        return null;
     }
 
     @Override

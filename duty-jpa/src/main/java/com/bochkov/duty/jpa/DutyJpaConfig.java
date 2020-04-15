@@ -4,6 +4,7 @@ import com.bochkov.duty.h2.SpringH2ServerConfig;
 import com.google.common.collect.Maps;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
@@ -27,6 +28,7 @@ import java.util.Optional;
 @EnableJpaAuditing()
 @EnableTransactionManagement
 @Import(SpringH2ServerConfig.class)
+@ComponentScan("com.bochkov.duty.planning.service")
 public class DutyJpaConfig {
 
 
@@ -61,9 +63,9 @@ public class DutyJpaConfig {
 
         //for eclipselink
         Map<String, Object> jpaProperties = Maps.newHashMap();
-        jpaProperties.put("hibernate.enable_lazy_load_no_trans","true");
-        jpaProperties.put("hibernate.format_sql","false");
-        jpaProperties.put("hibernate.hbm2ddl.auto","none");
+        jpaProperties.put("hibernate.enable_lazy_load_no_trans", "true");
+        jpaProperties.put("hibernate.format_sql", "false");
+        jpaProperties.put("hibernate.hbm2ddl.auto", "none");
         jpaVendorAdapter.setShowSql(true);
         entityManagerFactory.setJpaPropertyMap(jpaProperties);
         return entityManagerFactory;

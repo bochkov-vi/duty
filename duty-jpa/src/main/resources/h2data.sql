@@ -1,15 +1,16 @@
-INSERT INTO DUTY_TYPE (ID_DUTY_TYPE, DUTY_TYPE, FA_ICON, HTML_CLASS, PLAIN_TEXT, CREATED_DATE)
-VALUES (0, 'Выходной', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
-       (1, 'Обычный рабочий день', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
-       (2, 'Рабочий день перед выходным', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
-       (3, 'ПОДКНО', NULL, NULL, 'X', CURRENT_TIMESTAMP());
+MERGE INTO DUTY_TYPE (ID_DUTY_TYPE, DUTY_TYPE, FA_ICON, HTML_CLASS, PLAIN_TEXT, CREATED_DATE)
+    KEY (ID_DUTY_TYPE)
+    VALUES (0, 'Выходной', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
+           (1, 'Обычный рабочий день', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
+           (2, 'Рабочий день перед выходным', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
+           (3, 'ПОДКНО', NULL, NULL, 'X', CURRENT_TIMESTAMP());
 
-INSERT INTO DUTY_TYPE_PERIOD (ID_DUTY_TYPE, START, DURATION)
-VALUES (1, '9:00', 240),
-       (1, '13:00', 255),
-       (2, '9:00', 240),
-       (2, '13:00', 240),
-       (3, '9:00', 1440)
+MERGE INTO DUTY_TYPE_PERIOD (ID_DUTY_TYPE, START, DURATION)
+    VALUES (1, '9:00', 240),
+           (1, '13:00', 255),
+           (2, '9:00', 240),
+           (2, '13:00', 240),
+           (3, '9:00', 1440)
 ;
 
 insert into DUTY_TYPE_DAYS_TO_WEEKEND (ID_DUTY_TYPE, DAYS_TO_WEEKEND)
@@ -21,10 +22,11 @@ VALUES (0, 0),
        (1, 5);
 
 
-insert into PERSON_GROUP (ID_PERSON_GROUP, PERSON_GROUP, CREATED_DATE)
-VALUES (1, '1 группа СО', CURRENT_TIMESTAMP()),
-       (2, '2 отделение СО', CURRENT_TIMESTAMP()),
-       (101, 'ПСОИ-1', CURRENT_TIMESTAMP());
+merge into PERSON_GROUP (ID_PERSON_GROUP, PERSON_GROUP, CREATED_DATE)
+    key (ID_PERSON_GROUP)
+    VALUES (1, '1 группа СО', CURRENT_TIMESTAMP()),
+           (2, '2 отделение СО', CURRENT_TIMESTAMP()),
+           (101, 'ПСОИ-1', CURRENT_TIMESTAMP());
 
 
 merge into PERSON (ID_PERSON, FIRST_NAME, LAST_NAME, MIDDLE_NAME, POST, ID_PERSON_GROUP, ID_RANG, CREATED_DATE)
@@ -63,3 +65,7 @@ merge into PERSON_DUTY_TYPE (ID_PERSON, ID_DUTY_TYPE) key (ID_PERSON, ID_DUTY_TY
            ('demidov', 1),
            ('demidov', 2),
            ('demidov', 3);
+
+merge into REPORT (ID_REPORT, DATE_FROM, DATE_TITLE, DATE_TO, GENITIVE_DEPARTMENT_NAME, REPORT_TITLE, CHIEF,
+                   ID_DUTY_TYPE, EXECUTOR, CREATED_DATE, CREATED_BY, LAST_MODIFIED_BY, LAST_MODIFIED_DATE, DATE)
+values ( 1,'2020' )

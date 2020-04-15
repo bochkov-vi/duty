@@ -1,8 +1,0 @@
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-
-    <category name="org.optaplanner">
-        <priority value="debug" />
-    </category>
-
-
-</log4j:configuration>
