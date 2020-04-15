@@ -28,6 +28,7 @@ public class Duty extends AbstractAuditableEntity<DutyPK> {
     @JoinColumn(name = "id_duty_type", nullable = true, foreignKey = @ForeignKey(name = "DUTY_DUTY_TYPE_FK", value = ConstraintMode.NO_CONSTRAINT))
     DutyType dutyType;
 
+
     @OneToOne
     /*@JoinColumns(value = {
             @JoinColumn(name = "id_person", referencedColumnName = "id_person", insertable = false, updatable = false),

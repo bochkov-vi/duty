@@ -58,6 +58,14 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
     @JoinColumn(name = "id_duty_type_default", referencedColumnName = "id_duty_type")
     DutyType dutyType;
 
+    @Column(name = "no_use_in_autoplanning")
+    boolean noUseInAutoPlaning;
+
+    @ElementCollection
+    @CollectionTable(name = "DAY_DUTY_TYPE_COUNT_PER_PAGE",
+            joinColumns = @JoinColumn(name = "date", referencedColumnName = "date"))
+    Set<DayDutyTypeCountPerPage> dayDutyTypeCountPerPages;
+
     public Day(LocalDate date) {
         this.id = date;
         weekend = isWeekendDate(date);

@@ -2,16 +2,29 @@ drop table if exists DAY cascade;
 
 create table if not exists DAY
 (
-    DATE                 DATE not null,
-    ID_DUTY_TYPE_DEFAULT INTEGER,
-    DAYS_FROM_WEEKEND    INTEGER,
-    DAYS_TO_WEEKEND      INTEGER,
-    NEXT                 DATE,
-    WEEKEND              BOOLEAN,
-    CREATED_DATE         TIMESTAMP,
+    DATE                   DATE not null,
+    ID_DUTY_TYPE_DEFAULT   INTEGER,
+    DAYS_FROM_WEEKEND      INTEGER,
+    DAYS_TO_WEEKEND        INTEGER,
+    NEXT                   DATE,
+    WEEKEND                BOOLEAN,
+    NO_USE_IN_AUTOPLANNING BOOLEAN default FALSE,
+    CREATED_DATE           TIMESTAMP,
     constraint DAY_PRIMARY_KEY primary key (DATE),
     constraint NEXT_DAY_FK foreign key (DATE) references DAY (DATE),
     constraint DAY_DEFAULT_DUTY_TYPE_FK foreign key (ID_DUTY_TYPE_DEFAULT) references DUTY_TYPE (ID_DUTY_TYPE)
+);
+
+drop table if exists DAY_DUTY_TYPE_COUNT_PER_PAGE cascade;
+create table if not exists DAY_DUTY_TYPE_COUNT_PER_PAGE
+(
+    DATE          DATE    not null,
+    ID_DUTY_TYPE  INTEGER not null,
+    MAX_COUNT_PER_DAY INTEGER default 1,
+    MIN_COUNT_PER_DAY INTEGER default 1,
+    constraint DAY_DUTY_TYPE_COUNT_PER_PAGE_PRIMARY_KEY primary key (DATE, ID_DUTY_TYPE),
+    constraint DAY_DUTY_TYPE_COUNT_PER_PAGE_FK foreign key (DATE) references DAY (DATE) on update cascade on delete cascade,
+    constraint DAY_DUTY_TYPE_COUNT_PER_PAGE_DUTY_TYPE_FK foreign key (ID_DUTY_TYPE) references DUTY_TYPE (ID_DUTY_TYPE) on update cascade on delete cascade
 );
 
 drop table if exists DAY_PERIOD cascade;
