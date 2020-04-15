@@ -1,9 +1,9 @@
 package com.bochkov.duty;
 
-import com.bochkov.duty.jpa.DutyJpaConfig;
 import com.bochkov.duty.jpa.repository.*;
 import com.bochkov.duty.planning.DutyAssigment;
 import com.bochkov.duty.planning.DutyPlan;
+import com.bochkov.duty.planning.PlanningSpringConfiguration;
 import com.bochkov.duty.planning.service.PlanningService;
 import com.google.common.collect.Lists;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = DutyJpaConfig.class)
+@ContextConfiguration(classes = PlanningSpringConfiguration.class)
 public class PlanningTest {
     @Autowired
     PlanningService planningService;

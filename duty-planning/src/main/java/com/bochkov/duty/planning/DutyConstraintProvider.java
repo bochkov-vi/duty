@@ -10,6 +10,7 @@ import java.util.Objects;
 import static org.optaplanner.core.api.score.stream.ConstraintCollectors.count;
 
 public class DutyConstraintProvider implements ConstraintProvider {
+
     @Override
     public Constraint[] defineConstraints(ConstraintFactory factory) {
         return new Constraint[]{notInitDutyDay(factory),
@@ -33,6 +34,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
         return factory.from(DutyAssigment.class)
                 .filter(DutyAssigment::isWeekend)
                 .groupBy(DutyAssigment::getPerson, count())
-                .penalize("меньше выходных дежурств", HardSoftScore.ONE_HARD, (person, cnt) -> cnt * 2);
+                .filter((p, cnt) -> cnt > 1)
+                .penalize("меньше выходных дежурств", HardSoftScore.ONE_SOFT, (person, cnt) -> cnt * 2);
     }
 }

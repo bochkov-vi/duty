@@ -11,7 +11,7 @@
     </scoreDirectorFactory>
 
     <termination>
-        <secondsSpentLimit>5</secondsSpentLimit>
+        <scoreCalculationCountLimit>100000</scoreCalculationCountLimit>
     </termination>
     <constructionHeuristic>
         <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
