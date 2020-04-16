@@ -11,6 +11,8 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
 import java.io.Serializable;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
 
 @PlanningEntity
 @Data
@@ -18,13 +20,18 @@ import java.io.Serializable;
 @EqualsAndHashCode(of = {"day", "dutyType"})
 public class DutyAssigment implements Serializable {
 
-    @PlanningVariable(valueRangeProviderRefs = {"persons"},nullable = true)
+    @PlanningVariable(valueRangeProviderRefs = {"persons"}, nullable = true)
     Person person;
 
     Day day;
+
     DutyType dutyType;
 
     Boolean weekend;
+
+    public Integer getWeekNumber() {
+        return day.getId().get(WeekFields.of(Locale.getDefault()).weekOfYear());
+    }
 
     public boolean isWeekend() {
         if (weekend == null) {

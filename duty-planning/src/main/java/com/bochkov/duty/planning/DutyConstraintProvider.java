@@ -7,14 +7,13 @@ import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
 import org.optaplanner.core.api.score.stream.Constraint;
 import org.optaplanner.core.api.score.stream.ConstraintFactory;
 import org.optaplanner.core.api.score.stream.ConstraintProvider;
-import org.optaplanner.core.api.score.stream.uni.UniConstraintCollector;
-import org.optaplanner.core.impl.score.stream.uni.DefaultUniConstraintCollector;
+import org.optaplanner.core.api.score.stream.bi.BiConstraintCollector;
+import org.optaplanner.core.api.score.stream.tri.TriConstraintCollector;
+import org.optaplanner.core.impl.score.stream.bi.DefaultBiConstraintCollector;
+import org.optaplanner.core.impl.score.stream.tri.DefaultTriConstraintCollector;
 
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
 import java.util.Objects;
-import java.util.function.BiFunction;
 import java.util.function.ToIntFunction;
 
 import static org.optaplanner.core.api.score.stream.ConstraintCollectors.count;
@@ -27,8 +26,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
                 notNextDutyDay(factory),
                 leastWeekend(factory),
                 dispersionOfDutyCount(factory),
-                moreIntervalBeteenDuties(factory),
-                dispersionOfDutyCount2(factory)};
+                moreIntervalBeteenDuties(factory)};
     }
 
     private Constraint notInitDutyDay(ConstraintFactory factory) {
@@ -53,8 +51,10 @@ public class DutyConstraintProvider implements ConstraintProvider {
 
     private Constraint dispersionOfDutyCount(ConstraintFactory factory) {
         return factory.from(DutyAssigment.class)
-                .groupBy(count())
-                .groupBy(variance())
+                .groupBy(DutyAssigment::getPerson, count())
+                .groupBy(new DefaultBiConstraintCollector<>(SynchronizedSummaryStatistics::new,
+                        (ss, person, cnt) -> () -> ss.addValue(cnt),
+                        SummaryStatistics::getVariance))
                 .penalize("Распределение дежурств по людям должно быть равномерным", HardMediumSoftScore.ONE_SOFT, new ToIntFunction<Double>() {
                     @Override
                     public int applyAsInt(Double v) {
@@ -65,11 +65,8 @@ public class DutyConstraintProvider implements ConstraintProvider {
 
     private Constraint dispersionOfDutyCount2(ConstraintFactory factory) {
         return factory.from(DutyAssigment.class)
-                .join(Person.class)
-                .filter((d, p) -> Objects.equals(d.getPerson(), p))
-                .groupBy((d, p) -> d.getDay().getId().get(WeekFields.of(Locale.getDefault()).weekOfYear()))
-                .groupBy(count())
-                .groupBy(variance())
+                .groupBy(DutyAssigment::getPerson, DutyAssigment::getWeekNumber, count())
+                .groupBy(triVariance())
                 .penalize("Распределение дежурств по неделям должно быть равномерным", HardMediumSoftScore.ONE_SOFT, new ToIntFunction<Double>() {
                     @Override
                     public int applyAsInt(Double v) {
@@ -90,21 +87,18 @@ public class DutyConstraintProvider implements ConstraintProvider {
                         (d1, p, d2) -> 7 - (int) ChronoUnit.DAYS.between(d1.day.getId(), d2.day.getId()));
     }
 
-    public UniConstraintCollector<Integer, SummaryStatistics, Double> variance() {
-        UniConstraintCollector<Integer, SummaryStatistics, Double> result = null;
-        result = new DefaultUniConstraintCollector<>(SynchronizedSummaryStatistics::new,
-                new BiFunction<SummaryStatistics, Integer, Runnable>() {
-                    @Override
-                    public Runnable apply(SummaryStatistics ss, Integer a) {
-                        return new Runnable() {
-                            @Override
-                            public void run() {
-                                ss.addValue(a);
-                            }
-                        };
-                    }
-                },
+    public BiConstraintCollector<Person, Integer, SummaryStatistics, Double> biVariance() {
+        BiConstraintCollector<Person, Integer, SummaryStatistics, Double> result = null;
+        result = new DefaultBiConstraintCollector<>(SynchronizedSummaryStatistics::new,
+                (ss, person, cnt) -> () -> ss.addValue(cnt),
                 SummaryStatistics::getVariance);
+        return result;
+    }
+
+    public TriConstraintCollector<Person, Integer, Integer, SummaryStatistics, Double> triVariance() {
+        TriConstraintCollector<Person, Integer, Integer, SummaryStatistics, Double> result = null;
+        result = new DefaultTriConstraintCollector<>(SynchronizedSummaryStatistics::new,
+                (ss, person, w, cnt) -> () -> ss.addValue(cnt), summaryStatistics -> summaryStatistics.getVariance());
         return result;
     }
 }
