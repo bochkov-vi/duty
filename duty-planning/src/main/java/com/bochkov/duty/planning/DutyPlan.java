@@ -12,6 +12,7 @@ import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.api.domain.solution.drools.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.solution.drools.ProblemFactProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
+import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 
 import java.io.Serializable;
@@ -40,6 +41,6 @@ public class DutyPlan implements Serializable {
     List<DutyAssigment> duties;
 
     @PlanningScore
-    private HardSoftScore score;
+    private HardMediumSoftScore score;
 
 }

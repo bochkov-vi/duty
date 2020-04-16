@@ -11,9 +11,37 @@
     </scoreDirectorFactory>
 
     <termination>
-        <scoreCalculationCountLimit>100000</scoreCalculationCountLimit>
+        <secondsSpentLimit>15</secondsSpentLimit>
+
     </termination>
     <constructionHeuristic>
         <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
     </constructionHeuristic>
+
+
+    <localSearch>
+        <acceptor>
+            <lateAcceptanceSize>400</lateAcceptanceSize>
+            <entityTabuSize>5</entityTabuSize>
+        </acceptor>
+        <forager>
+            <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+    </localSearch>
+
+
+    <localSearch>
+        <localSearchType>TABU_SEARCH</localSearchType>
+    </localSearch>
+
+
+    <localSearch>
+        <acceptor>
+            <stepCountingHillClimbingSize>400</stepCountingHillClimbingSize>
+        </acceptor>
+        <forager>
+            <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+    </localSearch>
+
 </solver>

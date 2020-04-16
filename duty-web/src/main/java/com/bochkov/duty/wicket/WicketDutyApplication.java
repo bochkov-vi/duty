@@ -22,22 +22,25 @@ import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
+@Component
 public class WicketDutyApplication extends WebApplication {
-    @Inject
+
+    @Autowired
     DutyTypeRepository dutyTypeRepository;
 
-    @Inject
+    @Autowired
     RangRepository rangRepository;
 
-    @Inject
+    @Autowired
     PersonGroupRepository personGroupRepository;
 
-    @Inject
+    @Autowired
     PersonRepository personRepository;
 
-    @Inject
+    @Autowired
     DayRepository dayRepository;
 
     @Override
@@ -65,6 +68,7 @@ public class WicketDutyApplication extends WebApplication {
             @Override
             public DutyType convertToObject(String value, Locale locale) throws ConversionException {
                 return Optional.ofNullable(value).map(Ints::tryParse)
+                        .filter(Objects::nonNull)
                         .flatMap(id -> dutyTypeRepository.findById(id)).orElse(null);
             }
 

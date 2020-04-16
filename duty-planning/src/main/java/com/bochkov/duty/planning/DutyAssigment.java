@@ -5,6 +5,7 @@ import com.bochkov.duty.jpa.entity.DutyType;
 import com.bochkov.duty.jpa.entity.Period;
 import com.bochkov.duty.jpa.entity.Person;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
@@ -14,11 +15,15 @@ import java.io.Serializable;
 @PlanningEntity
 @Data
 @Accessors(chain = true)
+@EqualsAndHashCode(of = {"day", "dutyType"})
 public class DutyAssigment implements Serializable {
-    @PlanningVariable(valueRangeProviderRefs = {"persons"})
+
+    @PlanningVariable(valueRangeProviderRefs = {"persons"},nullable = true)
     Person person;
+
     Day day;
     DutyType dutyType;
+
     Boolean weekend;
 
     public boolean isWeekend() {
@@ -33,4 +38,5 @@ public class DutyAssigment implements Serializable {
         }
         return weekend;
     }
+
 }
