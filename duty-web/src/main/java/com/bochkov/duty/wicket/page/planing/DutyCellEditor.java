@@ -1,5 +1,6 @@
 package com.bochkov.duty.wicket.page.planing;
 
+import com.bochkov.duty.jpa.entity.*;
 import com.bochkov.duty.jpa.repository.DayRepository;
 import com.bochkov.duty.jpa.repository.DutyRepository;
 import com.bochkov.duty.jpa.repository.DutyTypeRepository;

@@ -1,5 +1,7 @@
 package com.bochkov.duty.wicket;
 
+import com.bochkov.duty.jpa.entity.*;
+import com.bochkov.duty.jpa.repository.*;
 import com.bochkov.duty.wicket.page.home.HomePage;
 import com.google.common.primitives.Ints;
 import de.agilecoders.wicket.webjars.WicketWebjars;
@@ -17,25 +19,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 
+import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Optional;
 
-@Component
 public class WicketDutyApplication extends WebApplication {
-    @Autowired
+    @Inject
     DutyTypeRepository dutyTypeRepository;
 
-    @Autowired
+    @Inject
     RangRepository rangRepository;
 
-    @Autowired
+    @Inject
     PersonGroupRepository personGroupRepository;
 
-    @Autowired
+    @Inject
     PersonRepository personRepository;
 
-    @Autowired
+    @Inject
     DayRepository dayRepository;
 
     @Override

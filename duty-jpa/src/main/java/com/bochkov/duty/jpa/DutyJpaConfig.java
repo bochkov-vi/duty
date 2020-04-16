@@ -28,7 +28,6 @@ import java.util.Optional;
 @EnableJpaAuditing()
 @EnableTransactionManagement
 @Import(SpringH2ServerConfig.class)
-@ComponentScan("com.bochkov.duty.planning.service")
 public class DutyJpaConfig {
 
 
@@ -66,7 +65,7 @@ public class DutyJpaConfig {
         jpaProperties.put("hibernate.enable_lazy_load_no_trans", "true");
         jpaProperties.put("hibernate.format_sql", "false");
         jpaProperties.put("hibernate.hbm2ddl.auto", "none");
-        jpaVendorAdapter.setShowSql(true);
+        jpaVendorAdapter.setShowSql(false);
         entityManagerFactory.setJpaPropertyMap(jpaProperties);
         return entityManagerFactory;
     }
