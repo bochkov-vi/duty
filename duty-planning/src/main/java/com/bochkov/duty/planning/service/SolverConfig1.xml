@@ -11,16 +11,16 @@
     </scoreDirectorFactory>
 
     <termination>
-        <secondsSpentLimit>15</secondsSpentLimit>
-
+        <!--<secondsSpentLimit>15</secondsSpentLimit>-->
+        <scoreCalculationCountLimit>100000</scoreCalculationCountLimit>
     </termination>
     <constructionHeuristic>
         <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
     </constructionHeuristic>
 
 
-    <localSearch>
-        <acceptor>
+    <!--  <localSearch>
+      <acceptor>
             <lateAcceptanceSize>400</lateAcceptanceSize>
             <entityTabuSize>5</entityTabuSize>
         </acceptor>
@@ -42,6 +42,6 @@
         <forager>
             <acceptedCountLimit>1</acceptedCountLimit>
         </forager>
-    </localSearch>
+    </localSearch>-->
 
 </solver>

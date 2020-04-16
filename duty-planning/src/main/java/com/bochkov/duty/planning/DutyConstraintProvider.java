@@ -4,9 +4,7 @@ import com.bochkov.duty.jpa.entity.Person;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.commons.math3.stat.descriptive.SynchronizedSummaryStatistics;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
-import org.optaplanner.core.api.score.stream.Constraint;
-import org.optaplanner.core.api.score.stream.ConstraintFactory;
-import org.optaplanner.core.api.score.stream.ConstraintProvider;
+import org.optaplanner.core.api.score.stream.*;
 import org.optaplanner.core.api.score.stream.bi.BiConstraintCollector;
 import org.optaplanner.core.api.score.stream.tri.TriConstraintCollector;
 import org.optaplanner.core.impl.score.stream.bi.DefaultBiConstraintCollector;
@@ -14,6 +12,8 @@ import org.optaplanner.core.impl.score.stream.tri.DefaultTriConstraintCollector;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
 import static org.optaplanner.core.api.score.stream.ConstraintCollectors.count;
@@ -50,8 +50,14 @@ public class DutyConstraintProvider implements ConstraintProvider {
     }
 
     private Constraint dispersionOfDutyCount(ConstraintFactory factory) {
-        return factory.from(DutyAssigment.class)
-                .groupBy(DutyAssigment::getPerson, count())
+        return factory.from(Person.class)
+                .join(DutyAssigment.class, Joiners.equal(Function.identity(), DutyAssigment::getPerson))
+                .groupBy(new BiFunction<Person, DutyAssigment, Person>() {
+                    @Override
+                    public Person apply(Person person, DutyAssigment dutyAssigment) {
+                        return person;
+                    }
+                }, ConstraintCollectors.countBi())
                 .groupBy(new DefaultBiConstraintCollector<>(SynchronizedSummaryStatistics::new,
                         (ss, person, cnt) -> () -> ss.addValue(cnt),
                         SummaryStatistics::getVariance))
