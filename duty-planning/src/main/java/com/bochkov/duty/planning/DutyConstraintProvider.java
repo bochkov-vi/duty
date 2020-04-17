@@ -4,7 +4,9 @@ import com.bochkov.duty.jpa.entity.Person;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.commons.math3.stat.descriptive.SynchronizedSummaryStatistics;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
-import org.optaplanner.core.api.score.stream.*;
+import org.optaplanner.core.api.score.stream.Constraint;
+import org.optaplanner.core.api.score.stream.ConstraintFactory;
+import org.optaplanner.core.api.score.stream.ConstraintProvider;
 import org.optaplanner.core.api.score.stream.bi.BiConstraintCollector;
 import org.optaplanner.core.api.score.stream.tri.TriConstraintCollector;
 import org.optaplanner.core.impl.score.stream.bi.DefaultBiConstraintCollector;
@@ -12,8 +14,7 @@ import org.optaplanner.core.impl.score.stream.tri.DefaultTriConstraintCollector;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.Optional;
 import java.util.function.ToIntFunction;
 
 import static org.optaplanner.core.api.score.stream.ConstraintCollectors.count;
@@ -24,9 +25,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
     public Constraint[] defineConstraints(ConstraintFactory factory) {
         return new Constraint[]{notInitDutyDay(factory),
                 notNextDutyDay(factory),
-                leastWeekend(factory),
-                dispersionOfDutyCount(factory),
-                moreIntervalBeteenDuties(factory)};
+                dispersionOfDutyCount(factory)};
     }
 
     private Constraint notInitDutyDay(ConstraintFactory factory) {
@@ -51,20 +50,23 @@ public class DutyConstraintProvider implements ConstraintProvider {
 
     private Constraint dispersionOfDutyCount(ConstraintFactory factory) {
         return factory.from(Person.class)
-                .join(DutyAssigment.class, Joiners.equal(Function.identity(), DutyAssigment::getPerson))
-                .groupBy(new BiFunction<Person, DutyAssigment, Person>() {
-                    @Override
-                    public Person apply(Person person, DutyAssigment dutyAssigment) {
-                        return person;
-                    }
-                }, ConstraintCollectors.countBi())
+                .join(DutyAssigment.class)
+                .groupBy((person, dutyAssigment) -> person,
+                        new DefaultBiConstraintCollector<Person, DutyAssigment, SummaryStatistics, Integer>(SynchronizedSummaryStatistics::new, (ss, p, d) -> () -> {
+                            if (Objects.equals(p, d.getPerson())) {
+                                ss.addValue(1);
+                            } else {
+                                ss.addValue(0);
+                            }
+                        }, (ss) -> Optional.of(ss.getSum()).filter(sum -> !sum.isNaN()).map(Number::intValue).orElse(0)))
                 .groupBy(new DefaultBiConstraintCollector<>(SynchronizedSummaryStatistics::new,
                         (ss, person, cnt) -> () -> ss.addValue(cnt),
-                        SummaryStatistics::getVariance))
+                        (ss)->Optional.of(ss.getVariance()).filter(s -> !s.isNaN()).orElse(0.0)))
                 .penalize("Распределение дежурств по людям должно быть равномерным", HardMediumSoftScore.ONE_SOFT, new ToIntFunction<Double>() {
                     @Override
                     public int applyAsInt(Double v) {
-                        return new Double(v * 10).intValue();
+                        int result = Optional.of(v).filter(s -> !s.isNaN()).map(Number::intValue).orElse(0);
+                        return result;
                     }
                 });
     }
@@ -107,4 +109,6 @@ public class DutyConstraintProvider implements ConstraintProvider {
                 (ss, person, w, cnt) -> () -> ss.addValue(cnt), summaryStatistics -> summaryStatistics.getVariance());
         return result;
     }
+
+
 }

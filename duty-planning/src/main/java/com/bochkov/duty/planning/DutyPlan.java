@@ -13,7 +13,6 @@ import org.optaplanner.core.api.domain.solution.drools.ProblemFactCollectionProp
 import org.optaplanner.core.api.domain.solution.drools.ProblemFactProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 
 import java.io.Serializable;
 import java.util.List;
@@ -30,11 +29,11 @@ public class DutyPlan implements Serializable {
     @ProblemFactCollectionProperty
     List<DutyType> dutyTypes;
 
-    @ProblemFactProperty
+    @ProblemFactCollectionProperty
     List<Day> days;
 
     @ValueRangeProvider(id = "persons")
-    @ProblemFactProperty
+    @ProblemFactCollectionProperty
     List<Person> persons;
 
     @PlanningEntityCollectionProperty

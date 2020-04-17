@@ -1,0 +1,13 @@
+
+import com.bochkov.duty.planning.DutyPlan;
+import com.bochkov.duty.planning.DutyAssigment;
+import com.bochkov.duty.jpa.entity.Person;
+
+// A nurse can only work one shift per day, i.e. no two shift can be assigned to the same nurse on a day.
+rule "oneDutyPer2Day"
+    when
+        DutyAssigment($leftId : id, $employee : employee, $shiftDate : shiftDate, employee != null)
+        ShiftAssignment(employee == $employee, shiftDate == $shiftDate, id > $leftId)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end

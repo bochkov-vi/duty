@@ -11,16 +11,17 @@
     </scoreDirectorFactory>
 
     <termination>
-        <!--<secondsSpentLimit>15</secondsSpentLimit>-->
-        <scoreCalculationCountLimit>100000</scoreCalculationCountLimit>
+        <secondsSpentLimit>15</secondsSpentLimit>
+       <!-- <scoreCalculationCountLimit>100000</scoreCalculationCountLimit>-->
     </termination>
-    <constructionHeuristic>
+   <!-- <constructionHeuristic>
         <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
-    </constructionHeuristic>
+    </constructionHeuristic>-->
 
+    <environmentMode>FAST_ASSERT</environmentMode>
+    <localSearch>
 
-    <!--  <localSearch>
-      <acceptor>
+        <acceptor>
             <lateAcceptanceSize>400</lateAcceptanceSize>
             <entityTabuSize>5</entityTabuSize>
         </acceptor>
@@ -29,19 +30,19 @@
         </forager>
     </localSearch>
 
+    <!--
+      <localSearch>
+          <localSearchType>TABU_SEARCH</localSearchType>
+      </localSearch>
 
-    <localSearch>
-        <localSearchType>TABU_SEARCH</localSearchType>
-    </localSearch>
 
-
-    <localSearch>
-        <acceptor>
-            <stepCountingHillClimbingSize>400</stepCountingHillClimbingSize>
-        </acceptor>
-        <forager>
-            <acceptedCountLimit>1</acceptedCountLimit>
-        </forager>
-    </localSearch>-->
+      <localSearch>
+          <acceptor>
+              <stepCountingHillClimbingSize>400</stepCountingHillClimbingSize>
+          </acceptor>
+          <forager>
+              <acceptedCountLimit>1</acceptedCountLimit>
+          </forager>
+      </localSearch>-->
 
 </solver>
