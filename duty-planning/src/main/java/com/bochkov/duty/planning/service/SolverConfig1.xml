@@ -18,7 +18,7 @@
         <!-- <scoreCalculationCountLimit>100000</scoreCalculationCountLimit>-->
     </termination>
 
-    <!--<environmentMode>FULL_ASSERT</environmentMode>-->
+    <environmentMode>FAST_ASSERT</environmentMode>
     <localSearch>
 
         <acceptor>

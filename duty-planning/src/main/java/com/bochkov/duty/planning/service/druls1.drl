@@ -7,11 +7,14 @@ import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
 import org.apache.commons.math3.stat.descriptive.SynchronizedSummaryStatistics;
 import com.bochkov.duty.planning.service.PersonDutyCount;
 
+import accumulate com.bochkov.duty.planning.service.functions.LoadBalanceByCountAccumulateFunction loadBalanceByCount;
+import accumulate com.bochkov.duty.planning.service.functions.LoadBalanceAccumulateFunction loadBalance;
+
 global  HardMediumSoftScoreHolder scoreHolder;
 
 // A nurse can only work one shift per day, i.e. no two shift can be assigned to the same nurse on a day.
 rule "нельзя дежурства без людей"
-salience 3
+
     when
         DutyAssigment(person==null)
     then
@@ -19,7 +22,7 @@ salience 3
 end
 
 rule "нельзя дежурства за подряд"
-salience 3
+
     when
         DutyAssigment(person!=null, $person:=person,$day:=day,$dutyType:=dutyType)
         DutyAssigment(person!=null, $person==person,$day==day.prev,$dutyType:=dutyType)
@@ -29,19 +32,35 @@ end
 
 
 
-rule "количество дежурств у людей"
+/*rule "количество дежурств у людей"
 salience 2
     when
-        $person:Person()
+        $person:Person() and
         $amount: Number() from accumulate(DutyAssigment( person==$person), count())
     then
-        System.out.println();
-end
+        insertLogical(new PersonDutyCount($person,$amount));
+end*/
 
 rule "распределение дежурств у людей"
-salience 1
+
     when
-        $variance: Number() from accumulate(PersonDutyCount($cnt:count), variance($cnt))
+       accumulate(
+           DutyAssigment(person != null, $p : person);
+           $total : loadBalanceByCount($p)
+       )
     then
-        scoreHolder.addSoftConstraintMatch(kcontext, $variance.intValue());
+       // System.out.println("variance is " + $result);
+        scoreHolder.addSoftConstraintMatch(kcontext, - (int) $total.getZeroDeviationSquaredSumRootMillis());
+end
+
+rule "распределение дежурств у людей по выходным"
+
+    when
+       accumulate(
+           DutyAssigment(person != null , isWeekend(), $p : person);
+           $total : loadBalanceByCount($p)
+       )
+    then
+       // System.out.println("variance is " + $result);
+        scoreHolder.addSoftConstraintMatch(kcontext, - (int) $total.getZeroDeviationSquaredSumRootMillis());
 end
