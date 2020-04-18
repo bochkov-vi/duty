@@ -20,7 +20,7 @@ import java.util.Locale;
 @EqualsAndHashCode(of = {"day", "dutyType"})
 public class DutyAssigment implements Serializable {
 
-    @PlanningVariable(valueRangeProviderRefs = {"persons"}, nullable = true)
+    @PlanningVariable(valueRangeProviderRefs = {"persons"})
     Person person;
 
     Day day;

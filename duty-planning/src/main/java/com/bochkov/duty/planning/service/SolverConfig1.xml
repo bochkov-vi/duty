@@ -7,18 +7,18 @@
     <entityClass>com.bochkov.duty.planning.DutyAssigment</entityClass>
 
     <scoreDirectorFactory>
-        <constraintProviderClass>com.bochkov.duty.planning.DutyConstraintProvider</constraintProviderClass>
+        <scoreDrl>com/bochkov/duty/planning/service/druls1.drl</scoreDrl>
     </scoreDirectorFactory>
 
-    <termination>
-        <secondsSpentLimit>15</secondsSpentLimit>
-       <!-- <scoreCalculationCountLimit>100000</scoreCalculationCountLimit>-->
-    </termination>
-   <!-- <constructionHeuristic>
+    <constructionHeuristic>
         <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
-    </constructionHeuristic>-->
+    </constructionHeuristic>
+    <termination>
+        <secondsSpentLimit>5</secondsSpentLimit>
+        <!-- <scoreCalculationCountLimit>100000</scoreCalculationCountLimit>-->
+    </termination>
 
-    <environmentMode>FAST_ASSERT</environmentMode>
+    <!--<environmentMode>FULL_ASSERT</environmentMode>-->
     <localSearch>
 
         <acceptor>

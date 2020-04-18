@@ -1,13 +1,47 @@
 
+import java.time.LocalDate;
 import com.bochkov.duty.planning.DutyPlan;
 import com.bochkov.duty.planning.DutyAssigment;
 import com.bochkov.duty.jpa.entity.Person;
+import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScoreHolder;
+import org.apache.commons.math3.stat.descriptive.SynchronizedSummaryStatistics;
+import com.bochkov.duty.planning.service.PersonDutyCount;
+
+global  HardMediumSoftScoreHolder scoreHolder;
 
 // A nurse can only work one shift per day, i.e. no two shift can be assigned to the same nurse on a day.
-rule "oneDutyPer2Day"
+rule "нельзя дежурства без людей"
+salience 3
     when
-        DutyAssigment($leftId : id, $employee : employee, $shiftDate : shiftDate, employee != null)
-        ShiftAssignment(employee == $employee, shiftDate == $shiftDate, id > $leftId)
+        DutyAssigment(person==null)
+    then
+        scoreHolder.addMediumConstraintMatch(kcontext, -1);
+end
+
+rule "нельзя дежурства за подряд"
+salience 3
+    when
+        DutyAssigment(person!=null, $person:=person,$day:=day,$dutyType:=dutyType)
+        DutyAssigment(person!=null, $person==person,$day==day.prev,$dutyType:=dutyType)
     then
         scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+
+
+rule "количество дежурств у людей"
+salience 2
+    when
+        $person:Person()
+        $amount: Number() from accumulate(DutyAssigment( person==$person), count())
+    then
+        System.out.println();
+end
+
+rule "распределение дежурств у людей"
+salience 1
+    when
+        $variance: Number() from accumulate(PersonDutyCount($cnt:count), variance($cnt))
+    then
+        scoreHolder.addSoftConstraintMatch(kcontext, $variance.intValue());
 end

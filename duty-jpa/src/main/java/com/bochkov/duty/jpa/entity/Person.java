@@ -13,7 +13,7 @@ import java.util.Set;
 @Accessors(chain = true)
 @Table(name = "person")
 @Entity
-public class Person extends AbstractEntity<String> {
+public class Person extends AbstractEntity<String> implements Comparable<Person> {
 
     @Id
     @Column(name = "id_person", length = 15)
@@ -36,7 +36,7 @@ public class Person extends AbstractEntity<String> {
     String lastName;
 
     @ManyToOne
-    @JoinColumn(name = "id_person_group",foreignKey = @ForeignKey(name = "PERSON_PERSON_GROUP_FK"))
+    @JoinColumn(name = "id_person_group", foreignKey = @ForeignKey(name = "PERSON_PERSON_GROUP_FK"))
     PersonGroup personGroup;
 
     @JoinTable(name = "person_duty_type", joinColumns = @JoinColumn(name = "id_person", referencedColumnName = "id_person"),
@@ -52,4 +52,8 @@ public class Person extends AbstractEntity<String> {
     }
 
 
+    @Override
+    public int compareTo(Person o) {
+        return id.compareTo(o.getId());
+    }
 }

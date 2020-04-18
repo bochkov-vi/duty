@@ -13,11 +13,19 @@
     <properties>
         <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
     </properties>
+    <profiles>
+        <profile>
+            <id>development</id>
+
+        </profile>
+    </profiles>
     <dependencies>
+
+
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
+            <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
         </dependency>
 
