@@ -14,8 +14,8 @@
         <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
     </constructionHeuristic>
     <termination>
-        <secondsSpentLimit>5</secondsSpentLimit>
-        <!-- <scoreCalculationCountLimit>100000</scoreCalculationCountLimit>-->
+       <!-- <secondsSpentLimit>5</secondsSpentLimit>-->
+         <scoreCalculationCountLimit>1000</scoreCalculationCountLimit>
     </termination>
 
     <environmentMode>FAST_ASSERT</environmentMode>

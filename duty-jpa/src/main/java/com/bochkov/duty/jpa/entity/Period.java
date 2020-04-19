@@ -60,12 +60,12 @@ public class Period implements Serializable, Comparable<Period> {
         return result;
     }
 
+
     public Range<LocalDateTime> range(LocalDate date) {
         LocalDateTime d1 = date.atTime(start);
         LocalDateTime d2 = d1.plus(duration);
         return Range.closed(d1, d2);
     }
-
 
     @Override
     public int compareTo(Period period) {

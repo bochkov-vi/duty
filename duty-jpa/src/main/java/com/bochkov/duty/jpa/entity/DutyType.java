@@ -1,5 +1,6 @@
 package com.bochkov.duty.jpa.entity;
 
+import com.google.common.collect.Range;
 import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -75,4 +77,16 @@ public class DutyType extends AbstractEntity<Integer> {
     public Integer getId() {
         return id;
     }
+
+    public OvertimeData overtime(Day day) {
+        OvertimeData data = new OvertimeData();
+        Range<LocalDateTime> dayRange = day.range();
+        boolean weekend = day.isWeekend();
+        Set<LocalDateTime> set = Sets.newTreeSet();
+        for (Period p1 : periods) {
+
+        }
+        return data;
+    }
+
 }

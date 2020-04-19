@@ -60,8 +60,14 @@ public class PlanningTest {
         System.out.println(plan);
         Map<Person, Long> map = plan.getDuties().stream().collect(Collectors.groupingBy(DutyAssigment::getPerson, Collectors.counting()));
         System.out.println(Joiner.on("\n").withKeyValueSeparator("->").join(map));
+        System.out.println("========== ВЫХОДНЫЕ ==========");
+        System.out.println(Joiner.on("\n").withKeyValueSeparator("->").join(
+                plan.getDuties().stream().filter(DutyAssigment::isWeekend).collect(Collectors.groupingBy(DutyAssigment::getPerson, Collectors.counting()))
+        ));
+
         System.out.println("====================================");
-        System.out.println(plan.getDuties().stream().sorted(Comparator.comparing(DutyAssigment::getDay)).map(d -> String.format("%s %s", d.getDay(), d.getPerson())).collect(Collectors.joining("\n")));
+        System.out.println(plan.getDuties().stream().sorted(Comparator.comparing(DutyAssigment::getDay)).map(d -> String.format("%s %s %s", d.isWeekend(), d.getDay(), d.getPerson())).collect(Collectors.joining("\n")));
+
         System.out.println(plan.getScore());
     }
 

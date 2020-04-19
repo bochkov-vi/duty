@@ -78,12 +78,4 @@ public class Duty extends AbstractAuditableEntity<DutyPK> {
         _this.dutyType = dutyType;
         return _this;
     }
-
-    @PrePersist
-    public void prePersist() {
-        if (dutyType == null && day != null) {
-            setDutyType(day.getDutyType());
-        }
-    }
-
 }
