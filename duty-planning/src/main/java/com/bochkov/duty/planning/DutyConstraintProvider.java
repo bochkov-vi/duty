@@ -33,14 +33,14 @@ public class DutyConstraintProvider implements ConstraintProvider {
     }
 
     private Constraint notInitDutyDay(ConstraintFactory factory) {
-        return factory.from(DutyAssigment.class).filter(da -> da.person == null)
+        return factory.from(DutyAssigment.class).filter(da -> da.getPerson() == null)
                 .penalize("нельзя дежурства без людей", HardMediumSoftScore.ONE_MEDIUM);
     }
 
     private Constraint notNextDutyDay(ConstraintFactory factory) {
         return factory.from(DutyAssigment.class)
                 .join(DutyAssigment.class)
-                .filter((d1, d2) -> Objects.equals(d1.getPerson(), d2.getPerson()) && d1.day.getId().equals(d2.getDay().getId().plusDays(1)))
+                .filter((d1, d2) -> Objects.equals(d1.getPerson(), d2.getPerson()) && d1.getDay().getId().equals(d2.getDay().getId().plusDays(1)))
                 .penalize("нельзя одно и тоже дежурство за подряд", HardMediumSoftScore.ONE_HARD);
     }
 
@@ -54,7 +54,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
 
     private Constraint dispersionOfDutyCount(ConstraintFactory factory) {
         return factory.from(Person.class)
-                .join(DutyAssigment.class, Joiners.equal(p -> p, d -> d.person))
+                .join(DutyAssigment.class, Joiners.equal(p -> p, d -> d.getPerson()))
                 .groupBy((person, dutyAssigment) -> person, countBi())
                 .groupBy(new DefaultBiConstraintCollector<>(() -> {
 //                    System.out.println("ss new");
@@ -77,7 +77,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
 
     private Constraint dispersionOfDutyCount2(ConstraintFactory factory) {
         return factory.from(DutyAssigment.class)
-                .groupBy(DutyAssigment::getPerson, DutyAssigment::getWeekNumber, count())
+                .groupBy(DutyAssigment::getPerson, DutyAssigment::getWeekIndex, count())
                 .groupBy(triVariance())
                 .penalize("Распределение дежурств по неделям должно быть равномерным", HardMediumSoftScore.ONE_SOFT, new ToIntFunction<Double>() {
                     @Override
@@ -93,10 +93,10 @@ public class DutyConstraintProvider implements ConstraintProvider {
                 .filter((d, p) -> Objects.equals(d.getPerson(), p))
                 .join(DutyAssigment.class)
                 .filter((d1, p, d2) -> Objects.equals(d1.getPerson(), d2.getPerson()))
-                .filter((d1, p, d2) -> d1.day.isBefore(d2.day))
-                .filter((d1, p, d2) -> (int) ChronoUnit.DAYS.between(d1.day.getId(), d2.day.getId()) < 7)
+                .filter((d1, p, d2) -> d1.getDay().isBefore(d2.getDay()))
+                .filter((d1, p, d2) -> (int) ChronoUnit.DAYS.between(d1.getDay().getId(), d2.getDay().getId()) < 7)
                 .penalize("больше интервал между дежурствами", HardMediumSoftScore.ONE_SOFT,
-                        (d1, p, d2) -> 7 - (int) ChronoUnit.DAYS.between(d1.day.getId(), d2.day.getId()));
+                        (d1, p, d2) -> 7 - (int) ChronoUnit.DAYS.between(d1.getDay().getId(), d2.getDay().getId()));
     }
 
     public BiConstraintCollector<Person, Integer, SummaryStatistics, Double> biVariance() {

@@ -3,14 +3,17 @@ MERGE INTO DUTY_TYPE(ID_DUTY_TYPE, DUTY_TYPE, FA_ICON, HTML_CLASS, PLAIN_TEXT, C
     VALUES (0, 'Выходной', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
         (1, 'Обычный рабочий день', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
     (2, 'Рабочий день перед выходным', NULL, NULL, NULL, CURRENT_TIMESTAMP()),
-        (3, 'ПОДКНО', NULL, NULL, 'X', CURRENT_TIMESTAMP());
+        (3, 'ПОДКНО', NULL, NULL, 'X', CURRENT_TIMESTAMP()),
+        (4, '30%', NULL, NULL, '30%', CURRENT_TIMESTAMP());
 
 MERGE INTO DUTY_TYPE_PERIOD(ID_DUTY_TYPE, START, DURATION)
     VALUES (1, '9:00', 240),
         (1, '13:00', 255),
         (2, '9:00', 240),
         (2, '13:00', 240),
-        (3, '9:00', 1440)
+        (3, '9:00', 1440),
+        (4, '9:00', 240),
+        (4, '13:00', 255)
 ;
 
 merge into DUTY_TYPE_DAYS_TO_WEEKEND(ID_DUTY_TYPE, DAYS_TO_WEEKEND)
@@ -51,21 +54,26 @@ merge into PERSON_DUTY_TYPE(ID_PERSON, ID_DUTY_TYPE) key (ID_PERSON, ID_DUTY_TYP
         ('bochkov', 1),
         ('bochkov', 2),
         ('bochkov', 3),
+        ('bochkov', 4),
         ('afanasyev', 0),
         ('afanasyev', 1),
         ('afanasyev', 2),
         ('afanasyev', 3),
+        ('afanasyev', 4),
         ('vasukov', 0),
         ('vasukov', 1),
         ('vasukov', 2),
         ('vasukov', 3),
+        ('vasukov', 4),
         ('gashporenko', 0),
         ('gashporenko', 1),
         ('gashporenko', 2),
         ('gashporenko', 3),
+        ('gashporenko', 4),
         ('demidov', 0),
         ('demidov', 1),
         ('demidov', 2),
-        ('demidov', 3);
+        ('demidov', 3),
+        ('demidov', 4);
 
 

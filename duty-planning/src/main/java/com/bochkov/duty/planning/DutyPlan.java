@@ -24,7 +24,7 @@ import java.util.List;
 public class DutyPlan implements Serializable {
 
     @ProblemFactProperty
-    DutyPlanOptions dutyPlanOptions;
+    DutyPlanOptions dutyPlanOptions = new DutyPlanOptions();
 
     @ProblemFactCollectionProperty
     List<DutyType> dutyTypes;
@@ -38,6 +38,9 @@ public class DutyPlan implements Serializable {
 
     @PlanningEntityCollectionProperty
     List<DutyAssigment> duties;
+
+    @ProblemFactProperty()
+    Integer minInterval;
 
     @PlanningScore
     private HardMediumSoftScore score;

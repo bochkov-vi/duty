@@ -11,11 +11,11 @@
     </scoreDirectorFactory>
 
     <constructionHeuristic>
-        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+        <constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
     </constructionHeuristic>
     <termination>
-       <!-- <secondsSpentLimit>5</secondsSpentLimit>-->
-         <scoreCalculationCountLimit>1000</scoreCalculationCountLimit>
+        <secondsSpentLimit>60</secondsSpentLimit>
+        <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
     </termination>
 
     <environmentMode>FAST_ASSERT</environmentMode>
@@ -28,21 +28,27 @@
         <forager>
             <acceptedCountLimit>1</acceptedCountLimit>
         </forager>
+        <termination>
+            <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>
+            <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
+        </termination>
     </localSearch>
 
-    <!--
-      <localSearch>
-          <localSearchType>TABU_SEARCH</localSearchType>
-      </localSearch>
+
+    <localSearch>
+        <localSearchType>HILL_CLIMBING</localSearchType>
+        <termination>
+            <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>
+        </termination>
+    </localSearch>
 
 
-      <localSearch>
-          <acceptor>
-              <stepCountingHillClimbingSize>400</stepCountingHillClimbingSize>
-          </acceptor>
-          <forager>
-              <acceptedCountLimit>1</acceptedCountLimit>
-          </forager>
-      </localSearch>-->
+    <localSearch>
+        <localSearchType>TABU_SEARCH</localSearchType>
+        <termination>
+            <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>
+        </termination>
+    </localSearch>
+
 
 </solver>

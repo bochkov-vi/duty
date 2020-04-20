@@ -136,4 +136,10 @@ public class DutyType extends AbstractEntity<Integer> implements IPeriodContaine
         return data;
     }
 
+    public Duration totalOvertime(Day day,Person person){
+        return overtime(day,person).getTotal();
+    }
+    public Duration totalOvertime(Day day){
+        return overtime(day).getTotal();
+    }
 }

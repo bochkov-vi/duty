@@ -142,13 +142,15 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
         return id.isBefore(Objects.requireNonNull(day.getId()));
     }
 
-    public long daysTo(Day day) {
-        return ChronoUnit.DAYS.between(this.id, day.id);
+    public int daysTo(Day day) {
+        return (int) ChronoUnit.DAYS.between(this.id, day.id);
     }
 
     public Range<LocalDateTime> range() {
         return Period.of().range(id);
     }
 
-
+    public DayOfWeek getDayOfWeek() {
+        return id.getDayOfWeek();
+    }
 }

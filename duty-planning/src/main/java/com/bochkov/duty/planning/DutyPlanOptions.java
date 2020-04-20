@@ -9,9 +9,15 @@ import java.time.LocalDate;
 @Data
 @Accessors(chain = true)
 public class DutyPlanOptions implements Serializable {
+
     LocalDate start;
+
     LocalDate end;
+
     LocalDate windowStart;
+
     LocalDate windowEnd;
+
+    Integer minInterval = 4;
 
 }
