@@ -40,13 +40,7 @@ public class DutyAssigment implements Serializable {
 
     public boolean isWeekend() {
         if (weekend == null) {
-            weekend = day.isWeekend();
-            if (!weekend && day.getNext() != null && day.getNext().isWeekend()) {
-                Period last = dutyType.lastPeriod();
-                if (last != null) {
-                    weekend = last.range(day.getId()).isConnected(day.getNext().range());
-                }
-            }
+            weekend = dutyType.isStartOnWeekend(day) || dutyType.isEndOnWeekend(day);
         }
         return weekend;
     }

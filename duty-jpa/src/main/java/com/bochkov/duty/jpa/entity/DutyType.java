@@ -78,11 +78,11 @@ public class DutyType extends AbstractEntity<Integer> implements IPeriodContaine
         return id;
     }
 
-    boolean isStartOnWeekend(Day day) {
+    public boolean isStartOnWeekend(Day day) {
         return day.isWeekend();
     }
 
-    boolean isEndOnWeekend(Day day) {
+    public boolean isEndOnWeekend(Day day) {
         boolean result = false;
         if (day.getNext() != null && day.getNext().isWeekend()) {
             Period last = lastPeriod();
