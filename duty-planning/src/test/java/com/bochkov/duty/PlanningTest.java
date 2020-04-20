@@ -65,8 +65,12 @@ public class PlanningTest {
         dutyPlan.setPersons(personRepository.findAll().stream().limit(8).collect(Collectors.toList()));
         dutyPlan.setDutyTypes(dutyTypeRepository.findAllById(Lists.newArrayList(3)));
         int[] index = new int[]{0};
-        dutyPlan.setDuties(dutyPlan.getDays().stream()
+        dutyPlan.setDuties(
+                dayRepository.findOrCreate(start, end).stream()
                 .map(d -> DutyAssigment.of(d, dutyTypeRepository.findById(3).get()).setId(index[0]++)).collect(Collectors.toList()));
+
+        dutyPlan.getDuties().addAll(dayRepository.findOrCreate(start, start.plusDays(9)).stream()
+                .map(d -> DutyAssigment.of(d, dutyTypeRepository.findById(4).get()).setId(index[0]++)).collect(Collectors.toList()));
 
         dutyPlan.getDutyPlanOptions().setMinInterval((int)Math.ceil(dutyPlan.getPersons().size() / 2.0));
         DutyPlan plan = planningService.solve(dutyPlan);

@@ -74,6 +74,9 @@ merge into PERSON_DUTY_TYPE(ID_PERSON, ID_DUTY_TYPE) key (ID_PERSON, ID_DUTY_TYP
         ('demidov', 1),
         ('demidov', 2),
         ('demidov', 3),
-        ('demidov', 4);
+        ('demidov', 4),
+        ('konstantinov', 4),
+        ('pisarenko', 4),
+        ('skabina', 4);
 
 

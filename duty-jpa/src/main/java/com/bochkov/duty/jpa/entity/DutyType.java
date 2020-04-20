@@ -85,6 +85,14 @@ public class DutyType extends AbstractEntity<Integer> implements IPeriodContaine
     public boolean isEndOnWeekend(Day day) {
         boolean result = false;
         if (day.getNext() != null && day.getNext().isWeekend()) {
+            result = isEndOnNextDay(day);
+        }
+        return result;
+    }
+
+    public boolean isEndOnNextDay(Day day) {
+        boolean result = false;
+        if (day.getNext() != null) {
             Period last = lastPeriod();
             if (last != null) {
                 result = last.range(day.getId()).isConnected(day.getNext().range());
@@ -136,10 +144,11 @@ public class DutyType extends AbstractEntity<Integer> implements IPeriodContaine
         return data;
     }
 
-    public Duration totalOvertime(Day day,Person person){
-        return overtime(day,person).getTotal();
+    public Duration totalOvertime(Day day, Person person) {
+        return overtime(day, person).getTotal();
     }
-    public Duration totalOvertime(Day day){
+
+    public Duration totalOvertime(Day day) {
         return overtime(day).getTotal();
     }
 }

@@ -21,6 +21,29 @@ rule "нельзя дежурства без людей"
         scoreHolder.addMediumConstraintMatch(kcontext, -1);
 end
 
+rule "вид дежурства только предусмотренный для сотрудника"
+    when
+        DutyAssigment(person!=null,$person:person,$dutyType:dutyType,person.dutyTypes not contains dutyType)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "нет дежурств после ночного длящегося дежурства"
+    when
+        DutyAssigment(person!=null,$person:person, $dayIndex:dayIndex,endOnNextDay==true)
+        DutyAssigment($person==person,$dayIndex+1==dayIndex)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "нельзя дежурства  на 1 человека в 1 день"
+    when
+        DutyAssigment(person!=null, $person:person,$id:id,$dayIndex:dayIndex)
+        DutyAssigment(person==$person,$id<id,dayIndex==$dayIndex)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
 rule "нельзя дежурства за подряд"
 
     when
@@ -51,8 +74,20 @@ rule "распределение дежурств у людей"
 
     when
        accumulate(
-           DutyAssigment(person != null, $p : person);
+           DutyAssigment(person != null,$p : person);
            $total : loadBalanceByCount($p)
+       )
+    then
+       // System.out.println("variance is " + $result);
+        scoreHolder.addSoftConstraintMatch(kcontext, - (int) $total.getZeroDeviationSquaredSumRootMillis());
+end
+
+rule "распределение дежурств у людей по видам дежурств"
+
+    when
+       accumulate(
+           DutyAssigment(person != null,$dutyType:dutyType ,$p : person);
+           $total : loadBalanceByCount(Pair.of($p,$dutyType))
        )
     then
        // System.out.println("variance is " + $result);

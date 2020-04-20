@@ -3,7 +3,10 @@ package com.bochkov.duty.planning;
 import com.bochkov.duty.jpa.entity.Day;
 import com.bochkov.duty.jpa.entity.DutyType;
 import com.bochkov.duty.jpa.entity.Person;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
@@ -41,6 +44,8 @@ public class DutyAssigment implements Serializable {
 
     private Duration overTime;
 
+    private boolean endOnNextDay;
+
     public static DutyAssigment of(Day day, DutyType dutyType) {
         DutyAssigment result = new DutyAssigment();
         result.setDay(day);
@@ -50,6 +55,7 @@ public class DutyAssigment implements Serializable {
         result.setOverTime(dutyType.totalOvertime(day));
         result.setDayIndex((int) day.getId().toEpochDay());
         result.dayOfWeek = day.getDayOfWeek();
+        result.endOnNextDay = dutyType.isEndOnNextDay(day);
         return result;
     }
 
