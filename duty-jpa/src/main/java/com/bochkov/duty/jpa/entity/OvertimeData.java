@@ -11,7 +11,14 @@ import java.time.Duration;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OvertimeData implements Serializable {
+
     Duration overTime = Duration.ZERO;
+
     Duration weekendTime = Duration.ZERO;
+
     Duration restTime = Duration.ZERO;
+
+    public Duration getTotal() {
+        return overTime.plus(weekendTime).minus(restTime);
+    }
 }

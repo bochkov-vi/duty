@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface DayRepository extends BaseRepository<Day, LocalDate> {
+
     @Transactional
     default Day findOrCreate(LocalDate date) {
         Day result = null;
@@ -138,6 +139,7 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
     default List<Day> findOrCreate(LocalDate dateFrom, LocalDate dateTo) {
         return Stream.iterate(dateFrom, date -> date.plusDays(1))
                 .limit(ChronoUnit.DAYS.between(dateFrom, dateTo.plusDays(1)))
+                .sorted()
                 .map(this::findOrCreate)
                 .collect(Collectors.toList());
     }

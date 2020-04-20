@@ -15,6 +15,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor

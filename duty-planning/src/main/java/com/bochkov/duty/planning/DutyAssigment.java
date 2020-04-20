@@ -32,7 +32,7 @@ public class DutyAssigment implements Serializable {
 
     Boolean weekend;
 
-    Integer overTime;
+    Duration overTime;
 
     public Integer getWeekNumber() {
         return day.getId().get(WeekFields.of(Locale.getDefault()).weekOfYear());
@@ -51,7 +51,7 @@ public class DutyAssigment implements Serializable {
         return weekend;
     }
 
-    public Integer getOverTime() {
+    public Duration getOverTime() {
         if (overTime == null) {
             overTime = calculateOverTime();
         }
@@ -61,7 +61,7 @@ public class DutyAssigment implements Serializable {
     Duration calculateOverTime() {
         Duration result = Duration.ZERO;
         for (Period dutyPeriod : dutyType.getPeriods()) {
-            for(Period dayPeriod: day.getPeriods()){
+            for (Period dayPeriod : day.getPeriods()) {
 
             }
         }

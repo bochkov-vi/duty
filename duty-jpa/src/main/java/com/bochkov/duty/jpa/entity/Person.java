@@ -1,10 +1,12 @@
 package com.bochkov.duty.jpa.entity;
 
+import com.bochkov.duty.jpa.entity.converter.DurationConverter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.Set;
 
@@ -45,6 +47,9 @@ public class Person extends AbstractEntity<String> implements Comparable<Person>
     @ManyToMany
     Set<DutyType> dutyTypes;
 
+    @Column(name = "road_to_home_time")
+    @Convert(converter = DurationConverter.class)
+    Duration roadToHomeTime;
 
     @Override
     public String toString() {

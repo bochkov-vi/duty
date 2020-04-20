@@ -1,6 +1,5 @@
 package com.bochkov.duty.jpa.entity;
 
-import com.google.common.collect.Range;
 import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,9 +7,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Getter
@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(name = "duty_type")
 @Entity
 @NoArgsConstructor
-public class DutyType extends AbstractEntity<Integer> {
+public class DutyType extends AbstractEntity<Integer> implements IPeriodContainer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "duty_type_seq")
@@ -78,14 +78,61 @@ public class DutyType extends AbstractEntity<Integer> {
         return id;
     }
 
-    public OvertimeData overtime(Day day) {
-        OvertimeData data = new OvertimeData();
-        Range<LocalDateTime> dayRange = day.range();
-        boolean weekend = day.isWeekend();
-        Set<LocalDateTime> set = Sets.newTreeSet();
-        for (Period p1 : periods) {
+    boolean isStartOnWeekend(Day day) {
+        return day.isWeekend();
+    }
 
+    boolean isEndOnWeekend(Day day) {
+        boolean result = false;
+        if (day.getNext() != null && day.getNext().isWeekend()) {
+            Period last = lastPeriod();
+            if (last != null) {
+                result = last.range(day.getId()).isConnected(day.getNext().range());
+            }
         }
+        return result;
+    }
+
+    public OvertimeData overtime(Day day, Person person) {
+        OvertimeData result = overtime(day);
+        if (isStartOnWeekend(day)) {
+            Optional.ofNullable(person.getRoadToHomeTime()).ifPresent(rt ->
+                    result.setWeekendTime(result.getWeekendTime().plus(rt)));
+        }
+        if (isEndOnWeekend(day)) {
+            Optional.ofNullable(person.getRoadToHomeTime()).ifPresent(rt ->
+                    result.setWeekendTime(result.getWeekendTime().plus(rt)));
+        }
+        return result;
+    }
+
+    public OvertimeData overtime(Day day) {
+        Duration overTime = Duration.ZERO;
+        Duration weekendTime = Duration.ZERO;
+        Duration restTime = Duration.ZERO;
+        Duration overTime1 = this.diffDuration(day.getId(), day.getDutyType(), day.getId());
+
+        if (day.isWeekend()) {
+            weekendTime = weekendTime.plus(overTime1);
+        } else {
+            overTime = overTime.plus(overTime1);
+        }
+
+        Duration overTime2 = this.diffDuration(day.getId(), day.getNext().getId(), day.getNext().getDutyType(), day.getNext().getId());
+        if (day.getNext().isWeekend()) {
+            weekendTime = weekendTime.plus(overTime2);
+        } else {
+            overTime = overTime.plus(overTime2);
+        }
+
+        Duration resTime1 = day.getDutyType().diffDuration(day.getId(), this, day.getId());
+        restTime = restTime.plus(resTime1);
+
+
+        Duration resTime2 = day.getNext().getDutyType().diffDuration(day.getNext().getId(), day.getId(), this, day.getNext().getId());
+        restTime = restTime.plus(resTime2);
+
+        OvertimeData data = new OvertimeData(overTime, weekendTime, restTime);
         return data;
     }
 
