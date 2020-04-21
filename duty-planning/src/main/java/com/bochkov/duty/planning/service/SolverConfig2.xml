@@ -7,7 +7,7 @@
     <entityClass>com.bochkov.duty.planning.DutyAssigment</entityClass>
 
     <scoreDirectorFactory>
-        <constraintProviderClass>com.bochkov.duty.planning.DutyConstraintProvider</constraintProviderClass>
+        <scoreDrl>com/bochkov/duty/planning/service/druls1.drl</scoreDrl>
     </scoreDirectorFactory>
 
     <constructionHeuristic>

@@ -36,7 +36,7 @@ rule "нет дежурств после ночного длящегося де�
         scoreHolder.addHardConstraintMatch(kcontext, -1);
 end
 
-rule "нельзя дежурства  на 1 человека в 1 день"
+rule "только 1 дежурство  на 1 человека в 1 день"
     when
         DutyAssigment(person!=null, $person:person,$id:id,$dayIndex:dayIndex)
         DutyAssigment(person==$person,$id<id,dayIndex==$dayIndex)
