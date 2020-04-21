@@ -1,6 +1,6 @@
 package com.bochkov.duty.planning;
 
-import com.bochkov.duty.planning.service.StatisticCollectors;
+import com.bochkov.duty.planning.service.VarianceCollector;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
 import org.optaplanner.core.api.score.stream.ConstraintFactory;
@@ -35,7 +35,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
         return factory.from(DutyAssigment.class)
                 .join(DutyAssigment.class,
                         equal(DutyAssigment::getPerson, DutyAssigment::getPerson),
-                        equal(DutyAssigment::getDayIndex, da -> da.getDayIndex() + 1),
+                        equal(DutyAssigment::getDayIndex, da -> da.getDayIndex() - 1),
                         filtering((da1, da2) -> da1.isEndOnNextDay()))
                 .penalize("нельзя дежурить после длинного дежурства", HardMediumSoftScore.ONE_HARD);
     }
@@ -68,7 +68,18 @@ public class DutyConstraintProvider implements ConstraintProvider {
                         greaterThanOrEqual((dpo, d1) -> d1.getDayIndex(), DutyAssigment::getDayIndex),
                         filtering((dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dpo.minInterval)
                 )
-                .penalize("нельзя дежурства за подряд", HardMediumSoftScore.ONE_MEDIUM, (dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex());
+                .penalize("нельзя дежурства за подряд", HardMediumSoftScore.ONE_MEDIUM, (dpo, d1, d2) -> dpo.minInterval - (d1.getDayIndex() - d2.getDayIndex()));
+    }
+
+    private Constraint moreIntervalBetweenDutiesForAllType(ConstraintFactory factory) {
+        return factory.from(DutyPlanOptions.class)
+                .join(DutyAssigment.class, filtering((dpo, d) -> Objects.nonNull(d.getPerson())))
+                .join(DutyAssigment.class,
+                        equal((dpo, d1) -> d1.getPerson(), DutyAssigment::getPerson),
+                        greaterThanOrEqual((dpo, d1) -> d1.getDayIndex(), DutyAssigment::getDayIndex),
+                        filtering((dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dpo.minInterval)
+                )
+                .penalize("больше интервалов между любыми дежурствами", HardMediumSoftScore.ONE_SOFT, (dpo, d1, d2) -> dpo.minInterval - (d1.getDayIndex() - d2.getDayIndex()));
     }
 
     private Constraint moreIntervalBetweenWeekendDuties(ConstraintFactory factory) {
@@ -78,19 +89,20 @@ public class DutyConstraintProvider implements ConstraintProvider {
                 )
                 .join(DutyAssigment.class,
                         equal((dpo, d1) -> d1.getPerson(), DutyAssigment::getPerson),
-                        equal((dpo, d1) -> d1.getDutyType(), DutyAssigment::getDutyType),
                         greaterThanOrEqual((dpo, d1) -> d1.getDayIndex(), DutyAssigment::getDayIndex),
                         filtering((dpo, d1, d2) -> d2.isWeekend() && d1.getDayIndex() - d2.getDayIndex() <= dpo.minInterval)
                 )
-                .penalize("нельзя дежурства в выходные за подряд", HardMediumSoftScore.ONE_MEDIUM, (dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex());
+                .penalize("нельзя дежурства в выходные за подряд", HardMediumSoftScore.ONE_SOFT, (dpo, d1, d2) -> dpo.minInterval - (d1.getDayIndex() - d2.getDayIndex()));
     }
 
     private Constraint fairDistributionDutyByCount(ConstraintFactory factory) {
         return factory.from(DutyAssigment.class)
+                .filter(da -> Objects.nonNull(da.getPerson()))
                 .groupBy(DutyAssigment::getPerson, count())
-                .groupBy(StatisticCollectors.varianceBi())
-                .penalize("распределение дежурств у людей", HardMediumSoftScore.ONE_SOFT,
-                        v -> (int) Math.round(v * 1000.0));
+                .groupBy(VarianceCollector.varianceBi())
+                /* .groupBy(StatisticCollectors.varianceBi())*/
+                .penalize("распределение дежурств между людьми", HardMediumSoftScore.ONE_SOFT,
+                        (a) -> (int) Math.floor(a * 1000.0));
 
     }
 

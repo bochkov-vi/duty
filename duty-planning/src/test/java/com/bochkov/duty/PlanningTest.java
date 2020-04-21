@@ -67,12 +67,12 @@ public class PlanningTest {
         int[] index = new int[]{0};
         dutyPlan.setDuties(
                 dayRepository.findOrCreate(start, end).stream()
-                .map(d -> DutyAssigment.of(d, dutyTypeRepository.findById(3).get()).setId(index[0]++)).collect(Collectors.toList()));
+                        .map(d -> DutyAssigment.of(d, dutyTypeRepository.findById(3).get()).setId(index[0]++)).collect(Collectors.toList()));
 
         dutyPlan.getDuties().addAll(dayRepository.findOrCreate(start, start.plusDays(9)).stream()
                 .map(d -> DutyAssigment.of(d, dutyTypeRepository.findById(4).get()).setId(index[0]++)).collect(Collectors.toList()));
 
-        dutyPlan.getDutyPlanOptions().setMinInterval((int)Math.ceil(dutyPlan.getPersons().size() / 2.0));
+        dutyPlan.getDutyPlanOptions().setMinInterval((int) Math.ceil(dutyPlan.getPersons().size() / 2.0));
         DutyPlan plan = planningService.solve(dutyPlan);
         System.out.println(plan);
         Map<Person, Long> map = plan.getDuties().stream().collect(Collectors.groupingBy(DutyAssigment::getPerson, Collectors.counting()));
@@ -84,7 +84,11 @@ public class PlanningTest {
 
         System.out.println("========== ВРЕМЯ ==========");
         System.out.println(Joiner.on("\n").withKeyValueSeparator("->").join(
-                Maps.transformValues(plan.getDuties().stream().collect(Collectors.groupingBy(DutyAssigment::getPerson, Collectors.summingLong(da -> da.getOverTime().toMinutes()))), Duration::ofMinutes)
+                Maps.transformValues(plan.getDuties().stream()
+                                .collect(Collectors.groupingBy(
+                                        DutyAssigment::getPerson,
+                                        Collectors.summingLong(da -> da.getOverTime().toMinutes()))),
+                        Duration::ofMinutes)
         ));
 
 //        System.out.println("====================================");
