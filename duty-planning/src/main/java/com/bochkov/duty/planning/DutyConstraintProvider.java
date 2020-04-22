@@ -1,6 +1,7 @@
 package com.bochkov.duty.planning;
 
 import com.bochkov.duty.jpa.entity.Person;
+import com.bochkov.duty.planning.service.DutyTypeInterval;
 import com.bochkov.duty.planning.service.LoadBalanceCollector;
 import com.bochkov.duty.planning.service.PersonDutyTypeLimit;
 import com.bochkov.duty.planning.service.VarianceConstraintCollector;
@@ -73,17 +74,18 @@ public class DutyConstraintProvider implements ConstraintProvider {
     }
 
     private Constraint moreIntervalBetweenStrongDuties(ConstraintFactory factory) {
-        return factory.from(DutyPlanOptions.class)
+        return factory.from(DutyTypeInterval.class)
                 .join(DutyAssigment.class,
+                        Joiners.equal(DutyTypeInterval::getDutyType, DutyAssigment::getDutyType),
                         filtering((dpo, d) -> Objects.nonNull(d.getPerson())),
                         filtering((dpo, d) -> d.isEndOnNextDay()))
                 .join(DutyAssigment.class,
                         equal((dpo, d1) -> d1.getPerson(), DutyAssigment::getPerson),
                         greaterThanOrEqual((dpo, d1) -> d1.getDayIndex(), DutyAssigment::getDayIndex),
                         filtering((dpo, d1, d2) -> d1.isEndOnNextDay() && d2.isEndOnNextDay()),
-                        filtering((dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dpo.minInterval)
+                        filtering((dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dpo.getMin())
                 )
-                .penalize("нельзя суточные дежурства надо пореже", HardMediumSoftScore.ONE_MEDIUM, (dpo, d1, d2) -> dpo.minInterval - (d1.getDayIndex() - d2.getDayIndex()));
+                .penalize("нельзя суточные дежурства надо пореже", HardMediumSoftScore.ONE_MEDIUM, (dpo, d1, d2) -> dpo.getMin() - (d1.getDayIndex() - d2.getDayIndex()));
     }
 
     private Constraint moreIntervalBetweenDuties(ConstraintFactory factory) {

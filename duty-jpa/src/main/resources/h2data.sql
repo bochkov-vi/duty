@@ -81,7 +81,12 @@ merge into PERSON_DUTY_TYPE (ID_PERSON, ID_DUTY_TYPE) key (ID_PERSON, ID_DUTY_TY
            ('demidov', 4),
            ('konstantinov', 4),
            ('pisarenko', 4),
-           ('skabina', 4);
+           ('skabina', 4),
+           ('konstantinov', 3),
+           ('pisarenko', 3),
+           ('skabina', 3);
+
+
 
 
 MERGE INTO PUBLIC.PERSON (ID_PERSON, FIRST_NAME, LAST_NAME, MIDDLE_NAME, POST, ID_PERSON_GROUP, ID_RANG,
