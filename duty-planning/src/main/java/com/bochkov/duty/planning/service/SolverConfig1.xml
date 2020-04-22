@@ -24,15 +24,15 @@
     <localSearch>
         <localSearchType>HILL_CLIMBING</localSearchType>
         <termination>
-            <secondsSpentLimit>100</secondsSpentLimit>
-            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+          <!--  <secondsSpentLimit>100</secondsSpentLimit>-->
+            <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
         </termination>
     </localSearch>
     <localSearch>
         <localSearchType>LATE_ACCEPTANCE</localSearchType>
         <termination>
             <secondsSpentLimit>100</secondsSpentLimit>
-            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+            <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
             <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
         </termination>
     </localSearch>
@@ -42,7 +42,7 @@
         <localSearchType>GREAT_DELUGE</localSearchType>
         <termination>
             <secondsSpentLimit>100</secondsSpentLimit>
-            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+            <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
             <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
         </termination>
     </localSearch>
@@ -51,7 +51,7 @@
         <localSearchType>VARIABLE_NEIGHBORHOOD_DESCENT</localSearchType>
         <termination>
             <secondsSpentLimit>100</secondsSpentLimit>
-            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+            <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
             <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
         </termination>
     </localSearch>
