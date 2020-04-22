@@ -27,9 +27,6 @@ import java.util.stream.Collectors;
 @Accessors(chain = true)
 public class DutyPlan implements Serializable {
 
-    @ProblemFactProperty
-    DutyPlanOptions dutyPlanOptions = new DutyPlanOptions();
-
     @ProblemFactCollectionProperty
     List<DutyType> dutyTypes;
 

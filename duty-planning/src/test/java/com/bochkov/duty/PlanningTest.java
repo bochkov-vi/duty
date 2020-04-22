@@ -99,8 +99,10 @@ public class PlanningTest {
 
         });
 
-        dutyPlan.getDutyPlanOptions().setMinInterval((int) Math.ceil(dutyPlan.getPersons().size() / 2.0));
-        DutyPlan plan = planningService.solve(dutyPlan);
+        DutyPlan plan1 = planningService.solve(dutyPlan);
+        DutyPlan plan = planningService.solve(plan1);
+
+
         System.out.println(plan);
         Map<Person, Long> map = plan.getDuties().stream().collect(Collectors.groupingBy(DutyAssigment::getPerson, Collectors.counting()));
         System.out.println(Joiner.on("\n").withKeyValueSeparator("->").join(map));
@@ -125,6 +127,7 @@ public class PlanningTest {
 
         System.out.println(plan.getScore());
         printData(plan);
+        printData(plan1);
     }
 
     @Test
