@@ -6,6 +6,7 @@ import com.bochkov.duty.jpa.repository.*;
 import com.bochkov.duty.planning.DutyAssigment;
 import com.bochkov.duty.planning.DutyPlan;
 import com.bochkov.duty.planning.PlanningSpringConfiguration;
+import com.bochkov.duty.planning.service.PersonDutyTypeLimit;
 import com.bochkov.duty.planning.service.PlanningService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -64,10 +65,20 @@ public class PlanningTest {
 
         DutyPlan dutyPlan = new DutyPlan();
 
+        dutyPlan.setPersonDutyTypeLimits(
+                Lists.newArrayList(
+                        personRepository.findById("nod1").map(PersonDutyTypeLimit::new).map(l -> l.setMax(1)).get()
+                        , personRepository.findById("nod2").map(PersonDutyTypeLimit::new).map(l -> l.setMax(1)).get()
+                        , personRepository.findById("nod3").map(PersonDutyTypeLimit::new).map(l -> l.setMax(1)).get()
+                        , personRepository.findById("nod4").map(PersonDutyTypeLimit::new).map(l -> l.setMax(1)).get()
+                        , personRepository.findById("nod5").map(PersonDutyTypeLimit::new).map(l -> l.setMax(1)).get()
+                )
+        );
+
         dayRepository.findOrCreate(start, start.plusDays(9)).forEach(day -> dayRepository.safeSave(day.setWeekend(true)));
         dutyPlan.setDays(dayRepository.findOrCreate(start, end));
 
-        dutyPlan.setPersons(personRepository.findAll().stream().limit(8).collect(Collectors.toList()));
+        dutyPlan.setPersons(personRepository.findAll().stream().limit(100).collect(Collectors.toList()));
         dutyPlan.setDutyTypes(dutyTypeRepository.findAllById(Lists.newArrayList(3)));
         int[] index = new int[]{0};
         dutyPlan.setDuties(
@@ -76,6 +87,10 @@ public class PlanningTest {
 
         dutyPlan.getDuties().addAll(dayRepository.findOrCreate(start, start.plusDays(9)).stream()
                 .map(d -> DutyAssigment.of(d, dutyTypeRepository.findById(4).get()).setId(index[0]++)).collect(Collectors.toList()));
+
+        dutyPlan.getDuties().addAll(dayRepository.findOrCreate(start, end).stream()
+                .map(d -> DutyAssigment.of(d, dutyTypeRepository.findById(5).get()).setId(index[0]++)).collect(Collectors.toList()));
+
 
         dutyPlan.getDutyPlanOptions().setMinInterval((int) Math.ceil(dutyPlan.getPersons().size() / 2.0));
         DutyPlan plan = planningService.solve(dutyPlan);

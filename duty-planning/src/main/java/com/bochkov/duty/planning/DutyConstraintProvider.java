@@ -2,17 +2,18 @@ package com.bochkov.duty.planning;
 
 import com.bochkov.duty.jpa.entity.Person;
 import com.bochkov.duty.planning.service.LoadBalanceCollector;
+import com.bochkov.duty.planning.service.PersonDutyTypeLimit;
 import com.bochkov.duty.planning.service.VarianceConstraintCollector;
 import org.apache.commons.lang3.tuple.Pair;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
 import org.optaplanner.core.api.score.stream.ConstraintFactory;
 import org.optaplanner.core.api.score.stream.ConstraintProvider;
+import org.optaplanner.core.api.score.stream.Joiners;
 
 import java.util.Objects;
 
-import static org.optaplanner.core.api.score.stream.ConstraintCollectors.count;
-import static org.optaplanner.core.api.score.stream.ConstraintCollectors.sum;
+import static org.optaplanner.core.api.score.stream.ConstraintCollectors.*;
 import static org.optaplanner.core.api.score.stream.Joiners.*;
 
 public class DutyConstraintProvider implements ConstraintProvider {
@@ -26,14 +27,16 @@ public class DutyConstraintProvider implements ConstraintProvider {
                 onlyOneDutyForPersonPerDay(factory),
                 moreIntervalBetweenDuties(factory),
                 moreIntervalBetweenWeekendDuties(factory)
-                ,moreIntervalBetweenStrongDuties(factory)
-//                , moreIntervalBetweenDutiesForAllType(factory)
-//                , fairDistributionDutyByCount(factory)
-//                , fairDistributionDutyByCountAndDutyType(factory)
-//                , fairDistributionDutyByCountAndDayType(factory)
-//                , fairDistributionDutyByCountAndWeek(factory)
-//                , fairDistributionDutyByCountAndWeekend(factory)
+                , moreIntervalBetweenStrongDuties(factory)
+                , moreIntervalBetweenDutiesForAllType(factory)
+                , fairDistributionDutyByCount(factory)
+                , fairDistributionDutyByCountAndDutyType(factory)
+                , fairDistributionDutyByCountAndDayType(factory)
+                , fairDistributionDutyByCountAndWeek(factory)
+                , fairDistributionDutyByCountAndWeekend(factory)
                 , fairDistributionDutyByTime(factory)
+                , personDutyTypeMaxCountLimit(factory)
+                , personAllDutyMaxCountLimit(factory)
         };
     }
 
@@ -191,8 +194,33 @@ public class DutyConstraintProvider implements ConstraintProvider {
                 .penalize("распределение дежурств у людей по длительности", HardMediumSoftScore.ONE_SOFT,
                         (v) -> {
 //                            System.out.printf("balance:%s\n", v);
-                            return (int) (Math.round(v)*1000);
+                            return (int) (Math.round(v) * 1000);
                         });
 
     }
+
+    private Constraint personDutyTypeMaxCountLimit(ConstraintFactory factory) {
+        return factory.from(PersonDutyTypeLimit.class)
+                .filter(lm -> Objects.nonNull(lm.getMax()))
+                .join(DutyAssigment.class,
+                        Joiners.equal(PersonDutyTypeLimit::getPerson, DutyAssigment::getPerson),
+                        Joiners.equal(PersonDutyTypeLimit::getDutyType, DutyAssigment::getDutyType)
+                )
+                .groupBy((lm, da) -> lm, countBi())
+                .filter((lm, cnt) -> lm.getMax() < cnt)
+                .penalize("максимальный предел количества определенного типа дежурств", HardMediumSoftScore.ONE_HARD, (lm, cnt) -> cnt - lm.getMax());
+    }
+
+    private Constraint personAllDutyMaxCountLimit(ConstraintFactory factory) {
+        return factory.from(PersonDutyTypeLimit.class)
+                .filter(lm -> Objects.nonNull(lm.getMax()))
+                .filter(lm -> Objects.isNull(lm.getDutyType()))
+                .join(DutyAssigment.class,
+                        Joiners.equal(PersonDutyTypeLimit::getPerson, DutyAssigment::getPerson)
+                )
+                .groupBy((lm, da) -> lm, countBi())
+                .filter((lm, cnt) -> lm.getMax() < cnt)
+                .penalize("максимальный предел количества дежурств", HardMediumSoftScore.ONE_HARD, (lm, cnt) -> cnt - lm.getMax());
+    }
+
 }

@@ -3,6 +3,7 @@ package com.bochkov.duty.planning;
 import com.bochkov.duty.jpa.entity.Day;
 import com.bochkov.duty.jpa.entity.DutyType;
 import com.bochkov.duty.jpa.entity.Person;
+import com.bochkov.duty.planning.service.PersonDutyTypeLimit;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -28,6 +29,9 @@ public class DutyPlan implements Serializable {
 
     @ProblemFactCollectionProperty
     List<DutyType> dutyTypes;
+
+    @ProblemFactCollectionProperty
+    List<PersonDutyTypeLimit> personDutyTypeLimits;
 
     @ProblemFactCollectionProperty
     List<Day> days;

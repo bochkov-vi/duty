@@ -10,27 +10,21 @@
         <constraintProviderClass>com.bochkov.duty.planning.DutyConstraintProvider</constraintProviderClass>
     </scoreDirectorFactory>
 
-    <constructionHeuristic>
-        <constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
-    </constructionHeuristic>
     <termination>
         <secondsSpentLimit>300</secondsSpentLimit>
         <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
     </termination>
-
     <environmentMode>FAST_ASSERT</environmentMode>
-    <localSearch>
 
-        <acceptor>
-            <lateAcceptanceSize>400</lateAcceptanceSize>
-            <entityTabuSize>5</entityTabuSize>
-        </acceptor>
-        <forager>
-            <acceptedCountLimit>1</acceptedCountLimit>
-        </forager>
+    <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+    </constructionHeuristic>
+
+    <localSearch>
+        <localSearchType>LATE_ACCEPTANCE</localSearchType>
         <termination>
             <secondsSpentLimit>100</secondsSpentLimit>
-<!--            <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>-->
+            <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
             <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
         </termination>
     </localSearch>
@@ -40,7 +34,7 @@
         <localSearchType>HILL_CLIMBING</localSearchType>
         <termination>
             <secondsSpentLimit>100</secondsSpentLimit>
-            <!--<unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>-->
+            <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
         </termination>
     </localSearch>
 
@@ -49,7 +43,7 @@
         <localSearchType>TABU_SEARCH</localSearchType>
         <termination>
             <secondsSpentLimit>100</secondsSpentLimit>
-           <!-- <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>-->
+            <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>
         </termination>
     </localSearch>
 

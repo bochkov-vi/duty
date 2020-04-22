@@ -14,7 +14,7 @@ public class LoadBalanceCollector {
                 new DefaultBiConstraintCollector<A, B, LoadBalanceData, Long>(
                         LoadBalanceData::new,
                         (loadBalanceData, argA, number) -> {
-                            System.out.printf("%s:%s\n", argA, number);
+//                            System.out.printf("%s:%s\n", argA, number);
                             accumulate(loadBalanceData, number);
                             return (Runnable) () -> {
                                 reverse(loadBalanceData, number);
