@@ -14,7 +14,7 @@
         <constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
     </constructionHeuristic>
     <termination>
-        <secondsSpentLimit>60</secondsSpentLimit>
+        <secondsSpentLimit>300</secondsSpentLimit>
         <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
     </termination>
 
@@ -29,7 +29,8 @@
             <acceptedCountLimit>1</acceptedCountLimit>
         </forager>
         <termination>
-            <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>
+            <secondsSpentLimit>100</secondsSpentLimit>
+<!--            <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>-->
             <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
         </termination>
     </localSearch>
@@ -38,7 +39,8 @@
     <localSearch>
         <localSearchType>HILL_CLIMBING</localSearchType>
         <termination>
-            <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>
+            <secondsSpentLimit>100</secondsSpentLimit>
+            <!--<unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>-->
         </termination>
     </localSearch>
 
@@ -46,7 +48,8 @@
     <localSearch>
         <localSearchType>TABU_SEARCH</localSearchType>
         <termination>
-            <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>
+            <secondsSpentLimit>100</secondsSpentLimit>
+           <!-- <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>-->
         </termination>
     </localSearch>
 

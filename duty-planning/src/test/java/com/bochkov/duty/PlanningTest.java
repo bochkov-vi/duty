@@ -8,9 +8,13 @@ import com.bochkov.duty.planning.DutyPlan;
 import com.bochkov.duty.planning.PlanningSpringConfiguration;
 import com.bochkov.duty.planning.service.PlanningService;
 import com.google.common.base.Joiner;
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Table;
+import com.google.common.collect.Tables;
+import com.google.common.collect.TreeBasedTable;
 import dnl.utils.text.table.GuavaTableModel;
 import dnl.utils.text.table.TextTable;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -83,12 +88,14 @@ public class PlanningTest {
         ));
 
         System.out.println("========== ВРЕМЯ ==========");
-        System.out.println(Joiner.on("\n").withKeyValueSeparator("->").join(
-                Maps.transformValues(plan.getDuties().stream()
-                                .collect(Collectors.groupingBy(
-                                        DutyAssigment::getPerson,
-                                        Collectors.summingLong(da -> da.getOverTime().toMinutes()))),
-                        Duration::ofMinutes)
+        System.out.println(Joiner.on("\n").join(
+                plan.getDuties().stream().collect(
+                        Collectors.groupingBy(
+                                DutyAssigment::getPerson,
+                                Collectors.summingLong(da -> da.getOverTime().toMinutes()))
+                ).entrySet().stream().map(e -> Pair.of(e.getKey(), Duration.ofMinutes(e.getValue())))
+                        .sorted(Comparator.comparing(Pair::getValue))
+                        .collect(Collectors.toList())
         ));
 
 //        System.out.println("====================================");

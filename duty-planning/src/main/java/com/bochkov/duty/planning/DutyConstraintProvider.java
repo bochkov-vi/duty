@@ -1,6 +1,9 @@
 package com.bochkov.duty.planning;
 
-import com.bochkov.duty.planning.service.VarianceCollector;
+import com.bochkov.duty.jpa.entity.Person;
+import com.bochkov.duty.planning.service.LoadBalanceCollector;
+import com.bochkov.duty.planning.service.VarianceConstraintCollector;
+import org.apache.commons.lang3.tuple.Pair;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
 import org.optaplanner.core.api.score.stream.ConstraintFactory;
@@ -9,6 +12,7 @@ import org.optaplanner.core.api.score.stream.ConstraintProvider;
 import java.util.Objects;
 
 import static org.optaplanner.core.api.score.stream.ConstraintCollectors.count;
+import static org.optaplanner.core.api.score.stream.ConstraintCollectors.sum;
 import static org.optaplanner.core.api.score.stream.Joiners.*;
 
 public class DutyConstraintProvider implements ConstraintProvider {
@@ -21,8 +25,15 @@ public class DutyConstraintProvider implements ConstraintProvider {
                 personDutyTypeOnly(factory),
                 onlyOneDutyForPersonPerDay(factory),
                 moreIntervalBetweenDuties(factory),
-                moreIntervalBetweenWeekendDuties(factory),
-                fairDistributionDutyByCount(factory)
+                moreIntervalBetweenWeekendDuties(factory)
+                ,moreIntervalBetweenStrongDuties(factory)
+//                , moreIntervalBetweenDutiesForAllType(factory)
+//                , fairDistributionDutyByCount(factory)
+//                , fairDistributionDutyByCountAndDutyType(factory)
+//                , fairDistributionDutyByCountAndDayType(factory)
+//                , fairDistributionDutyByCountAndWeek(factory)
+//                , fairDistributionDutyByCountAndWeekend(factory)
+                , fairDistributionDutyByTime(factory)
         };
     }
 
@@ -58,6 +69,19 @@ public class DutyConstraintProvider implements ConstraintProvider {
                 .penalize("только 1 дежурство  на 1 человека в 1 день", HardMediumSoftScore.ONE_HARD);
     }
 
+    private Constraint moreIntervalBetweenStrongDuties(ConstraintFactory factory) {
+        return factory.from(DutyPlanOptions.class)
+                .join(DutyAssigment.class,
+                        filtering((dpo, d) -> Objects.nonNull(d.getPerson())),
+                        filtering((dpo, d) -> d.isEndOnNextDay()))
+                .join(DutyAssigment.class,
+                        equal((dpo, d1) -> d1.getPerson(), DutyAssigment::getPerson),
+                        greaterThanOrEqual((dpo, d1) -> d1.getDayIndex(), DutyAssigment::getDayIndex),
+                        filtering((dpo, d1, d2) -> d1.isEndOnNextDay() && d2.isEndOnNextDay()),
+                        filtering((dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dpo.minInterval)
+                )
+                .penalize("нельзя суточные дежурства надо пореже", HardMediumSoftScore.ONE_MEDIUM, (dpo, d1, d2) -> dpo.minInterval - (d1.getDayIndex() - d2.getDayIndex()));
+    }
 
     private Constraint moreIntervalBetweenDuties(ConstraintFactory factory) {
         return factory.from(DutyPlanOptions.class)
@@ -68,7 +92,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
                         greaterThanOrEqual((dpo, d1) -> d1.getDayIndex(), DutyAssigment::getDayIndex),
                         filtering((dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dpo.minInterval)
                 )
-                .penalize("нельзя дежурства за подряд", HardMediumSoftScore.ONE_MEDIUM, (dpo, d1, d2) -> dpo.minInterval - (d1.getDayIndex() - d2.getDayIndex()));
+                .penalize("надо больше промежутки между дежурствами", HardMediumSoftScore.ONE_SOFT, (dpo, d1, d2) -> dpo.minInterval - (d1.getDayIndex() - d2.getDayIndex()));
     }
 
     private Constraint moreIntervalBetweenDutiesForAllType(ConstraintFactory factory) {
@@ -89,6 +113,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
                 )
                 .join(DutyAssigment.class,
                         equal((dpo, d1) -> d1.getPerson(), DutyAssigment::getPerson),
+//                        equal((dpo, d1) -> d1.getDutyType(), DutyAssigment::getDutyType),
                         greaterThanOrEqual((dpo, d1) -> d1.getDayIndex(), DutyAssigment::getDayIndex),
                         filtering((dpo, d1, d2) -> d2.isWeekend() && d1.getDayIndex() - d2.getDayIndex() <= dpo.minInterval)
                 )
@@ -99,11 +124,75 @@ public class DutyConstraintProvider implements ConstraintProvider {
         return factory.from(DutyAssigment.class)
                 .filter(da -> Objects.nonNull(da.getPerson()))
                 .groupBy(DutyAssigment::getPerson, count())
-                .groupBy(VarianceCollector.varianceBi())
+                .groupBy(LoadBalanceCollector.loadBalanceBi())
                 /* .groupBy(StatisticCollectors.varianceBi())*/
                 .penalize("распределение дежурств между людьми", HardMediumSoftScore.ONE_SOFT,
-                        (a) -> (int) Math.floor(a * 1000.0));
+                        Long::intValue);
 
     }
 
+    private Constraint fairDistributionDutyByCountAndDutyType(ConstraintFactory factory) {
+        return factory.from(DutyAssigment.class)
+                .filter(da -> Objects.nonNull(da.getPerson()))
+                .groupBy(da -> Pair.of(da.getPerson(), da.getDutyType()), count())
+                .groupBy(LoadBalanceCollector.loadBalanceBi())
+                /* .groupBy(StatisticCollectors.varianceBi())*/
+                .penalize("распределение дежурств у людей по видам дежурств", HardMediumSoftScore.ONE_SOFT,
+                        Long::intValue);
+
+    }
+
+    private Constraint fairDistributionDutyByCountAndDayType(ConstraintFactory factory) {
+        return factory.from(DutyAssigment.class)
+                .filter(da -> Objects.nonNull(da.getPerson()))
+                .groupBy(da -> Pair.of(da.getPerson(), da.getDay().getDayOfWeek()), count())
+                .groupBy(LoadBalanceCollector.loadBalanceBi())
+                /* .groupBy(StatisticCollectors.varianceBi())*/
+                .penalize("распределение дежурств у людей по видам дней", HardMediumSoftScore.ONE_SOFT,
+                        Long::intValue);
+
+    }
+
+    private Constraint fairDistributionDutyByCountAndWeek(ConstraintFactory factory) {
+        return factory.from(DutyAssigment.class)
+                .filter(da -> Objects.nonNull(da.getPerson()))
+                .groupBy(da -> Pair.of(da.getPerson(), da.getWeekIndex()), count())
+                .groupBy(LoadBalanceCollector.loadBalanceBi())
+                /* .groupBy(StatisticCollectors.varianceBi())*/
+                .penalize("распределение дежурств у людей по неделям", HardMediumSoftScore.ONE_SOFT,
+                        Long::intValue);
+
+    }
+
+    private Constraint fairDistributionDutyByCountAndWeekend(ConstraintFactory factory) {
+        return factory.from(DutyAssigment.class)
+                .filter(da -> Objects.nonNull(da.getPerson()) && da.isWeekend())
+                .groupBy(da -> da.getPerson(), count())
+                .groupBy(LoadBalanceCollector.loadBalanceBi())
+                /* .groupBy(StatisticCollectors.varianceBi())*/
+                .penalize("распределение дежурств у людей по выходным", HardMediumSoftScore.ONE_SOFT,
+                        Long::intValue);
+
+    }
+
+    private Constraint fairDistributionDutyByTime(ConstraintFactory factory) {
+        return factory.from(Person.class)
+                .join(factory.fromUnfiltered(DutyAssigment.class))
+                //.filter(da -> Objects.nonNull(da.getPerson()))
+                .groupBy((p, da) -> p, sum((p, da) -> {
+                    int v = 0;
+                    if (Objects.equals(p, da.getPerson())) {
+                        v = (int) da.getOverTime().toHours();
+                    }
+                    // System.out.printf("%s:%s\n", p, v);
+                    return v;
+                }))
+                .groupBy(VarianceConstraintCollector.varianceBi())
+                .penalize("распределение дежурств у людей по длительности", HardMediumSoftScore.ONE_SOFT,
+                        (v) -> {
+//                            System.out.printf("balance:%s\n", v);
+                            return (int) (Math.round(v)*1000);
+                        });
+
+    }
 }
