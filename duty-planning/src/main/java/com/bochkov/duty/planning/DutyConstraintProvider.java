@@ -118,10 +118,12 @@ public class DutyConstraintProvider implements ConstraintProvider {
                         equal((dpo, d1) -> d1.getPerson(), DutyAssigment::getPerson),
 //                        equal((dpo, d1) -> d1.getDutyType(), DutyAssigment::getDutyType),
                         greaterThanOrEqual((dpo, d1) -> d1.getDayIndex(), DutyAssigment::getDayIndex),
-                        filtering((dpo, d1, d2) -> d2.isWeekend() && d1.getDayIndex() - d2.getDayIndex() <= dpo.minInterval)
+                        filtering((dpo, d1, d2) -> d2.isWeekend()),
+                        filtering((dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dpo.minInterval)
                 )
                 .penalize("нельзя дежурства в выходные за подряд", HardMediumSoftScore.ONE_SOFT, (dpo, d1, d2) -> dpo.minInterval - (d1.getDayIndex() - d2.getDayIndex()));
     }
+
 
     private Constraint fairDistributionDutyByCount(ConstraintFactory factory) {
         return factory.from(DutyAssigment.class)

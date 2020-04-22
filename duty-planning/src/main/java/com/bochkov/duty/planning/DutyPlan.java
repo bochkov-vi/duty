@@ -36,7 +36,7 @@ public class DutyPlan implements Serializable {
     @ProblemFactCollectionProperty
     List<Day> days;
 
-    @ValueRangeProvider(id = "persons")
+
     @ProblemFactCollectionProperty
     List<Person> persons;
 

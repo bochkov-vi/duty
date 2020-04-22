@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
+import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.temporal.WeekFields;
+import java.util.List;
 import java.util.Locale;
 
 @PlanningEntity
@@ -44,6 +46,9 @@ public class DutyAssigment implements Serializable {
 
     private Duration overTime;
 
+    @ValueRangeProvider(id = "persons")
+    private List<Person> personList;
+
     private boolean endOnNextDay;
 
     public static DutyAssigment of(Day day, DutyType dutyType) {
@@ -58,5 +63,6 @@ public class DutyAssigment implements Serializable {
         result.endOnNextDay = dutyType.isEndOnNextDay(day);
         return result;
     }
+
 
 }

@@ -17,27 +17,45 @@
     <environmentMode>FAST_ASSERT</environmentMode>
 
     <constructionHeuristic>
-        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+        <constructionHeuristicType>CHEAPEST_INSERTION</constructionHeuristicType>
     </constructionHeuristic>
-
-    <localSearch>
-        <localSearchType>LATE_ACCEPTANCE</localSearchType>
-        <termination>
-            <secondsSpentLimit>100</secondsSpentLimit>
-            <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
-            <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
-        </termination>
-    </localSearch>
 
 
     <localSearch>
         <localSearchType>HILL_CLIMBING</localSearchType>
         <termination>
             <secondsSpentLimit>100</secondsSpentLimit>
-            <unimprovedSecondsSpentLimit>5</unimprovedSecondsSpentLimit>
+            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+        </termination>
+    </localSearch>
+    <localSearch>
+        <localSearchType>LATE_ACCEPTANCE</localSearchType>
+        <termination>
+            <secondsSpentLimit>100</secondsSpentLimit>
+            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+            <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
         </termination>
     </localSearch>
 
+
+    <localSearch>
+        <localSearchType>GREAT_DELUGE</localSearchType>
+        <termination>
+            <secondsSpentLimit>100</secondsSpentLimit>
+            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+            <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
+        </termination>
+    </localSearch>
+
+    <localSearch>
+        <localSearchType>VARIABLE_NEIGHBORHOOD_DESCENT</localSearchType>
+        <termination>
+            <secondsSpentLimit>100</secondsSpentLimit>
+            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+            <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
+        </termination>
+    </localSearch>
+<!--
 
     <localSearch>
         <localSearchType>TABU_SEARCH</localSearchType>
@@ -46,6 +64,7 @@
             <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>
         </termination>
     </localSearch>
+-->
 
 
 </solver>
