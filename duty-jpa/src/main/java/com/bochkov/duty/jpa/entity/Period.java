@@ -15,9 +15,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -68,6 +65,11 @@ public class Period implements Serializable, Comparable<Period> {
         LocalDateTime d1 = date.atTime(start);
         LocalDateTime d2 = d1.plus(duration);
         return Range.closed(d1, d2);
+    }
+
+    @Override
+    public Period clone() {
+        return new Period(start, duration);
     }
 
     @Override

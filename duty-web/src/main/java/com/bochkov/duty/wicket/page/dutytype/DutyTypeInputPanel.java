@@ -1,10 +1,12 @@
 package com.bochkov.duty.wicket.page.dutytype;
 
 import com.bochkov.duty.jpa.entity.DutyType;
+import com.bochkov.duty.wicket.component.PeriodCollectionInput;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 
 import java.time.LocalDateTime;
 
@@ -37,6 +39,6 @@ public class DutyTypeInputPanel extends GenericPanel<DutyType> {
         add(faIconTextField);
         add(htmlClassTextField);
         add(plainTextTextField);
-
+        add(new PeriodCollectionInput("periods", new PropertyModel<>(getModel(), "periods")));
     }
 }
