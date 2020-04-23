@@ -49,17 +49,19 @@ public class FaIcon extends Label {
     }
 
     @Override
-    public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag) {
-    }
-
-    @Override
     protected void onConfigure() {
         super.onConfigure();
         if (hideOnModelEmpty) {
-            if (Strings.isNullOrEmpty(getDefaultModelObjectAsString()))
+            if (Strings.isNullOrEmpty(getDefaultModelObjectAsString())) {
                 setVisible(false);
-            else
+            } else {
                 setVisible(true);
+            }
         }
+    }
+
+    @Override
+    public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag) {
+        replaceComponentTagBody(markupStream, openTag, null);
     }
 }

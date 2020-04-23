@@ -24,6 +24,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,6 +36,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializable> extends BootstrapPage<T> {
+
     static String MODAL_CONTENT_ID = "modal-content";
 
     @Accessors(chain = true)
@@ -72,7 +74,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         super();
         setModel(PersistableModel.of(id -> {
             return getRepository().findById(id);
-        }));
+        }, this::newInstance));
     }
 
     public EntityPage(T entity) {
@@ -111,12 +113,13 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
 
         formInputFragment = new Fragment(MODAL_CONTENT_ID, "form-input-fragment", getPage());
         formInputFragment.add(editForm = saveForm("form-save"));
+
         formDeleteFragment = new Fragment(MODAL_CONTENT_ID, "form-delete-fragment", getPage());
         formDeleteFragment.add(deleteForm("form-delete"));
         add(new AjaxLink<Void>("btn-new-row") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                editForm.setModelObject(newInstance());
+                EntityPage.this.setModelObject(null);
                 showModal(target);
                 setModalContent(formInputFragment);
             }
@@ -224,7 +227,8 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
                     hideModal(target);
                     target.add(table);
                 } catch (Exception e) {
-                    error(e.getLocalizedMessage());
+                    //error(e.getLocalizedMessage());
+                    error(((DataIntegrityViolationException) e).getRootCause().getMessage());
                 }
                 target.add(feedback);
             }

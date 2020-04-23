@@ -68,10 +68,10 @@ public class PlanningTest {
         dutyPlan.setPersonDutyTypeLimits(
                 Lists.newArrayList(
                         personRepository.findById("nod1").map(PersonDutyTypeLimit::new).map(l -> l.setMax(1)).get()
-                        , personRepository.findById("nod2").map(PersonDutyTypeLimit::new).map(l -> l.setMax(1)).get()
-                        , personRepository.findById("nod3").map(PersonDutyTypeLimit::new).map(l -> l.setMax(1)).get()
-                        , personRepository.findById("nod4").map(PersonDutyTypeLimit::new).map(l -> l.setMax(1)).get()
-                        , personRepository.findById("nod5").map(PersonDutyTypeLimit::new).map(l -> l.setMax(1)).get()
+                        , personRepository.findById("nod2").map(PersonDutyTypeLimit::new).map(l -> l.setMax(2)).get()
+                        , personRepository.findById("nod3").map(PersonDutyTypeLimit::new).map(l -> l.setMax(3)).get()
+                        , personRepository.findById("nod4").map(PersonDutyTypeLimit::new).map(l -> l.setMax(4)).get()
+                        , personRepository.findById("nod5").map(PersonDutyTypeLimit::new).map(l -> l.setMax(5)).get()
                 )
         );
 
@@ -99,8 +99,7 @@ public class PlanningTest {
 
         });
 
-        DutyPlan plan1 = planningService.solve(dutyPlan);
-        DutyPlan plan = planningService.solve(plan1);
+        DutyPlan plan = planningService.solve(dutyPlan);
 
 
         System.out.println(plan);
@@ -127,7 +126,6 @@ public class PlanningTest {
 
         System.out.println(plan.getScore());
         printData(plan);
-        printData(plan1);
     }
 
     @Test

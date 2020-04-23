@@ -34,6 +34,7 @@
             <artifactId>wicket-spring</artifactId>
             <version>${wicket.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-extensions</artifactId>
@@ -57,7 +58,7 @@
         </dependency>
         <dependency>
             <groupId>com.bochkov</groupId>
-            <artifactId>duty-jpa</artifactId>
+            <artifactId>duty-planning</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

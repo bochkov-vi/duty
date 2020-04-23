@@ -1,47 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
-<body>
-<wicket:panel>
-
-    <form wicket:id="form">
-        <div class="form-group">
-            <label wicket:for="dutyType.id">
-                <wicket:label>dutyType.id</wicket:label>
-                :</label>
-            <input type="text" class="form-control" wicket:id="dutyType.id">
-        </div>
-        <div class="form-group">
-            <label wicket:for="dutyType.name">
-                <wicket:label>dutyType.name</wicket:label>
-                :</label>
-            <input type="text" class="form-control" wicket:id="dutyType.name">
-        </div>
-        <div class="form-group">
-            <label wicket:for="dutyType.createdDate">
-                <wicket:label>dutyType.createdDate</wicket:label>
-                :</label>
-            <input type="text" class="form-control" wicket:id="dutyType.createdDate">
-        </div>
-        <div class="form-group">
-            <label wicket:for="dutyType.uiOptions.htmlClass">
-                <wicket:label>dutyType.uiOptions.htmlClass</wicket:label>
-                :</label>
-            <input type="text" class="form-control" wicket:id="dutyType.uiOptions.htmlClass">
-        </div>
-        <div class="form-group">
-            <label wicket:for="dutyType.uiOptions.plainText">
-                <wicket:label>dutyType.uiOptions.plainText</wicket:label>
-                :</label>
-            <input type="text" class="form-control" wicket:id="dutyType.uiOptions.plainText">
-        </div>
-        <div class="form-group">
-            <label wicket:for="dutyType.uiOptions.faIcon">
-                <wicket:label>dutyType.uiOptions.faIcon</wicket:label>
-                :</label>
-            <input type="text" class="form-control" wicket:id="dutyType.uiOptions.faIcon">
-        </div>
-    </form>
+<!--suppress HtmlFormInputWithoutLabel -->
+<wicket:panel xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+    <div class="form-group">
+        <label wicket:for="id">
+            <wicket:message key="dutyType.id"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="id">
+    </div>
+    <div class="form-group">
+        <label wicket:for="name">
+            <wicket:message key="dutyType.name"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="name">
+    </div>
+    <div class="form-group">
+        <label wicket:for="createdDate">
+            <wicket:message key="dutyType.createdDate"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="createdDate">
+    </div>
+    <div class="form-group">
+        <label wicket:for="uiOptions.htmlClass">
+            <wicket:message key="dutyType.uiOptions.htmlClass"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="uiOptions.htmlClass">
+    </div>
+    <div class="form-group">
+        <label wicket:for="uiOptions.plainText">
+            <wicket:message key="dutyType.uiOptions.plainText"/>
+            :</label>
+        <input class="form-control" size="3" maxlength="3" type="text" wicket:id="uiOptions.plainText">
+    </div>
+    <div class="form-group">
+        <label wicket:for="uiOptions.faIcon">
+            <wicket:message key="dutyType.uiOptions.faIcon"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="uiOptions.faIcon">
+    </div>
 
 </wicket:panel>
-</body>
-</html>

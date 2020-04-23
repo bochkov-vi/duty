@@ -65,7 +65,7 @@ public class DutyJpaConfig {
         jpaProperties.put("hibernate.enable_lazy_load_no_trans", "true");
         jpaProperties.put("hibernate.format_sql", "false");
         jpaProperties.put("hibernate.hbm2ddl.auto", "none");
-        jpaVendorAdapter.setShowSql(false);
+        jpaVendorAdapter.setShowSql(true);
         entityManagerFactory.setJpaPropertyMap(jpaProperties);
         return entityManagerFactory;
     }

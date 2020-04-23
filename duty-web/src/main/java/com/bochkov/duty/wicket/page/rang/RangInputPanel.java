@@ -16,9 +16,9 @@ public class RangInputPanel extends GenericPanel<Rang> {
     protected void onInitialize() {
         super.onInitialize();
         //((CompoundPropertyModel<Rang>)getModel()).bind();
-        add(new TextField<>("rang.id", LambdaModel.of(getModel(), Rang::getId, Rang::setId)).setEnabled(false));
-        add(new RequiredTextField<>("rang.name", LambdaModel.of(getModel(), Rang::getName, Rang::setName)));
-        add(new RequiredTextField<>("rang.fullName", LambdaModel.of(getModel(), Rang::getFullName, Rang::setFullName)));
-        add(new TextField<>("rang.createdDate", LambdaModel.of(getModel(), Rang::getCreatedDate, Rang::setCreatedDate)).setEnabled(false));
+        add(new TextField<>("id").setEnabled(false));
+        add(new RequiredTextField<>("name"));
+        add(new RequiredTextField<>("fullName"));
+        add(new TextField<>("createdDate").setEnabled(false));
     }
 }
