@@ -3,17 +3,20 @@
 <body>
 <wicket:panel>
     <div wicket:id="container">
-        <form  wicket:id="form">
-            <div class="input-group">
-
-                <input class="form-control" wicket:id="start">
-
-                <input wicket:id="duration" class="form-control">
-                <div class="input-group-append">
-                    <button wicket:id="submit" type="submit" class="btn btn-light"><span class="fa fa-plus"></span>
-                    </button>
+        <form wicket:id="form">
+            <div wicket:id="start-container" class="input-group">
+                <input class="form-control datetimepicker-input" data-target="#datetimepicker3" wicket:id="start">
+                <div wicket:id="start-button" class="input-group-append" data-target="#timepicker3" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
                 </div>
             </div>
+            <div>
+                <input wicket:id="duration" class="form-control">
+            </div>
+
+            <button wicket:id="submit" type="submit" class="btn btn-light"><span class="fa fa-plus"></span>
+            </button>
+
         </form>
         <div class="row" wicket:id="row">
             <div wicket:id="start" class="col-5"></div>
