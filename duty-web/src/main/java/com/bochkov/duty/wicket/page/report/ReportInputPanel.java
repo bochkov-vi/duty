@@ -1,12 +1,12 @@
 package com.bochkov.duty.wicket.page.report;
 
+import com.bochkov.bootstrap.tempusdominus.LocalDateField;
 import com.bochkov.duty.jpa.entity.DutyType;
 import com.bochkov.duty.jpa.entity.Person;
 import com.bochkov.duty.jpa.entity.Report;
 import com.bochkov.duty.jpa.repository.DutyTypeRepository;
 import com.bochkov.duty.jpa.repository.PersonRepository;
 import com.bochkov.duty.jpa.repository.ReportRepository;
-import com.bochkov.duty.wicket.component.date.BootstrapDatePickerBehavior;
 import com.bochkov.duty.wicket.page.dutytype.DutyTypeFieldSelect;
 import com.bochkov.duty.wicket.page.person.PersonFieldSelect;
 import com.bochkov.wicket.data.model.PersistableModel;
@@ -17,7 +17,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTextField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
@@ -108,10 +107,9 @@ public class ReportInputPanel extends GenericPanel<Report> {
         form.add(dateTitleField);
         dateTitleField.setOutputMarkupId(true);
 
-        dateField = new LocalDateTextField("report.date", Model.of(), getString("datePattern"));
+        dateField = new LocalDateField("report.date", Model.of(), getString("datePattern"));
         dateField.setRequired(true);
         dateField.add(
-                new BootstrapDatePickerBehavior().setLanguage("ru").setTodayBtn(true).setAutoclose(true).setClearBtn(true),
                 new AjaxFormComponentUpdatingBehavior("change") {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
@@ -122,19 +120,15 @@ public class ReportInputPanel extends GenericPanel<Report> {
         );
         form.add(dateField);
 
-        dateFromField = new LocalDateTextField("report.dateFrom", Model.of(), getString("datePattern"));
+        dateFromField = new LocalDateField("report.dateFrom", Model.of(), getString("datePattern"));
         dateFromField.setRequired(true);
-        dateFromField.add(
-                new BootstrapDatePickerBehavior().setLanguage("ru").setTodayBtn(true).setAutoclose(true).setClearBtn(true)
-        );
+
         form.add(dateFromField);
 
 
-        dateToField = new LocalDateTextField("report.dateTo", Model.of(), getString("datePattern"));
+        dateToField = new LocalDateField("report.dateTo", Model.of(), getString("datePattern"));
         dateToField.setRequired(true);
-        dateToField.add(
-                new BootstrapDatePickerBehavior().setLanguage("ru").setTodayBtn(true).setAutoclose(true).setClearBtn(true)
-        );
+
         form.add(dateToField);
 
         WebMarkupContainer personsContainer = new WebMarkupContainer("persons");

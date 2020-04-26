@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 
-import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Objects;
@@ -58,6 +57,7 @@ public class WicketDutyApplication extends WebApplication {
         getComponentInstantiationListeners().add(new SpringComponentInjector(this,
                 WebApplicationContextUtils.getRequiredWebApplicationContext(
                         getServletContext())));
+        getMarkupSettings().setStripWicketTags(true);
         //getRequestCycleListeners().add(new OpenSessionInViewRequestCycleListener(this));
     }
 

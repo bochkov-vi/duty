@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+
+<form wicket:id="form">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <input wicket:id="input" type="text">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <input wicket:id="duration" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <input wicket:id="duration2" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <input type="text" class="form-control datetimepicker-input" id="datetimepicker5"
+                       data-toggle="datetimepicker" data-target="#datetimepicker5"/>
+            </div>
+            <script type="text/javascript">
+                $(function () {
+                    $('#datetimepicker5').datetimepicker();
+                });
+            </script>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker3"/>
+                        <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $(function () {
+                    $('#datetimepicker3').datetimepicker({
+                        format: 'LT'
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">submit</button>
+</form>
+
+</body>
+</html>

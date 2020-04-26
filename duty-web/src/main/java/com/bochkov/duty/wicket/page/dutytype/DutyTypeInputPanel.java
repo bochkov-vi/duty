@@ -1,7 +1,7 @@
 package com.bochkov.duty.wicket.page.dutytype;
 
 import com.bochkov.duty.jpa.entity.DutyType;
-import com.bochkov.duty.wicket.component.PeriodCollectionInput;
+import com.bochkov.duty.wicket.component.date.period.PeriodCollectionInput;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.GenericPanel;
