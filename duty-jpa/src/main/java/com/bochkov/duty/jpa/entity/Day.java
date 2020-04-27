@@ -15,14 +15,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
 @Getter
 @Setter
 @Accessors(chain = true)
-@Table(name = "day")
+@Table(name = "DAY")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,40 +33,33 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
     final static Comparator<Day> COMPARATOR = Comparator.nullsLast(Comparator.comparing(Day::getId));
 
     @Id
-    @Column(name = "date")
+    @Column(name = "DATE")
     protected LocalDate id;
 
-    @Column(name = "weekend")
+    @Column(name = "WEEKEND")
     protected boolean weekend = false;
 
     @OneToOne
-    @JoinColumn(name = "next", referencedColumnName = "date", foreignKey = @ForeignKey(name = "NEXT_DAY_FK"))
+    @JoinColumn(name = "NEXT", referencedColumnName = "DATE", foreignKey = @ForeignKey(name = "NEXT_DAY_FK"))
     protected Day next;
 
     @OneToOne(mappedBy = "next")
     protected Day prev;
 
-    @Column(name = "days_to_weekend")
+    @Column(name = "DAYS_TO_WEEKEND")
     protected Integer daysToWeekend;
 
-    @Column(name = "days_from_weekend")
+    @Column(name = "DAYS_FROM_WEEKEND")
     protected Integer daysFromWeekend;
 
     @ElementCollection
-    @CollectionTable(name = "day_period", joinColumns = @JoinColumn(name = "date", referencedColumnName = "date"), foreignKey = @ForeignKey(name = "day_time_usage_fk", foreignKeyDefinition = "foreign key (DATE) references DAY (DATE)"))
+    @CollectionTable(name = "DAY_PERIOD", joinColumns = @JoinColumn(name = "DATE", referencedColumnName = "DATE"), foreignKey = @ForeignKey(name = "DAY_TIME_USAGE_FK", foreignKeyDefinition = "foreign key (DATE) references DAY (DATE)"))
     protected Set<Period> periods;
 
     @ManyToOne
-    @JoinColumn(name = "id_duty_type_default", referencedColumnName = "id_duty_type")
-    DutyType dutyType;
+    @JoinColumn(name = "ID_SHIFT_TYPE_DEFAULT", referencedColumnName = "ID_SHIFT_TYPE")
+    ShiftType shiftType;
 
-    @Column(name = "no_use_in_autoplanning")
-    boolean noUseInAutoPlaning;
-
-    @ElementCollection
-    @CollectionTable(name = "DAY_DUTY_TYPE_COUNT_PER_PAGE",
-            joinColumns = @JoinColumn(name = "date", referencedColumnName = "date"))
-    Set<DayDutyTypeCountPerPage> dayDutyTypeCountPerPages;
 
     public Day(LocalDate date) {
         this.id = date;
@@ -87,17 +82,18 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
         return result;
     }*/
 
-    public static Day setupDutyTypeTimeUsage(Day day, DutyType dutyType) {
-        day.setPeriods(calculateDutyTypeTimeUsage(day, dutyType));
+    public static Day setupDutyTypeTimeUsage(Day day, ShiftType shiftType) {
+        day.setPeriods(calculateDutyTypeTimeUsage(day, shiftType));
         return day;
     }
 
-    public static Set<Period> calculateDutyTypeTimeUsage(Day day, DutyType dutyType) {
+    public static Set<Period> calculateDutyTypeTimeUsage(Day day, ShiftType shiftType) {
         Set<Period> periods = Sets.newHashSet();
-        if (dutyType != null) {
+        if (shiftType != null) {
             Range<LocalDateTime> dayRange = day.range();
-            for (Period p : dutyType.getPeriods()) {
-                Range range = p.range(day.getId());
+            for (Period p : shiftType.getPeriods()) {
+                assert day.getId() != null;
+                Range<LocalDateTime> range = p.range(day.getId());
                 if (dayRange.isConnected(range)) {
                     Range<LocalDateTime> intersection = dayRange.intersection(range);
                     Period period = Period.of(intersection);
@@ -150,7 +146,15 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
         return Period.of().range(id);
     }
 
-    public DayOfWeek getDayOfWeek() {
+    public DayOfWeek dayOfWeek() {
         return id.getDayOfWeek();
+    }
+
+    public Integer weekIndex() {
+        return id.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+    }
+
+    public long dayIndex() {
+        return id.toEpochDay();
     }
 }

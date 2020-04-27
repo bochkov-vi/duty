@@ -9,19 +9,19 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Accessors(chain = true)
-@Table(name = "rang")
+@Table(name = "RANG")
 @Entity
 public class Rang extends AbstractEntity<Short> {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rang_seq")
-    @SequenceGenerator(name = "rang_seq", allocationSize = 1)
-    @Column(name = "id_rang")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RANG_SEQ")
+    @SequenceGenerator(name = "RANG_SEQ", allocationSize = 1)
+    @Column(name = "ID_RANG")
     Short id;
 
-    @Column(name = "rang", nullable = false)
+    @Column(name = "RANG", nullable = false)
     String name;
 
-    @Column(name = "full_name")
+    @Column(name = "FULL_NAME")
     String fullName;
 
     @Override

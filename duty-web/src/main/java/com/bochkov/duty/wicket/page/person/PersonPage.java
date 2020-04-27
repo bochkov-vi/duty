@@ -1,9 +1,9 @@
 package com.bochkov.duty.wicket.page.person;
 
-import com.bochkov.duty.jpa.entity.Person;
-import com.bochkov.duty.jpa.entity.PersonGroup;
+import com.bochkov.duty.jpa.entity.Employee;
+import com.bochkov.duty.jpa.entity.EmployeeGroup;
 import com.bochkov.duty.jpa.entity.Rang;
-import com.bochkov.duty.jpa.repository.PersonRepository;
+import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.duty.wicket.base.DetailsPanel;
 import com.bochkov.duty.wicket.base.EntityPage;
 import com.google.common.base.Joiner;
@@ -22,49 +22,49 @@ import java.util.List;
 import java.util.Optional;
 
 @MountPath("personal")
-public class PersonPage extends EntityPage<Person, String> {
+public class PersonPage extends EntityPage<Employee, String> {
     @SpringBean
-    private PersonRepository personRepository;
+    private EmployeeRepository employeeRepository;
 
     public PersonPage() {
     }
 
-    public PersonPage(Person entity) {
+    public PersonPage(Employee entity) {
         super(entity);
     }
 
     @Override
-    protected List<IColumn<Person, String>> columns() {
-        List<IColumn<Person, String>> list = Lists.newArrayList();
-        list.add(new LambdaColumn<Person, String>(new ResourceModel("person.id"), "id", Person::getId));
-        list.add(new LambdaColumn<Person, String>(new ResourceModel("person.post"), "post", Person::getPost));
-        list.add(new LambdaColumn<Person, String>(new ResourceModel("person.rang"), "rang",  p-> Optional.ofNullable(p).map(Person::getRang).map(Rang::getName).orElse(null)));
-        list.add(new LambdaColumn<Person, String>(new ResourceModel("person.firstName"), "firstName", Person::getFirstName));
-        list.add(new LambdaColumn<Person, String>(new ResourceModel("person.middleName"), "middleName", Person::getMiddleName));
-        list.add(new LambdaColumn<Person, String>(new ResourceModel("person.lastName"), "lastName", Person::getLastName));
-        list.add(new LambdaColumn<Person, String>(new ResourceModel("person.personGroup"), "personGroup.name", p-> Optional.ofNullable(p).map(Person::getPersonGroup).map(PersonGroup::getName).orElse(null)));
-        list.add(new LambdaColumn<Person, String>(new ResourceModel("person.dutyTypes"), "personGroup.dutyTypes", p-> Optional.ofNullable(p).map(Person::getDutyTypes).map(dts-> Joiner.on("; ").skipNulls().join(dts)).orElse(null)));
+    protected List<IColumn<Employee, String>> columns() {
+        List<IColumn<Employee, String>> list = Lists.newArrayList();
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.id"), "id", Employee::getId));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.post"), "post", Employee::getPost));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.rang"), "rang", p-> Optional.ofNullable(p).map(Employee::getRang).map(Rang::getName).orElse(null)));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.firstName"), "firstName", Employee::getFirstName));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.middleName"), "middleName", Employee::getMiddleName));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.lastName"), "lastName", Employee::getLastName));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.employeeGroup"), "personGroup.name", p-> Optional.ofNullable(p).map(Employee::getEmployeeGroup).map(EmployeeGroup::getName).orElse(null)));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.shiftTypes"), "employeeGroup.shiftTypes", p-> Optional.ofNullable(p).map(Employee::getShiftTypes).map(dts-> Joiner.on("; ").skipNulls().join(dts)).orElse(null)));
         return list;
     }
 
 
     @Override
-    protected PersonRepository getRepository() {
-        return personRepository;
+    protected EmployeeRepository getRepository() {
+        return employeeRepository;
     }
 
     @Override
-    protected WebMarkupContainer createInputPanel(String id, IModel<Person> model) {
+    protected WebMarkupContainer createInputPanel(String id, IModel<Employee> model) {
         return new PersonInputPanel(id, model);
     }
 
     @Override
-    protected GenericPanel<Person> createDetailsPanel(String id, IModel<Person> model) {
-        return new DetailsPanel<Person>(id, getModel(), ImmutableList.of("id", "post", "rang", "firstName", "middleName", "lastName", "createdDate"), "person.");
+    protected GenericPanel<Employee> createDetailsPanel(String id, IModel<Employee> model) {
+        return new DetailsPanel<Employee>(id, getModel(), ImmutableList.of("id", "post", "rang", "firstName", "middleName", "lastName", "createdDate"), "employee.");
     }
 
     @Override
-    protected Person newInstance() {
-        return new Person();
+    protected Employee newInstance() {
+        return new Employee();
     }
 }

@@ -28,16 +28,16 @@ import java.util.Optional;
 public class WicketDutyApplication extends WebApplication {
 
     @Autowired
-    DutyTypeRepository dutyTypeRepository;
+    ShiftTypeRepository shiftTypeRepository;
 
     @Autowired
     RangRepository rangRepository;
 
     @Autowired
-    PersonGroupRepository personGroupRepository;
+    EmployeeGroupRepository employeeGroupRepository;
 
     @Autowired
-    PersonRepository personRepository;
+    EmployeeRepository employeeRepository;
 
     @Autowired
     DayRepository dayRepository;
@@ -64,16 +64,16 @@ public class WicketDutyApplication extends WebApplication {
     @Override
     protected IConverterLocator newConverterLocator() {
         ConverterLocator converterLocator = (ConverterLocator) super.newConverterLocator();
-        converterLocator.set(DutyType.class, new IConverter<DutyType>() {
+        converterLocator.set(ShiftType.class, new IConverter<ShiftType>() {
             @Override
-            public DutyType convertToObject(String value, Locale locale) throws ConversionException {
+            public ShiftType convertToObject(String value, Locale locale) throws ConversionException {
                 return Optional.ofNullable(value).map(Ints::tryParse)
                         .filter(Objects::nonNull)
-                        .flatMap(id -> dutyTypeRepository.findById(id)).orElse(null);
+                        .flatMap(id -> shiftTypeRepository.findById(id)).orElse(null);
             }
 
             @Override
-            public String convertToString(DutyType value, Locale locale) {
+            public String convertToString(ShiftType value, Locale locale) {
                 return Optional.ofNullable(value).map(Persistable::getId).map(String::valueOf).orElse(null);
             }
         });
@@ -90,26 +90,26 @@ public class WicketDutyApplication extends WebApplication {
             }
         });
 
-        converterLocator.set(PersonGroup.class, new IConverter<PersonGroup>() {
+        converterLocator.set(EmployeeGroup.class, new IConverter<EmployeeGroup>() {
             @Override
-            public PersonGroup convertToObject(String value, Locale locale) throws ConversionException {
+            public EmployeeGroup convertToObject(String value, Locale locale) throws ConversionException {
                 return Optional.ofNullable(value).map(Ints::tryParse).map(n -> n.intValue())
-                        .flatMap(id -> personGroupRepository.findById(id)).orElse(null);
+                        .flatMap(id -> employeeGroupRepository.findById(id)).orElse(null);
             }
 
             @Override
-            public String convertToString(PersonGroup value, Locale locale) {
+            public String convertToString(EmployeeGroup value, Locale locale) {
                 return Optional.ofNullable(value).map(Persistable::getId).map(String::valueOf).orElse(null);
             }
         });
-        converterLocator.set(Person.class, new IConverter<Person>() {
+        converterLocator.set(Employee.class, new IConverter<Employee>() {
             @Override
-            public Person convertToObject(String value, Locale locale) throws ConversionException {
-                return Optional.ofNullable(value).flatMap(id -> personRepository.findById(id)).orElse(null);
+            public Employee convertToObject(String value, Locale locale) throws ConversionException {
+                return Optional.ofNullable(value).flatMap(id -> employeeRepository.findById(id)).orElse(null);
             }
 
             @Override
-            public String convertToString(Person value, Locale locale) {
+            public String convertToString(Employee value, Locale locale) {
                 return Optional.ofNullable(value).map(Persistable::getId).map(id -> converterLocator.getConverter(String.class).convertToString(id, locale)).orElse(null);
             }
         });

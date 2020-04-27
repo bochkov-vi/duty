@@ -1,7 +1,7 @@
 package com.bochkov.duty.wicket.page.persongroup;
 
-import com.bochkov.duty.jpa.entity.PersonGroup;
-import com.bochkov.duty.jpa.repository.PersonGroupRepository;
+import com.bochkov.duty.jpa.entity.EmployeeGroup;
+import com.bochkov.duty.jpa.repository.EmployeeGroupRepository;
 import com.bochkov.duty.wicket.base.DetailsPanel;
 import com.bochkov.duty.wicket.base.EntityPage;
 import com.google.common.collect.ImmutableList;
@@ -18,43 +18,43 @@ import org.wicketstuff.annotation.mount.MountPath;
 import java.util.List;
 
 @MountPath("personal-group")
-public class PersonGroupPage extends EntityPage<PersonGroup, Integer> {
+public class PersonGroupPage extends EntityPage<EmployeeGroup, Integer> {
     @SpringBean
-    private PersonGroupRepository personGroupRepository;
+    private EmployeeGroupRepository employeeGroupRepository;
 
     public PersonGroupPage() {
     }
 
-    public PersonGroupPage(PersonGroup entity) {
+    public PersonGroupPage(EmployeeGroup entity) {
         super(entity);
     }
 
     @Override
-    protected List<IColumn<PersonGroup, String>> columns() {
-        List<IColumn<PersonGroup, String>> list = Lists.newArrayList();
-        list.add(new LambdaColumn<PersonGroup, String>(new ResourceModel("personGroup.id"), "id", PersonGroup::getId));
-        list.add(new LambdaColumn<PersonGroup, String>(new ResourceModel("personGroup.name"), "name", PersonGroup::getName));
+    protected List<IColumn<EmployeeGroup, String>> columns() {
+        List<IColumn<EmployeeGroup, String>> list = Lists.newArrayList();
+        list.add(new LambdaColumn<EmployeeGroup, String>(new ResourceModel("personGroup.id"), "id", EmployeeGroup::getId));
+        list.add(new LambdaColumn<EmployeeGroup, String>(new ResourceModel("personGroup.name"), "name", EmployeeGroup::getName));
         return list;
     }
 
 
     @Override
-    protected PersonGroupRepository getRepository() {
-        return personGroupRepository;
+    protected EmployeeGroupRepository getRepository() {
+        return employeeGroupRepository;
     }
 
     @Override
-    protected WebMarkupContainer createInputPanel(String id, IModel<PersonGroup> model) {
+    protected WebMarkupContainer createInputPanel(String id, IModel<EmployeeGroup> model) {
         return new PersonGroupInputPanel(id, model);
     }
 
     @Override
-    protected GenericPanel<PersonGroup> createDetailsPanel(String id, IModel<PersonGroup> model) {
-        return new DetailsPanel<PersonGroup>(id, getModel(), ImmutableList.of("id", "name","createdDate"), "personGroup.");
+    protected GenericPanel<EmployeeGroup> createDetailsPanel(String id, IModel<EmployeeGroup> model) {
+        return new DetailsPanel<EmployeeGroup>(id, getModel(), ImmutableList.of("id", "name","createdDate"), "employeeGroup.");
     }
 
     @Override
-    protected PersonGroup newInstance() {
-        return new PersonGroup();
+    protected EmployeeGroup newInstance() {
+        return new EmployeeGroup();
     }
 }

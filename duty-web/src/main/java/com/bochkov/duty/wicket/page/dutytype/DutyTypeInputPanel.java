@@ -1,6 +1,6 @@
 package com.bochkov.duty.wicket.page.dutytype;
 
-import com.bochkov.duty.jpa.entity.DutyType;
+import com.bochkov.duty.jpa.entity.ShiftType;
 import com.bochkov.duty.wicket.component.date.period.PeriodCollectionInput;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
@@ -10,7 +10,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.time.LocalDateTime;
 
-public class DutyTypeInputPanel extends GenericPanel<DutyType> {
+public class DutyTypeInputPanel extends GenericPanel<ShiftType> {
 
     TextField<Integer> idTextField = new TextField<>("id");
 
@@ -25,14 +25,14 @@ public class DutyTypeInputPanel extends GenericPanel<DutyType> {
     TextField<String> faIconTextField = new TextField<>("uiOptions.faIcon");
 
 
-    public DutyTypeInputPanel(String id, IModel<DutyType> model) {
+    public DutyTypeInputPanel(String id, IModel<ShiftType> model) {
         super(id, model);
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        //((CompoundPropertyModel<DutyType>)getModel()).bind();
+        //((CompoundPropertyModel<ShiftType>)getModel()).bind();
         add(idTextField.setEnabled(false));
         add(nameTextField);
         add(createdDateTextField.setEnabled(false));

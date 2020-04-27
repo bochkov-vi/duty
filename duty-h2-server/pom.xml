@@ -10,11 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
+
     </properties>
     <artifactId>duty-h2-server</artifactId>
     <packaging>jar</packaging>
-    <dependencies>
 
+    <dependencies>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -32,6 +33,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>duty-h2-server</finalName>
         <resources>
             <resource>
                 <filtering>true</filtering>

@@ -23,47 +23,47 @@ import java.util.stream.Stream;
 @Setter
 @Accessors(chain = true)
 @Entity
-@Table(name = "report")
+@Table(name = "REPORT")
 public class Report extends AbstractAuditableEntity<Integer> {
 
     @Id
-    @GeneratedValue(generator = "report_seq")
-    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "report_seq")
-    @Column(name = "id_report", nullable = false)
+    @GeneratedValue(generator = "REPORT_SEQ")
+    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "REPORT_SEQ")
+    @Column(name = "ID_REPORT", nullable = false)
     Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "id_duty_type")
-    DutyType dutyType;
+    @JoinColumn(name = "ID_SHIFT_TYPE")
+    ShiftType shiftType;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "report_person", joinColumns = @JoinColumn(name = "id_report"), inverseJoinColumns = @JoinColumn(name = "id_person"))
-    Set<Person> persons;
+    @JoinTable(name = "REPORT_PERSON", joinColumns = @JoinColumn(name = "ID_REPORT"), inverseJoinColumns = @JoinColumn(name = "ID_PERSON"))
+    Set<Employee> employees;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "DATE", nullable = false)
     LocalDate date;
 
-    @Column(name = "date_from", nullable = false)
+    @Column(name = "DATE_FROM", nullable = false)
     LocalDate dateFrom;
 
-    @Column(name = "date_to", nullable = false)
+    @Column(name = "DATE_TO", nullable = false)
     LocalDate dateTo;
 
     @ManyToOne
-    @JoinColumn(name = "chief", nullable = false)
-    Person chief;
+    @JoinColumn(name = "CHIEF", nullable = false)
+    Employee chief;
 
     @ManyToOne
-    @JoinColumn(name = "executor", nullable = false)
-    Person executor;
+    @JoinColumn(name = "EXECUTOR", nullable = false)
+    Employee executor;
 
-    @Column(name = "report_title", nullable = false)
+    @Column(name = "REPORT_TITLE", nullable = false)
     String title;
 
-    @Column(name = "date_title", nullable = false)
+    @Column(name = "DATE_TITLE", nullable = false)
     String dateTitle;
 
-    @Column(name = "genitive_department_name", nullable = false)
+    @Column(name = "GENITIVE_DEPARTMENT_NAME", nullable = false)
     String genitiveDepartment;
 
     @Override

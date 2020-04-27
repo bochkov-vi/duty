@@ -16,13 +16,13 @@ import java.io.Serializable;
 @MappedSuperclass
 public class UiOptions implements Serializable {
 
-    @Column(name = "html_class")
+    @Column(name = "HTML_CLASS")
     String htmlClass;
 
-    @Column(name = "plain_text", length = 3)
+    @Column(name = "PLAIN_TEXT", length = 3)
     String plainText;
 
-    @Column(name = "fa_icon")
+    @Column(name = "FA_ICON")
     String faIcon;
 
     public UiOptions setHtmlClass(String htmlClass) {

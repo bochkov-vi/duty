@@ -2,7 +2,7 @@ package com.bochkov.duty.jpa.repository;
 
 import com.bochkov.duty.jpa.BaseRepository;
 import com.bochkov.duty.jpa.entity.Day;
-import com.bochkov.duty.jpa.entity.DutyType;
+import com.bochkov.duty.jpa.entity.ShiftType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
     default Day findOrCreate(LocalDate date) {
         Day result = null;
         Optional<Day> day = findById(date);
-        result = day.orElseGet(() -> safeSave(new Day().setId(date)));
+        result = day.map(this::safeSave).orElseGet(() -> safeSave(new Day().setId(date)));
         return result;
     }
 
@@ -88,17 +88,17 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
 
     @Transactional
     default Day _setupDutyTypeTimeUsage(Day day) {
-        DutyType dutyType = findDutyTypeByDaysToWeekend(day.getDaysToWeekend());
-        if (dutyType != null) {
-            Day.setupDutyTypeTimeUsage(day, dutyType);
+        ShiftType shiftType = findDutyTypeByDaysToWeekend(day.getDaysToWeekend());
+        if (shiftType != null) {
+            Day.setupDutyTypeTimeUsage(day, shiftType);
         }
         return save(day);
     }
 
     @Transactional
     default Day _setupDutyType(Day day) {
-        DutyType dutyType = findDutyTypeByDaysToWeekend(day.getDaysToWeekend());
-        day.setDutyType(dutyType);
+        ShiftType shiftType = findDutyTypeByDaysToWeekend(day.getDaysToWeekend());
+        day.setShiftType(shiftType);
         return day;
     }
 
@@ -152,8 +152,8 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
 
 
     @Transactional
-    @Query("SELECT o FROM DutyType o JOIN o.daysToWeekend w WHERE w = ?1")
-    public DutyType findDutyTypeByDaysToWeekend(Integer daysToWeekend);
+    @Query("SELECT o FROM ShiftType o JOIN o.daysToWeekend w WHERE w = ?1")
+    public ShiftType findDutyTypeByDaysToWeekend(Integer daysToWeekend);
 
 
 }

@@ -23,11 +23,11 @@ import java.time.LocalTime;
 @EqualsAndHashCode
 public class Period implements Serializable, Comparable<Period> {
 
-    @Column(name = "start", nullable = false)
+    @Column(name = "START", nullable = false)
     LocalTime start;
 
     @Convert(converter = DurationConverter.class)
-    @Column(name = "duration")
+    @Column(name = "DURATION")
     Duration duration;
 
     public Period(int h, int m, int minutes) {

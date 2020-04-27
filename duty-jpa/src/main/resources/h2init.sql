@@ -1,29 +1,28 @@
 drop table if exists DAY cascade;
 
 create table if not exists DAY (
-    DATE                   DATE not null,
-    ID_DUTY_TYPE_DEFAULT   INTEGER,
-    DAYS_FROM_WEEKEND      INTEGER,
-    DAYS_TO_WEEKEND        INTEGER,
-    NEXT                   DATE,
-    WEEKEND                BOOLEAN,
-    NO_USE_IN_AUTOPLANNING BOOLEAN default FALSE,
-    CREATED_DATE           TIMESTAMP,
+    DATE                  DATE not null,
+    ID_SHIFT_TYPE_DEFAULT INTEGER,
+    DAYS_FROM_WEEKEND     INTEGER,
+    DAYS_TO_WEEKEND       INTEGER,
+    NEXT                  DATE,
+    WEEKEND               BOOLEAN,
+    CREATED_DATE          TIMESTAMP,
     constraint DAY_PRIMARY_KEY primary key (DATE),
     constraint NEXT_DAY_FK foreign key (DATE) references DAY(DATE),
-    constraint DAY_DEFAULT_DUTY_TYPE_FK foreign key (ID_DUTY_TYPE_DEFAULT) references DUTY_TYPE(ID_DUTY_TYPE)
+    constraint DAY_DEFAULT_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE_DEFAULT) references SHIFT_TYPE(ID_SHIFT_TYPE)
 );
 
-drop table if exists DAY_DUTY_TYPE_COUNT_PER_PAGE cascade;
-create table if not exists DAY_DUTY_TYPE_COUNT_PER_PAGE (
+drop table if exists DAY_SHIFT_TYPE_COUNT_PER_PAGE cascade;
+/*create table if not exists DAY_SHIFT_TYPE_COUNT_PER_PAGE (
     DATE              DATE    not null,
-    ID_DUTY_TYPE      INTEGER not null,
+    ID_SHIFT_TYPE     INTEGER not null,
     MAX_COUNT_PER_DAY INTEGER default 1,
     MIN_COUNT_PER_DAY INTEGER default 1,
-    constraint DAY_DUTY_TYPE_COUNT_PER_PAGE_PRIMARY_KEY primary key (DATE, ID_DUTY_TYPE),
-    constraint DAY_DUTY_TYPE_COUNT_PER_PAGE_FK foreign key (DATE) references DAY(DATE) on update cascade on delete cascade,
-    constraint DAY_DUTY_TYPE_COUNT_PER_PAGE_DUTY_TYPE_FK foreign key (ID_DUTY_TYPE) references DUTY_TYPE(ID_DUTY_TYPE) on update cascade on delete cascade
-);
+    constraint DAY_SHIFT_TYPE_COUNT_PER_PAGE_PRIMARY_KEY primary key (DATE, ID_SHIFT_TYPE),
+    constraint DAY_SHIFT_TYPE_COUNT_PER_PAGE_FK foreign key (DATE) references DAY(DATE) on update cascade on delete cascade,
+    constraint DAY_SHIFT_TYPE_COUNT_PER_PAGE_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE) on update cascade on delete cascade
+);*/
 
 drop table if exists DAY_PERIOD cascade;
 
@@ -35,47 +34,47 @@ create table if not exists DAY_PERIOD (
     constraint DAY_PERIOD_FK foreign key (DATE) REFERENCES DAY(DATE) on delete cascade on update cascade
 );
 
-drop table if exists DUTY_TYPE cascade;
+drop table if exists SHIFT_TYPE cascade;
 
 
-create table if not exists DUTY_TYPE (
-    ID_DUTY_TYPE INTEGER not null primary key,
-    DUTY_TYPE    VARCHAR_IGNORECASE(45),
-    FA_ICON      VARCHAR(255),
-    HTML_CLASS   VARCHAR(255),
-    PLAIN_TEXT   VARCHAR(3),
-    CREATED_DATE TIMESTAMP
+create table if not exists SHIFT_TYPE (
+    ID_SHIFT_TYPE INTEGER not null primary key,
+    SHIFT_TYPE    VARCHAR_IGNORECASE(45),
+    FA_ICON       VARCHAR(255),
+    HTML_CLASS    VARCHAR(255),
+    PLAIN_TEXT    VARCHAR(3),
+    CREATED_DATE  TIMESTAMP
 );
 
-CREATE SEQUENCE IF NOT EXISTS DUTY_TYPE_SEQ START WITH 100;
+CREATE SEQUENCE IF NOT EXISTS SHIFT_TYPE_SEQ START WITH 100;
 
-drop table if exists DUTY_TYPE_PERIOD cascade;
+drop table if exists SHIFT_TYPE_PERIOD cascade;
 
 
-create table if not exists DUTY_TYPE_PERIOD (
-    ID_DUTY_TYPE INTEGER not null,
-    START        TIME    not null,
-    DURATION     INTEGER not null,
-    constraint DUTY_TYPE_PERIOD_PK primary key (ID_DUTY_TYPE, START),
-    constraint DUTY_TYPE_PERIOD_FQ foreign key (ID_DUTY_TYPE) references DUTY_TYPE(ID_DUTY_TYPE) on update cascade on delete cascade
+create table if not exists SHIFT_TYPE_PERIOD (
+    ID_SHIFT_TYPE INTEGER not null,
+    START         TIME    not null,
+    DURATION      INTEGER not null,
+    constraint SHIFT_TYPE_PERIOD_PK primary key (ID_SHIFT_TYPE, START),
+    constraint SHIFT_TYPE_PERIOD_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE) on update cascade on delete cascade
 );
 
-drop table if exists DUTY_TYPE_DAYS_FROM_WEEKEND cascade;
+drop table if exists SHIFT_TYPE_DAYS_FROM_WEEKEND cascade;
 
-create table if not exists DUTY_TYPE_DAYS_FROM_WEEKEND (
-    ID_DUTY_TYPE      INTEGER not null,
+create table if not exists SHIFT_TYPE_DAYS_FROM_WEEKEND (
+    ID_SHIFT_TYPE     INTEGER not null,
     DAYS_FROM_WEEKEND INTEGER,
-    constraint DAYS_FROM_WEEKEND_DUTY_TYPE_PK primary key (ID_DUTY_TYPE, DAYS_FROM_WEEKEND),
-    constraint DAYS_FROM_WEEKEND_DUTY_TYPE_FK foreign key (ID_DUTY_TYPE) references DUTY_TYPE(ID_DUTY_TYPE)
+    constraint DAYS_FROM_WEEKEND_SHIFT_TYPE_PK primary key (ID_SHIFT_TYPE, DAYS_FROM_WEEKEND),
+    constraint DAYS_FROM_WEEKEND_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE)
 );
 
-drop table if exists DUTY_TYPE_DAYS_TO_WEEKEND cascade;
+drop table if exists SHIFT_TYPE_DAYS_TO_WEEKEND cascade;
 
-create table if not exists DUTY_TYPE_DAYS_TO_WEEKEND (
-    ID_DUTY_TYPE    INTEGER not null,
+create table if not exists SHIFT_TYPE_DAYS_TO_WEEKEND (
+    ID_SHIFT_TYPE   INTEGER not null,
     DAYS_TO_WEEKEND INTEGER,
-    constraint DAYS_TO_WEEKEND_DUTY_TYPE_PK primary key (ID_DUTY_TYPE, DAYS_TO_WEEKEND),
-    constraint DAYS_TO_WEEKEND_DUTY_TYPE_FK foreign key (ID_DUTY_TYPE) references DUTY_TYPE(ID_DUTY_TYPE)
+    constraint DAYS_TO_WEEKEND_SHIFT_TYPE_PK primary key (ID_SHIFT_TYPE, DAYS_TO_WEEKEND),
+    constraint DAYS_TO_WEEKEND_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE)
 );
 
 
@@ -122,77 +121,91 @@ VALUES (27, '2018-11-18 18:32:09.769000', 'Капитан 1-го ранга', '�
 INSERT INTO PUBLIC.RANG (ID_RANG, CREATED_DATE, FULL_NAME, RANG)
 VALUES (28, '2018-11-18 18:32:09.770000', 'Полковник', 'п-к');
 
-drop table if exists PERSON_GROUP cascade;
+drop table if exists EMPLOYEE_GROUP cascade;
 
-create table if not exists PERSON_GROUP (
-    ID_PERSON_GROUP INTEGER                not null primary key,
-    PERSON_GROUP    VARCHAR_IGNORECASE(45) not null,
-    CREATED_DATE    TIMESTAMP,
-    CONSTRAINT PERSON_GROUP_UNQ UNIQUE (PERSON_GROUP)
+create table if not exists EMPLOYEE_GROUP (
+    ID_EMPLOYEE_GROUP INTEGER                not null,
+    EMPLOYEE_GROUP    VARCHAR_IGNORECASE(45) not null,
+    CREATED_DATE      TIMESTAMP,
+    CONSTRAINT EMPLOYEE_GROUP_PK primary key (ID_EMPLOYEE_GROUP),
+    CONSTRAINT EMPLOYEE_GROUP_UNQ UNIQUE (EMPLOYEE_GROUP)
 );
-insert into PERSON_GROUP (ID_PERSON_GROUP, PERSON_GROUP, CREATED_DATE)
+
+drop table if exists EMPLOYEE_GROUP_SHIFT_TYPE;
+create table if not exists EMPLOYEE_GROUP_SHIFT_TYPE (
+    ID_EMPLOYEE_GROUP INTEGER not null,
+    ID_SHIFT_TYPE     INTEGER not null,
+    constraint EMPLOYEE_GROUP_SHIFT_TYPE_PK primary key (ID_EMPLOYEE_GROUP, ID_SHIFT_TYPE),
+    constraint EMPLOYEE_GROUP_SHIFT_TYPE_EMPLOYEE_GROUP_FK foreign key (ID_EMPLOYEE_GROUP) references EMPLOYEE_GROUP(ID_EMPLOYEE_GROUP) on update cascade on delete cascade,
+    constraint EMPLOYEE_GROUP_SHIFT_TYPE_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE) on update cascade on delete cascade
+);
+
+insert into EMPLOYEE_GROUP (ID_EMPLOYEE_GROUP, EMPLOYEE_GROUP, CREATED_DATE)
 VALUES (1, '1 группа СО', CURRENT_TIMESTAMP()),
     (2, '2 отделение СО', CURRENT_TIMESTAMP()),
     (101, 'ПСОИ-1', CURRENT_TIMESTAMP());
-create sequence if not exists PERSON_GROUP_SEQ start with 1000;
+create sequence if not exists EMPLOYEE_GROUP_SEQ start with 1000;
 
-drop table if exists PERSON cascade;
+drop table if exists EMPLOYEE cascade;
 
-create table if not exists PERSON (
-    ID_PERSON         VARCHAR(15) not null primary key,
+create table if not exists EMPLOYEE (
+    ID_EMPLOYEE       VARCHAR(15) not null primary key,
     FIRST_NAME        VARCHAR_IGNORECASE(255),
     LAST_NAME         VARCHAR_IGNORECASE(255),
     MIDDLE_NAME       VARCHAR_IGNORECASE(255),
     POST              VARCHAR_IGNORECASE(255),
-    ID_PERSON_GROUP   INTEGER,
+    ID_EMPLOYEE_GROUP INTEGER,
     ID_RANG           SMALLINT    not null,
     ROAD_TO_HOME_TIME INTEGER,
     CREATED_DATE      TIMESTAMP,
-    constraint PERSON_PERSON_GROUP_FK foreign key (ID_PERSON_GROUP) references PERSON_GROUP(ID_PERSON_GROUP),
-    constraint PERSON_RANG_FQ foreign key (ID_RANG) references RANG(ID_RANG)
+    constraint EMPLOYEE_EMPLOYEE_GROUP_FK foreign key (ID_EMPLOYEE_GROUP) references EMPLOYEE_GROUP(ID_EMPLOYEE_GROUP),
+    constraint EMPLOYEE_RANG_FK foreign key (ID_RANG) references RANG(ID_RANG)
 );
 
-drop table if exists PERSON_DUTY_TYPE;
-create table if not exists PERSON_DUTY_TYPE (
-    ID_PERSON    VARCHAR(15) not null,
-    ID_DUTY_TYPE INTEGER     not null,
-    constraint PERSON_DUTY_TYPE_PK primary key (ID_PERSON, ID_DUTY_TYPE),
-    constraint PERSON_DUTY_TYPE_PERSON_FK foreign key (ID_PERSON) references PERSON(ID_PERSON) on update cascade on delete cascade,
-    constraint PERSON_DUTY_TYPE_DUTY_TYPE_FK foreign key (ID_DUTY_TYPE) references DUTY_TYPE(ID_DUTY_TYPE) on update cascade on delete cascade
+drop table if exists EMPLOYEE_SHIFT_TYPE;
+create table if not exists EMPLOYEE_SHIFT_TYPE (
+    ID_EMPLOYEE   VARCHAR(15) not null,
+    ID_SHIFT_TYPE INTEGER     not null,
+    constraint EMPLOYEE_SHIFT_TYPE_PK primary key (ID_EMPLOYEE, ID_SHIFT_TYPE),
+    constraint EMPLOYEE_SHIFT_TYPE_EMPLOYEE_FK foreign key (ID_EMPLOYEE) references EMPLOYEE(ID_EMPLOYEE) on update cascade on delete cascade,
+    constraint EMPLOYEE_SHIFT_TYPE_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE) on update cascade on delete cascade
 );
-drop table if exists DUTY_NEXT;
-drop table if exists DUTY_PERIOD;
-drop table if exists DUTY cascade;
 
-create table if not exists DUTY (
-    ID_PERSON          VARCHAR(15) not null,
-    DATE               DATE        not null,
-    ID_DUTY_TYPE       INTEGER,
+drop table if exists SHIFT_PERIOD;
+drop table if exists SHIFT_ASSIGNMENT cascade;
+drop table if exists SHIFT cascade;
+
+create table if not exists SHIFT (
+    ID_SHIFT           INTEGER not null,
+    DATE               DATE    not null,
+    ID_SHIFT_TYPE      INTEGER not null,
     CREATED_DATE       TIMESTAMP,
     CREATED_BY         VARCHAR(255),
     LAST_MODIFIED_BY   VARCHAR(255),
     LAST_MODIFIED_DATE TIMESTAMP,
-    primary key (ID_PERSON, DATE),
-    constraint DUTY_PERSON_FK foreign key (ID_PERSON) references PERSON(ID_PERSON),
-    constraint DUTY_DUTY_TYPE_FQ foreign key (ID_DUTY_TYPE) references DUTY_TYPE(ID_DUTY_TYPE)
+    constraint SHIFT_PK primary key (ID_SHIFT),
+    constraint SHIFT_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE)
 );
 
-create table DUTY_NEXT (
-    ID_PERSON      VARCHAR(15) not null,
-    DATE           DATE        not null,
-    ID_PERSON_NEXT VARCHAR(15) not null,
-    DATE_NEXT      DATE        not null,
-    constraint DUTY_NEXT_CURRENT_FK foreign key (ID_PERSON, DATE) references DUTY(ID_PERSON, DATE) on update cascade on delete cascade,
-    constraint DUTY_NEXT_FK foreign key (ID_PERSON_NEXT, DATE_NEXT) references DUTY(ID_PERSON, DATE) on update cascade on delete cascade
-);
+create table if not exists SHIFT_ASSIGNMENT (
+    ID_SHIFT_ASSIGNMENT INTEGER not null,
+    ID_SHIFT            INTEGER not null,
+    ID_EMPLOYEE         INTEGER not null,
+    CREATED_DATE        TIMESTAMP,
+    constraint SHIFT_ASSIGNMENT_PK primary key (ID_SHIFT_ASSIGNMENT),
+    constraint SHIFT_ASSIGNMENT_SHIFT_FK foreign key (ID_SHIFT) references SHIFT(ID_SHIFT) on delete cascade on update cascade,
+    constraint SHIFT_ASSIGNMENT_EMPLOYEE_FK foreign key (ID_EMPLOYEE) references EMPLOYEE(ID_EMPLOYEE)
 
-create table if not exists DUTY_PERIOD (
-    ID_PERSON VARCHAR not null,
-    DATE      DATE    not null,
-    START     TIME    NOT NULL,
-    DURATION  INTEGER NOT NULL,
-    constraint DUTY_PERIOD_PK primary key (ID_PERSON, DATE, START),
-    constraint DUTY_PERIOD_FK foreign key (ID_PERSON, DATE) REFERENCES DUTY(ID_PERSON, DATE) on delete cascade on update cascade
+);
+CREATE SEQUENCE IF NOT EXISTS SHIFT_ASSIGNMENT_SEQ start with 1000;
+
+
+create table if not exists SHIFT_PERIOD (
+    ID_SHIFT INTEGER not null,
+    START    TIME    NOT NULL,
+    DURATION INTEGER NOT NULL,
+    constraint SHIFT_PERIOD_PK primary key (ID_SHIFT, START),
+    constraint SHIFT_PERIOD_FK foreign key (ID_SHIFT) REFERENCES SHIFT(ID_SHIFT) on delete cascade on update cascade
 );
 
 
@@ -207,32 +220,124 @@ create table if not exists REPORT (
     GENITIVE_DEPARTMENT_NAME VARCHAR(255) not null,
     REPORT_TITLE             VARCHAR(255) not null,
     CHIEF                    VARCHAR(15)  not null,
-    ID_DUTY_TYPE             VARCHAR(15)  not null,
+    ID_SHIFT_TYPE            VARCHAR(15)  not null,
     EXECUTOR                 VARCHAR(15)  not null,
     CREATED_DATE             TIMESTAMP,
     CREATED_BY               VARCHAR(255),
     LAST_MODIFIED_BY         VARCHAR(255),
     LAST_MODIFIED_DATE       TIMESTAMP,
     DATE                     DATE         not null,
-    constraint REPORT_EXECUTOR_FK foreign key (EXECUTOR) references PERSON(ID_PERSON),
-    constraint REPORT_CHIEF_FK foreign key (CHIEF) references PERSON(ID_PERSON),
-    constraint REPORT_DUTY_TYPE_FK foreign key (ID_DUTY_TYPE) references DUTY_TYPE(ID_DUTY_TYPE)
+    constraint REPORT_EXECUTOR_FK foreign key (EXECUTOR) references EMPLOYEE(ID_EMPLOYEE),
+    constraint REPORT_CHIEF_FK foreign key (CHIEF) references EMPLOYEE(ID_EMPLOYEE),
+    constraint REPORT_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE)
 );
+
 create sequence if not exists REPORT_SEQ start with 100;
-drop table if exists REPORT_PERSON;
-create table REPORT_PERSON (
-    ID_REPORT INTEGER     not null,
-    ID_PERSON VARCHAR(15) not null,
-    primary key (ID_REPORT, ID_PERSON),
-    constraint REPORT_PERSON_REPORT_FQ foreign key (ID_REPORT) references REPORT(ID_REPORT) on update cascade on delete cascade,
-    constraint REPORT_PERSON_PERSON_FQ foreign key (ID_PERSON) references PERSON(ID_PERSON) on update cascade on delete cascade
-
+drop table if exists REPORT_EMPLOYEE;
+create table REPORT_EMPLOYEE (
+    ID_REPORT   INTEGER     not null,
+    ID_EMPLOYEE VARCHAR(15) not null,
+    primary key (ID_REPORT, ID_EMPLOYEE),
+    constraint REPORT_EMPLOYEE_REPORT_FK foreign key (ID_REPORT) references REPORT(ID_REPORT) on update cascade on delete cascade,
+    constraint REPORT_EMPLOYEE_EMPLOYEE_FK foreign key (ID_EMPLOYEE) references EMPLOYEE(ID_EMPLOYEE) on update cascade on delete cascade
 );
 
 
-ALTER SEQUENCE PUBLIC.DUTY_TYPE_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_DUTY_TYPE)+1,1) FROM PUBLIC.DUTY_TYPE);
-ALTER SEQUENCE PUBLIC.RANG_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_RANG)+1,1) FROM PUBLIC.RANG);
-ALTER SEQUENCE PERSON_GROUP_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_PERSON_GROUP)+1,1) FROM PERSON_GROUP);
+ALTER SEQUENCE SHIFT_TYPE_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_SHIFT_TYPE)+1,1) FROM PUBLIC.SHIFT_TYPE);
+ALTER SEQUENCE RANG_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_RANG)+1,1) FROM PUBLIC.RANG);
+ALTER SEQUENCE EMPLOYEE_GROUP_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_EMPLOYEE_GROUP)+1,1) FROM EMPLOYEE_GROUP);
 ALTER SEQUENCE REPORT_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_REPORT)+1,100) FROM REPORT);
+
+
+-- ===================       ROSTER       =========================
+
+drop table if exists DUTY_ROSTER;
+
+create table if not exists DUTY_ROSTER (
+    ID_DUTY_ROSTER INTEGER not null,
+    CREATED_DATE   TIMESTAMP,
+    INITSCORE      INTEGER,
+    HARDSCORE      INTEGER,
+    MEDIUMSCORE    INTEGER,
+    SOFTSCORE      INTEGER,
+    constraint DUTY_ROSTER_PK primary key (ID_DUTY_ROSTER)
+);
+
+drop table if exists DUTY_ROSTER_DAY;
+create table if not exists DUTY_ROSTER_DAY (
+    ID_DUTY_ROSTER INTEGER not null,
+    DATE           DATE    not null,
+    constraint DUTY_ROSTER_DAY_DAY_FK foreign key (DATE) references DAY(DATE),
+    constraint DUTY_ROSTER_DAY_DUTY_ROSTER_FK foreign key (ID_DUTY_ROSTER) references DUTY_ROSTER(ID_DUTY_ROSTER)
+);
+
+drop table if exists DUTY_ROSTER_EMPLOYEE;
+
+create table if not exists DUTY_ROSTER_EMPLOYEE (
+    ID_DUTY_ROSTER INTEGER     not null,
+    ID_EMPLOYEE    VARCHAR(15) not null,
+    constraint DUTY_ROSTER_EMPLOYEE_PK primary key (ID_DUTY_ROSTER, ID_EMPLOYEE),
+    constraint DUTY_ROSTER_EMPLOYEE_DUTY_ROSTER foreign key (ID_DUTY_ROSTER) references DUTY_ROSTER(ID_DUTY_ROSTER),
+    constraint DUTY_ROSTER_EMPLOYEE_EMPLOYEE foreign key (ID_EMPLOYEE) references EMPLOYEE(ID_EMPLOYEE)
+);
+
+drop table if exists DUTY_ROSTER_SHIFT;
+create table if not exists DUTY_ROSTER_SHIFT (
+    ID_DUTY_ROSTER INTEGER not null,
+    ID_SHIFT       INTEGER not null,
+    constraint DUTY_ROSTER_SHIFT_PK primary key (ID_DUTY_ROSTER, ID_SHIFT),
+    constraint DUTY_ROSTER_SHIFT_SHIFT_FK foreign key (ID_SHIFT) references SHIFT(ID_SHIFT),
+    constraint DUTY_ROSTER_SHIFT_DUTY_ROSTER_FK foreign key (ID_DUTY_ROSTER) references DUTY_ROSTER(ID_DUTY_ROSTER)
+);
+
+drop table if exists DUTY_ROSTER_SHIFT_TYPE;
+
+create table if not exists DUTY_ROSTER_SHIFT_TYPE (
+    ID_DUTY_ROSTER INTEGER not null,
+    ID_SHIFT_TYPE  INTEGER not null,
+    constraint DUTY_ROSTER_SHIFT_TYPE_PK primary key (ID_DUTY_ROSTER, ID_SHIFT_TYPE),
+    constraint DUTY_ROSTER_SHIFT_TYPE_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE),
+    constraint DUTY_ROSTER_SHIFT_TYPE_DUTY_ROSTER_FK foreign key (ID_DUTY_ROSTER) references DUTY_ROSTER(ID_DUTY_ROSTER)
+);
+
+drop table if exists EMPLOYEE_DUTY_TYPE_LIMIT;
+create table if not exists EMPLOYEE_DUTY_TYPE_LIMIT (
+    ID_DUTY_ROSTER INTEGER not null,
+    ID_EMPLOYEE    INTEGER not null,
+    ID_SHIFT_TYPE  INTEGER not null,
+    MIN            INTEGER,
+    MAX            INTEGER,
+    CREATED_DATE   TIMESTAMP,
+    constraint EMPLOYEE_DUTY_TYPE_LIMIT_PK primary key (ID_DUTY_ROSTER, ID_EMPLOYEE, ID_SHIFT_TYPE),
+    constraint EMPLOYEE_DUTY_TYPE_LIMIT_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE),
+    constraint EMPLOYEE_DUTY_TYPE_LIMIT_EMPLOYEE_FK foreign key (ID_EMPLOYEE) references EMPLOYEE(ID_EMPLOYEE),
+    constraint EMPLOYEE_DUTY_TYPE_LIMIT_DUTY_ROSTER_FK foreign key (ID_DUTY_ROSTER) references DUTY_ROSTER(ID_DUTY_ROSTER)
+);
+
+drop table if exists VACATION_PART;
+drop table if exists VACATION;
+
+create table if not exists VACATION (
+    ID_EMPLOYEE VARCHAR(255) not null,
+    YEAR         INTEGER      not null,
+    CREATED_DATE TIMESTAMP,
+    constraint VACATION_PK primary key (ID_EMPLOYEE, YEAR),
+    constraint VACATION_EMPLOYEE_FK foreign key (ID_EMPLOYEE) references EMPLOYEE(ID_EMPLOYEE)
+);
+
+create table VACATION_PART (
+    ID_EMPLOYEE VARCHAR(255) not null,
+    YEAR         INTEGER      not null,
+    PART_NUMBER  INTEGER      not null,
+    START        DATE         not null,
+    END          DATE         not null,
+    constraint VACATION_PART_PK primary key (ID_EMPLOYEE, YEAR, PART_NUMBER),
+    constraint VACATION_PART_FK foreign key (ID_EMPLOYEE, YEAR) references VACATION(ID_EMPLOYEE, YEAR)
+);
+
+
+
+
+
 
 

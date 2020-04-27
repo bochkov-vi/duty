@@ -18,14 +18,14 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public abstract class AbstractAuditableEntity<ID extends Serializable> extends AbstractEntity<ID> {
     @LastModifiedDate
-    @Column(name = "last_modified_date")
+    @Column(name = "LAST_MODIFIED_DATE")
     LocalDateTime lastModifiedDate;
 
     @LastModifiedBy
-    @Column(name = "last_modified_by")
+    @Column(name = "LAST_MODIFIED_BY")
     String lastModifiedBy;
 
     @CreatedBy
-    @Column(name = "created_by")
+    @Column(name = "CREATED_BY")
     String createdBy;
 }

@@ -16,10 +16,10 @@ import java.time.LocalDate;
 @Embeddable
 public class DutyPK implements Serializable {
 
-    @Column(name = "id_person", length = 15)
+    @Column(name = "ID_PERSON", length = 15)
     String idPerson;
 
-    @Column(name = "date")
+    @Column(name = "DATE")
     LocalDate date;
 
     public DutyPK() {
@@ -30,8 +30,8 @@ public class DutyPK implements Serializable {
         this.date = date;
     }
 
-    public DutyPK(Person person, Day day) {
-        this.idPerson = person.id;
+    public DutyPK(Employee employee, Day day) {
+        this.idPerson = employee.id;
         this.date = day.id;
     }
 

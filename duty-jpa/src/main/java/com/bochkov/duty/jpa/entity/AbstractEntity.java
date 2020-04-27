@@ -24,7 +24,7 @@ public abstract class AbstractEntity<ID extends Serializable> implements Persist
 
     @OrderColumn()
     @CreatedDate
-    @Column(name = "created_date")
+    @Column(name = "CREATED_DATE")
     LocalDateTime createdDate;
 
     @Override

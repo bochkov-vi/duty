@@ -2,12 +2,12 @@ package com.bochkov.duty;
 
 import com.bochkov.duty.jpa.DutyJpaConfig;
 import com.bochkov.duty.jpa.entity.Day;
-import com.bochkov.duty.jpa.entity.DutyType;
+import com.bochkov.duty.jpa.entity.ShiftType;
 import com.bochkov.duty.jpa.entity.OvertimeData;
-import com.bochkov.duty.jpa.entity.Person;
+import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.repository.DayRepository;
-import com.bochkov.duty.jpa.repository.DutyTypeRepository;
-import com.bochkov.duty.jpa.repository.PersonRepository;
+import com.bochkov.duty.jpa.repository.EmployeeRepository;
+import com.bochkov.duty.jpa.repository.ShiftTypeRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,10 +28,10 @@ public class DayRepositoryTests {
     DayRepository dayRepository;
 
     @Autowired
-    DutyTypeRepository dutyTypeRepository;
+    ShiftTypeRepository shiftTypeRepository;
 
     @Autowired
-    PersonRepository personRepository;
+    EmployeeRepository employeeRepository;
 
     LocalDate date = LocalDate.now();
 
@@ -100,31 +100,29 @@ public class DayRepositoryTests {
         LocalDate start = LocalDate.of(2020, 1, 1);
         LocalDate end = start.with(TemporalAdjusters.lastDayOfMonth());
         dayRepository.findOrCreate(start, end);
-        dayRepository.findAllByIdBetween(LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 10)).stream().map(day -> day.setWeekend(true)).forEach(
-                day -> dayRepository.safeSave(day)
-        );
+
     }
 
     @Test
     public void overtimeCalculates() {
-        DutyType dutyType = dutyTypeRepository.findById(3).get();
+        ShiftType shiftType = shiftTypeRepository.findById(3).get();
         LocalDate start = LocalDate.of(2020, 1, 1);
         LocalDate end = start.with(TemporalAdjusters.lastDayOfMonth());
         for (Day day : dayRepository.findOrCreate(start, end)) {
-            OvertimeData overtimeData = dutyType.overtime(day);
-            System.out.printf("%s\t%s\t%s\n", dutyType, day, overtimeData);
+            OvertimeData overtimeData = shiftType.overtime(day);
+            System.out.printf("%s\t%s\t%s\n", shiftType, day, overtimeData);
         }
     }
 
     @Test
     public void overtimeCalculatesForPerson() {
-        DutyType dutyType = dutyTypeRepository.findById(3).get();
+        ShiftType shiftType = shiftTypeRepository.findById(3).get();
         LocalDate start = LocalDate.of(2020, 1, 1);
         LocalDate end = start.with(TemporalAdjusters.lastDayOfMonth());
         for (Day day : dayRepository.findOrCreate(start, end)) {
-            for (Person p : personRepository.findAll()) {
-                OvertimeData overtimeData = dutyType.overtime(day,p);
-                System.out.printf("%s\t%s\t%s\t%s\t%s\n", dutyType, day, overtimeData, p,p.getRoadToHomeTime());
+            for (Employee p : employeeRepository.findAll()) {
+                OvertimeData overtimeData = shiftType.overtime(day,p);
+                System.out.printf("%s\t%s\t%s\t%s\t%s\n", shiftType, day, overtimeData, p,p.getRoadToHomeTime());
             }
         }
     }

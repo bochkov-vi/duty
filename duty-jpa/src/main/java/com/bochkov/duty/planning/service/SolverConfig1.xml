@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+    <!--<environmentMode>FULL_ASSERT</environmentMode>--><!-- To slowly prove there are no bugs in this code -->
+    <!--<moveThreadCount>AUTO</moveThreadCount>--><!-- To solve faster by saturating multiple CPU cores -->
+
+    <solutionClass>com.bochkov.duty.jpa.entity.DutyRoster</solutionClass>
+    <entityClass>com.bochkov.duty.jpa.entity.ShiftAssignment</entityClass>
+
+    <scoreDirectorFactory>
+        <constraintProviderClass>com.bochkov.duty.planning.DutyConstraintProvider</constraintProviderClass>
+    </scoreDirectorFactory>
+
+    <termination>
+        <secondsSpentLimit>300</secondsSpentLimit>
+        <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
+    </termination>
+    <environmentMode>REPRODUCIBLE</environmentMode>
+
+    <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+    </constructionHeuristic>
+
+
+
+    <localSearch>
+        <localSearchType>HILL_CLIMBING</localSearchType>
+        <termination>
+            <!--  <secondsSpentLimit>100</secondsSpentLimit>-->
+            <unimprovedSecondsSpentLimit>3</unimprovedSecondsSpentLimit>
+        </termination>
+    </localSearch>
+    <localSearch>
+        <localSearchType>LATE_ACCEPTANCE</localSearchType>
+        <termination>
+            <!--<secondsSpentLimit>100</secondsSpentLimit>-->
+            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+            <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
+        </termination>
+    </localSearch>
+
+    <localSearch>
+        <localSearchType>GREAT_DELUGE</localSearchType>
+        <termination>
+            <secondsSpentLimit>100</secondsSpentLimit>
+            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+            <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
+        </termination>
+    </localSearch>
+
+    <localSearch>
+        <localSearchType>VARIABLE_NEIGHBORHOOD_DESCENT</localSearchType>
+        <termination>
+            <secondsSpentLimit>100</secondsSpentLimit>
+            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+            <!--<scoreCalculationCountLimit>1000</scoreCalculationCountLimit>-->
+        </termination>
+    </localSearch>
+
+    <localSearch>
+        <localSearchType>TABU_SEARCH</localSearchType>
+        <termination>
+            <secondsSpentLimit>100</secondsSpentLimit>
+            <unimprovedSecondsSpentLimit>1</unimprovedSecondsSpentLimit>
+        </termination>
+    </localSearch>
+
+
+</solver>

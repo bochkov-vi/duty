@@ -1,16 +1,16 @@
 package com.bochkov.duty.wicket.page.person;
 
-import com.bochkov.duty.jpa.entity.Person;
-import com.bochkov.duty.jpa.repository.PersonRepository;
+import com.bochkov.duty.jpa.entity.Employee;
+import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.wicket.component.select2.data.PersistableChoiceProvider;
 import org.apache.wicket.injection.Injector;
 
 import javax.inject.Inject;
 
-public class PersonDataProvider extends PersistableChoiceProvider<Person, String> {
+public class PersonDataProvider extends PersistableChoiceProvider<Employee, String> {
 
     @Inject
-    PersonRepository repository;
+    EmployeeRepository repository;
 
     public PersonDataProvider() {
         super("lastName", "firstName", "id");
@@ -22,7 +22,7 @@ public class PersonDataProvider extends PersistableChoiceProvider<Person, String
     }
 
     @Override
-    public PersonRepository getRepository() {
+    public EmployeeRepository getRepository() {
         if (repository == null) {
             Injector.get().inject(this);
         }
