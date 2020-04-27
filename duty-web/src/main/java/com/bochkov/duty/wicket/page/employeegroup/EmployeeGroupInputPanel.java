@@ -1,4 +1,4 @@
-package com.bochkov.duty.wicket.page.persongroup;
+package com.bochkov.duty.wicket.page.employeegroup;
 
 import com.bochkov.duty.jpa.entity.EmployeeGroup;
 import org.apache.wicket.markup.html.form.RequiredTextField;
@@ -6,9 +6,9 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 
-public class PersonGroupInputPanel extends GenericPanel<EmployeeGroup> {
+public class EmployeeGroupInputPanel extends GenericPanel<EmployeeGroup> {
 
-    public PersonGroupInputPanel(String id, IModel<EmployeeGroup> model) {
+    public EmployeeGroupInputPanel(String id, IModel<EmployeeGroup> model) {
         super(id, model);
     }
 

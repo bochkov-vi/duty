@@ -26,7 +26,11 @@ public class Vacation extends AbstractEntity<VacationPK> {
     @ElementCollection
     @CollectionTable(name = "VACATION_PART", joinColumns = {@JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE"), @JoinColumn(name = "YEAR", referencedColumnName = "YEAR")})
     @OrderBy("partNumber")
-    Set<VacationPart> vacationParts;
+    Set<VacationPart> parts;
+
+    public Vacation(VacationPK id) {
+        this.id = id;
+    }
 
     public static Vacation of(Integer year, Employee employee) {
         return new Vacation().setEmployee(employee).setId(new VacationPK(year, employee.getId()));
@@ -35,9 +39,9 @@ public class Vacation extends AbstractEntity<VacationPK> {
     @PrePersist
     @PreUpdate
     public void preSave() {
-        if (vacationParts != null) {
+        if (parts != null) {
             int i = 0;
-            for (VacationPart vp : vacationParts) {
+            for (VacationPart vp : parts) {
                 vp.setPartNumber(++i);
             }
         }

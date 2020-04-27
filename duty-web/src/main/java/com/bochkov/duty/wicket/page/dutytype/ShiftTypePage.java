@@ -21,16 +21,16 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 
-@MountPath("duty-type")
-public class DutyTypePage extends EntityPage<ShiftType, Integer> {
+@MountPath("shift-type")
+public class ShiftTypePage extends EntityPage<ShiftType, Integer> {
 
     @SpringBean
     private ShiftTypeRepository shiftTypeRepository;
 
-    public DutyTypePage() {
+    public ShiftTypePage() {
     }
 
-    public DutyTypePage(ShiftType entity) {
+    public ShiftTypePage(ShiftType entity) {
         super(entity);
     }
 
@@ -58,7 +58,7 @@ public class DutyTypePage extends EntityPage<ShiftType, Integer> {
 
     @Override
     protected WebMarkupContainer createInputPanel(String id, IModel<ShiftType> model) {
-        return new DutyTypeInputPanel(id, model);
+        return new ShiftTypeInputPanel(id, model);
     }
 
     @Override

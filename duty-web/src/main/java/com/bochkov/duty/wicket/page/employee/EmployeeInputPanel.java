@@ -1,10 +1,10 @@
-package com.bochkov.duty.wicket.page.person;
+package com.bochkov.duty.wicket.page.employee;
 
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.repository.EmployeeGroupRepository;
 import com.bochkov.duty.jpa.repository.RangRepository;
-import com.bochkov.duty.wicket.page.dutytype.DutyTypeFieldMultiSelect;
-import com.bochkov.duty.wicket.page.persongroup.PersonGroupFieldSelect;
+import com.bochkov.duty.wicket.page.dutytype.ShiftTypeFieldMultiSelect;
+import com.bochkov.duty.wicket.page.employeegroup.EmployeeGroupFieldSelect;
 import com.bochkov.duty.wicket.page.rang.RangFieldSelect;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
@@ -12,7 +12,7 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-public class PersonInputPanel extends GenericPanel<Employee> {
+public class EmployeeInputPanel extends GenericPanel<Employee> {
 
     @SpringBean
     RangRepository rangRepository;
@@ -20,7 +20,7 @@ public class PersonInputPanel extends GenericPanel<Employee> {
     @SpringBean
     EmployeeGroupRepository employeeGroupRepository;
 
-    public PersonInputPanel(String id, IModel<Employee> model) {
+    public EmployeeInputPanel(String id, IModel<Employee> model) {
         super(id, model);
     }
 
@@ -33,8 +33,8 @@ public class PersonInputPanel extends GenericPanel<Employee> {
         add(new RequiredTextField<>("middleName"));
         add(new RequiredTextField<>("lastName"));
         add(new RangFieldSelect("rang").setRequired(true));
-        add(new PersonGroupFieldSelect("personGroup"));
-        add(new DutyTypeFieldMultiSelect("dutyTypes"));
+        add(new EmployeeGroupFieldSelect("employeeGroup"));
+        add(new ShiftTypeFieldMultiSelect("shiftTypes"));
         add(new RequiredTextField<>("post"));
         add(new TextField<>("createdDate").setEnabled(false));
     }

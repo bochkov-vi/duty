@@ -1,4 +1,4 @@
-package com.bochkov.duty.wicket.page.persongroup;
+package com.bochkov.duty.wicket.page.employeegroup;
 
 import com.bochkov.duty.jpa.entity.EmployeeGroup;
 import com.bochkov.duty.jpa.repository.EmployeeGroupRepository;
@@ -17,23 +17,24 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 
-@MountPath("personal-group")
-public class PersonGroupPage extends EntityPage<EmployeeGroup, Integer> {
+@MountPath("employee-group")
+public class EmloyeeGroupPage extends EntityPage<EmployeeGroup, Integer> {
+
     @SpringBean
     private EmployeeGroupRepository employeeGroupRepository;
 
-    public PersonGroupPage() {
+    public EmloyeeGroupPage() {
     }
 
-    public PersonGroupPage(EmployeeGroup entity) {
+    public EmloyeeGroupPage(EmployeeGroup entity) {
         super(entity);
     }
 
     @Override
     protected List<IColumn<EmployeeGroup, String>> columns() {
         List<IColumn<EmployeeGroup, String>> list = Lists.newArrayList();
-        list.add(new LambdaColumn<EmployeeGroup, String>(new ResourceModel("personGroup.id"), "id", EmployeeGroup::getId));
-        list.add(new LambdaColumn<EmployeeGroup, String>(new ResourceModel("personGroup.name"), "name", EmployeeGroup::getName));
+        list.add(new LambdaColumn<EmployeeGroup, String>(new ResourceModel("employeeGroup.id"), "id", EmployeeGroup::getId));
+        list.add(new LambdaColumn<EmployeeGroup, String>(new ResourceModel("employeeGroup.name"), "name", EmployeeGroup::getName));
         return list;
     }
 
@@ -45,12 +46,12 @@ public class PersonGroupPage extends EntityPage<EmployeeGroup, Integer> {
 
     @Override
     protected WebMarkupContainer createInputPanel(String id, IModel<EmployeeGroup> model) {
-        return new PersonGroupInputPanel(id, model);
+        return new EmployeeGroupInputPanel(id, model);
     }
 
     @Override
     protected GenericPanel<EmployeeGroup> createDetailsPanel(String id, IModel<EmployeeGroup> model) {
-        return new DetailsPanel<EmployeeGroup>(id, getModel(), ImmutableList.of("id", "name","createdDate"), "employeeGroup.");
+        return new DetailsPanel<EmployeeGroup>(id, getModel(), ImmutableList.of("id", "name", "createdDate"), "employeeGroup.");
     }
 
     @Override

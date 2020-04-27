@@ -10,12 +10,12 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.inject.Inject;
 
-public class DutyTypeChoiceProvider extends MaskableChoiceProvider<ShiftType> {
+public class ShiftTypeChoiceProvider extends MaskableChoiceProvider<ShiftType> {
 
     @Inject
     ShiftTypeRepository repository;
 
-    public DutyTypeChoiceProvider() {
+    public ShiftTypeChoiceProvider() {
         super("name", "id");
     }
 

@@ -1,4 +1,4 @@
-package com.bochkov.duty.wicket.page.persongroup;
+package com.bochkov.duty.wicket.page.employeegroup;
 
 import com.bochkov.duty.jpa.entity.EmployeeGroup;
 import com.bochkov.duty.jpa.repository.EmployeeGroupRepository;
@@ -9,12 +9,12 @@ import org.apache.wicket.injection.Injector;
 import javax.inject.Inject;
 import java.util.Optional;
 
-public class PersonGroupChoiceProvider extends PersistableChoiceProvider<EmployeeGroup, Integer> {
+public class EmployeeGroupChoiceProvider extends PersistableChoiceProvider<EmployeeGroup, Integer> {
 
     @Inject
     EmployeeGroupRepository repository;
 
-    public PersonGroupChoiceProvider() {
+    public EmployeeGroupChoiceProvider() {
         super("name", "id");
     }
 

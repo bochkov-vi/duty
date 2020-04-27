@@ -1,4 +1,4 @@
-package com.bochkov.duty.wicket.page.person;
+package com.bochkov.duty.wicket.page.employee;
 
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.repository.EmployeeRepository;
@@ -8,23 +8,23 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.select2.Select2Choice;
 
 @Getter
-public class PersonFieldSelect extends Select2Choice<Employee> {
+public class EmployeeFieldSelect extends Select2Choice<Employee> {
 
     @SpringBean
     EmployeeRepository repository;
 
-    public PersonFieldSelect(String id) {
+    public EmployeeFieldSelect(String id) {
         super(id);
     }
 
-    public PersonFieldSelect(String id, IModel<Employee> model) {
+    public EmployeeFieldSelect(String id, IModel<Employee> model) {
         super(id, model);
     }
 
     @Override
     protected void onInitialize() {
         getSettings().setCloseOnSelect(true);
-        setProvider(new PersonDataProvider());
+        setProvider(new EmployeeDataProvider());
         super.onInitialize();
     }
 }

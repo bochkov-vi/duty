@@ -6,19 +6,19 @@ import org.apache.wicket.model.IModel;
 import org.wicketstuff.select2.Select2Choice;
 
 @Getter
-public class DutyTypeFieldSelect extends Select2Choice<ShiftType> {
+public class ShiftTypeFieldSelect extends Select2Choice<ShiftType> {
 
-    public DutyTypeFieldSelect(String id) {
+    public ShiftTypeFieldSelect(String id) {
         super(id);
     }
 
-    public DutyTypeFieldSelect(String id, IModel<ShiftType> model) {
+    public ShiftTypeFieldSelect(String id, IModel<ShiftType> model) {
         super(id, model);
     }
 
     @Override
     protected void onInitialize() {
-        setProvider(new DutyTypeChoiceProvider());
+        setProvider(new ShiftTypeChoiceProvider());
         super.onInitialize();
     }
 }

@@ -8,19 +8,19 @@ import org.wicketstuff.select2.Select2MultiChoice;
 import java.util.Collection;
 
 @Getter
-public class DutyTypeFieldMultiSelect extends Select2MultiChoice<ShiftType> {
+public class ShiftTypeFieldMultiSelect extends Select2MultiChoice<ShiftType> {
 
-    public DutyTypeFieldMultiSelect(String id) {
+    public ShiftTypeFieldMultiSelect(String id) {
         super(id);
     }
 
-    public DutyTypeFieldMultiSelect(String id, IModel<Collection<ShiftType>> model) {
+    public ShiftTypeFieldMultiSelect(String id, IModel<Collection<ShiftType>> model) {
         super(id, model);
     }
 
     @Override
     protected void onInitialize() {
-        setProvider(new DutyTypeChoiceProvider());
+        setProvider(new ShiftTypeChoiceProvider());
         super.onInitialize();
     }
 }

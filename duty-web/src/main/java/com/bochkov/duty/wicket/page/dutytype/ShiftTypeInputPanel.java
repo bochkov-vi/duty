@@ -10,7 +10,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.time.LocalDateTime;
 
-public class DutyTypeInputPanel extends GenericPanel<ShiftType> {
+public class ShiftTypeInputPanel extends GenericPanel<ShiftType> {
 
     TextField<Integer> idTextField = new TextField<>("id");
 
@@ -25,7 +25,7 @@ public class DutyTypeInputPanel extends GenericPanel<ShiftType> {
     TextField<String> faIconTextField = new TextField<>("uiOptions.faIcon");
 
 
-    public DutyTypeInputPanel(String id, IModel<ShiftType> model) {
+    public ShiftTypeInputPanel(String id, IModel<ShiftType> model) {
         super(id, model);
     }
 

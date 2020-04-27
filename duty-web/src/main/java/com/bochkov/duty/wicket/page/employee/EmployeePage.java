@@ -1,4 +1,4 @@
-package com.bochkov.duty.wicket.page.person;
+package com.bochkov.duty.wicket.page.employee;
 
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.entity.EmployeeGroup;
@@ -21,29 +21,30 @@ import org.wicketstuff.annotation.mount.MountPath;
 import java.util.List;
 import java.util.Optional;
 
-@MountPath("personal")
-public class PersonPage extends EntityPage<Employee, String> {
+@MountPath("employee")
+public class EmployeePage extends EntityPage<Employee, String> {
+
     @SpringBean
     private EmployeeRepository employeeRepository;
 
-    public PersonPage() {
+    public EmployeePage() {
     }
 
-    public PersonPage(Employee entity) {
+    public EmployeePage(Employee entity) {
         super(entity);
     }
 
     @Override
     protected List<IColumn<Employee, String>> columns() {
         List<IColumn<Employee, String>> list = Lists.newArrayList();
-        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.id"), "id", Employee::getId));
-        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.post"), "post", Employee::getPost));
-        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.rang"), "rang", p-> Optional.ofNullable(p).map(Employee::getRang).map(Rang::getName).orElse(null)));
-        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.firstName"), "firstName", Employee::getFirstName));
-        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.middleName"), "middleName", Employee::getMiddleName));
-        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.lastName"), "lastName", Employee::getLastName));
-        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.employeeGroup"), "personGroup.name", p-> Optional.ofNullable(p).map(Employee::getEmployeeGroup).map(EmployeeGroup::getName).orElse(null)));
-        list.add(new LambdaColumn<Employee, String>(new ResourceModel("person.shiftTypes"), "employeeGroup.shiftTypes", p-> Optional.ofNullable(p).map(Employee::getShiftTypes).map(dts-> Joiner.on("; ").skipNulls().join(dts)).orElse(null)));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("employee.id"), "id", Employee::getId));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("employee.post"), "post", Employee::getPost));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("employee.rang"), "rang", p -> Optional.ofNullable(p).map(Employee::getRang).map(Rang::getName).orElse(null)));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("employee.firstName"), "firstName", Employee::getFirstName));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("employee.middleName"), "middleName", Employee::getMiddleName));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("employee.lastName"), "lastName", Employee::getLastName));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("employee.employeeGroup"), "employeeGroup.name", p -> Optional.ofNullable(p).map(Employee::getEmployeeGroup).map(EmployeeGroup::getName).orElse(null)));
+        list.add(new LambdaColumn<Employee, String>(new ResourceModel("employee.shiftTypes"), "employeeGroup.shiftTypes", p -> Optional.ofNullable(p).map(Employee::getShiftTypes).map(dts -> Joiner.on("; ").skipNulls().join(dts)).orElse(null)));
         return list;
     }
 
@@ -55,7 +56,7 @@ public class PersonPage extends EntityPage<Employee, String> {
 
     @Override
     protected WebMarkupContainer createInputPanel(String id, IModel<Employee> model) {
-        return new PersonInputPanel(id, model);
+        return new EmployeeInputPanel(id, model);
     }
 
     @Override

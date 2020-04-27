@@ -5,19 +5,25 @@
 
     <div class="form-group">
         <label wicket:for="id">
-            <wicket:message key="personGroup.id"/>
+            <wicket:message key="vacation.year"/>
             :</label>
-        <input type="text" class="form-control" wicket:id="id">
+        <input type="text" class="form-control" wicket:id="id.year">
     </div>
     <div class="form-group">
         <label wicket:for="name">
-            <wicket:message key="personGroup.name"/>
+            <wicket:message key="rang.name"/>
             :</label>
-        <input type="text" class="form-control" wicket:id="name">
+        <select type="text" class="form-control" wicket:id="employee"></select>
+    </div>
+    <div class="form-group">
+        <label wicket:for="fullName">
+            <wicket:message key="rang.fullName"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="fullName">
     </div>
     <div class="form-group">
         <label wicket:for="createdDate">
-            <wicket:message key="personGroup.createdDate"/>
+            <wicket:message key="rang.createdDate"/>
             :</label>
         <input type="text" class="form-control" wicket:id="createdDate">
     </div>
