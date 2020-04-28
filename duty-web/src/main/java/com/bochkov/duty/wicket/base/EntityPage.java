@@ -119,7 +119,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         add(new AjaxLink<Void>("btn-new-row") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                EntityPage.this.setModelObject(null);
+                EntityPage.this.setModelObject(newInstance());
                 showModal(target);
                 setModalContent(formInputFragment);
             }

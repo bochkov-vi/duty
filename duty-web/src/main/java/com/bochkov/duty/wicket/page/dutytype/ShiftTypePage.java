@@ -37,11 +37,11 @@ public class ShiftTypePage extends EntityPage<ShiftType, Integer> {
     @Override
     protected List<IColumn<ShiftType, String>> columns() {
         List<IColumn<ShiftType, String>> list = Lists.newArrayList();
-        list.add(new PropertyColumn<>(new ResourceModel("dutyType.id"), "id", "id"));
-        list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("dutyType.name"), "name", "name"));
-        list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("dutyType.uiOptions.htmlClass"), "uiOptions.htmlClass", "uiOptions.htmlClass"));
-        list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("dutyType.uiOptions.plainText"), "uiOptions.plainText", "uiOptions.plainText"));
-        list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("dutyType.uiOptions.faIcon"), "uiOptions.faIcon","uiOptions.faIcon"){
+        list.add(new PropertyColumn<>(new ResourceModel("shiftType.id"), "id", "id"));
+        list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("shiftType.name"), "name", "name"));
+        list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("shiftType.uiOptions.htmlClass"), "uiOptions.htmlClass", "uiOptions.htmlClass"));
+        list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("shiftType.uiOptions.plainText"), "uiOptions.plainText", "uiOptions.plainText"));
+        list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("shiftType.uiOptions.faIcon"), "uiOptions.faIcon","uiOptions.faIcon"){
             @Override
             public void populateItem(Item<ICellPopulator<ShiftType>> item, String componentId, IModel<ShiftType> rowModel) {
                 item.add(new FaIcon(componentId,getDataModel(rowModel)));

@@ -3,9 +3,12 @@ package com.bochkov.duty.wicket.page.employee;
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import lombok.Getter;
+import org.apache.wicket.StyleAttributeModifier;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.select2.Select2Choice;
+
+import java.util.Map;
 
 @Getter
 public class EmployeeFieldSelect extends Select2Choice<Employee> {
@@ -25,6 +28,13 @@ public class EmployeeFieldSelect extends Select2Choice<Employee> {
     protected void onInitialize() {
         getSettings().setCloseOnSelect(true);
         setProvider(new EmployeeDataProvider());
+        add(new StyleAttributeModifier() {
+            @Override
+            protected Map<String, String> update(Map<String, String> oldStyles) {
+                oldStyles.put("width", "100%");
+                return oldStyles;
+            }
+        });
         super.onInitialize();
     }
 }

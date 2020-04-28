@@ -7,6 +7,7 @@ import com.bochkov.duty.wicket.base.DetailsPanel;
 import com.bochkov.duty.wicket.base.EntityPage;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import lombok.Getter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
@@ -55,6 +56,6 @@ public class VacationPage extends EntityPage<Vacation, VacationPK> {
 
     @Override
     protected Vacation newInstance() {
-        return new Vacation(new VacationPK());
+        return new Vacation(new VacationPK()).setParts(Sets.newTreeSet());
     }
 }

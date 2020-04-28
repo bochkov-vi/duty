@@ -2,7 +2,6 @@ package com.bochkov.duty.wicket.page.vacation;
 
 import com.bochkov.duty.jpa.entity.Vacation;
 import com.bochkov.duty.wicket.page.employee.EmployeeFieldSelect;
-import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
@@ -30,7 +29,6 @@ public class VacationInputPanel extends GenericPanel<Vacation> {
             }
         }.setRequired(true));
         add(new EmployeeFieldSelect("employee").setRequired(true));
-        add(new RequiredTextField<>("fullName"));
         add(new TextField<>("createdDate").setEnabled(false));
     }
 }
