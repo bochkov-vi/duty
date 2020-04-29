@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.Getter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -18,8 +19,12 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @MountPath("vacation")
 @Getter
@@ -46,7 +51,7 @@ public class VacationPage extends EntityPage<Vacation, VacationPK> {
         List<IColumn<Vacation, String>> list = Lists.newArrayList();
         list.add(new PropertyColumn<Vacation, String>(new ResourceModel("vacation.employee"), "employee.lastName", "employee"));
         list.add(new PropertyColumn<Vacation, String>(new ResourceModel("vacation.id.year"), "id.year", "id.year"));
-        list.add(new PropertyColumn<Vacation, String>(new ResourceModel("vacation.parts"), null, "parts"));
+        list.add(new LambdaColumn<Vacation, String>(new ResourceModel("vacation.parts"), null, v -> Optional.ofNullable(v.getParts()).map(Collection::stream).map(stream -> stream.map(p -> p.toString(DateTimeFormatter.ofPattern(getString("datePattern")))).filter(Objects::nonNull).collect(Collectors.joining("; "))).orElse(null)));
         return list;
     }
 
