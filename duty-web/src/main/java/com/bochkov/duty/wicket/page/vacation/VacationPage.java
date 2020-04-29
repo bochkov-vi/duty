@@ -19,6 +19,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
+import java.util.Objects;
 
 @MountPath("vacation")
 @Getter
@@ -35,10 +36,16 @@ public class VacationPage extends EntityPage<Vacation, VacationPK> {
     }
 
     @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        setModalMode(false);
+    }
+
+    @Override
     protected List<IColumn<Vacation, String>> columns() {
         List<IColumn<Vacation, String>> list = Lists.newArrayList();
         list.add(new PropertyColumn<Vacation, String>(new ResourceModel("vacation.employee"), "employee.lastName", "employee"));
-        list.add(new PropertyColumn<Vacation, String>(new ResourceModel("vacation.year"), "id.year", "id.year"));
+        list.add(new PropertyColumn<Vacation, String>(new ResourceModel("vacation.id.year"), "id.year", "id.year"));
         list.add(new PropertyColumn<Vacation, String>(new ResourceModel("vacation.parts"), null, "parts"));
         return list;
     }
@@ -57,5 +64,14 @@ public class VacationPage extends EntityPage<Vacation, VacationPK> {
     @Override
     protected Vacation newInstance() {
         return new Vacation(new VacationPK()).setParts(Sets.newTreeSet());
+    }
+
+    @Override
+    public void save(Vacation entity) {
+        assert entity.getId() != null;
+        if (!Objects.equals(entity.getId().getIdEmployeer(), entity.getEmployee().getId())) {
+            entity.getId().setIdEmployeer(entity.getEmployee().getId());
+        }
+        super.save(entity);
     }
 }

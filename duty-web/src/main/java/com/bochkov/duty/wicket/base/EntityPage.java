@@ -18,12 +18,15 @@ import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulato
 import org.apache.wicket.extensions.markup.html.repeater.data.table.*;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.Specification;
@@ -33,6 +36,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializable> extends BootstrapPage<T> {
@@ -68,6 +72,28 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
 
     Form<T> editForm;
 
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    boolean modalMode = true;
+
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    boolean editMode = false;
+
+    WebMarkupContainer tableContainer = new WebMarkupContainer("table-container") {
+        @Override
+        public boolean isVisible() {
+            return !editMode;
+        }
+    };
+    WebMarkupContainer editFormContainer = new WebMarkupContainer("edit-form-container") {
+        @Override
+        public boolean isVisible() {
+            return editMode && !modalMode;
+        }
+    };
     WebMarkupContainer table;
 
     public EntityPage() {
@@ -92,10 +118,12 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
         feedback.setOutputMarkupId(true);
         feedback.setDelay(30000L);
         add(feedback);
-        add(table = table("table"));
+        add(tableContainer, editFormContainer);
+        tableContainer.add(table = table("table"));
         modal.setOutputMarkupId(true);
         modalContainer.setOutputMarkupId(true);
         add(modal);
@@ -116,14 +144,18 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
 
         formDeleteFragment = new Fragment(MODAL_CONTENT_ID, "form-delete-fragment", getPage());
         formDeleteFragment.add(deleteForm("form-delete"));
-        add(new AjaxLink<Void>("btn-new-row") {
+        tableContainer.add(new AjaxLink<Void>("btn-new-row") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                EntityPage.this.setModelObject(newInstance());
-                showModal(target);
-                setModalContent(formInputFragment);
+                onNewRow(Optional.ofNullable(target), editForm.getModel());
             }
         });
+
+        if ("edit".equals(getPageParameters().get(0).toOptionalString())) {
+            editMode = true;
+            modalMode = false;
+        }
+        editFormContainer.add(new EmptyPanel(MODAL_CONTENT_ID));
     }
 
     abstract protected <R extends JpaRepository<T, ID> & JpaSpecificationExecutor<T>> R getRepository();
@@ -145,7 +177,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
                         new AjaxLink<T>("edit", iModel) {
                             @Override
                             public void onClick(AjaxRequestTarget target) {
-                                onEditLinkClick(target, getModel());
+                                onEditLinkClick(Optional.of(target), getModel());
                             }
                         }
                         ).add(new AjaxLink<T>("delete", iModel) {
@@ -159,9 +191,15 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         };
     }
 
-    public void onEditLinkClick(AjaxRequestTarget target, IModel<T> model) {
-        modalContainer.replace(formInputFragment);
-        showModal(target);
+    public void onEditLinkClick(Optional<AjaxRequestTarget> target, IModel<T> model) {
+        if (modalMode) {
+            modalContainer.replace(formInputFragment);
+            target.ifPresent(t -> showModal(t));
+        } else {
+            RequestCycle.get().setResponsePage(this);
+            editFormContainer.replace(formInputFragment);
+            editMode = true;
+        }
         editForm.setModelObject(model.getObject());
     }
 
@@ -221,16 +259,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         form.add(new AjaxButton("btn-save") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                try {
-                    save(EntityPage.this.getModelObject());
-                    success(new StringResourceModel("message.entity.saved", this, EntityPage.this.getModel()).getString());
-                    hideModal(target);
-                    target.add(table);
-                } catch (Exception e) {
-                    //error(e.getLocalizedMessage());
-                    error(((DataIntegrityViolationException) e).getRootCause().getMessage());
-                }
-                target.add(feedback);
+                onEditSubmit(Optional.of(target), form.getModel());
             }
 
             @Override
@@ -239,6 +268,24 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
             }
         });
         form.add(createInputPanel("input-panel", form.getModel()));
+        form.add(new WebMarkupContainer("btn-cancel-modal-edit") {
+            @Override
+            public boolean isVisible() {
+                return modalMode;
+            }
+        });
+        form.add(new Link<Void>("btn-cancel-edit") {
+            @Override
+            public boolean isVisible() {
+                return !modalMode;
+            }
+
+            @Override
+            public void onClick() {
+                RequestCycle.get().setResponsePage(getPage());
+                editMode = false;
+            }
+        });
         return form;
     }
 
@@ -249,18 +296,13 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 if (deleteForm.getModel().isPresent().getObject()) {
-                    T entity = deleteForm.getModelObject();
-                    delete(target, entity);
-                    warn(getString("message.entity.deleted", deleteForm.getModel()));
-                    hideModal(target);
-                    target.add(table);
-                    target.add(feedback);
+                    onDelete(Optional.of(target), deleteForm.getModel());
                 }
             }
 
             @Override
             protected void onError(AjaxRequestTarget target) {
-                super.onError(target);
+                EntityPage.this.onError(target, deleteForm.getModel());
             }
         });
         return deleteForm;
@@ -279,13 +321,56 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         setModelObject(entity);
     }
 
-    public void delete(AjaxRequestTarget target, T entity) {
+    public void delete(T entity) {
         getRepository().delete(entity);
         setModelObject(null);
     }
 
-    public void create() {
+    public void onNewRow(Optional<AjaxRequestTarget> target, IModel<T> model) {
+        EntityPage.this.setModelObject(newInstance());
+        onEditLinkClick(target, model);
 
+    }
+
+    public void onEditSubmit(Optional<AjaxRequestTarget> target, IModel<T> model) {
+        try {
+            save(EntityPage.this.getModelObject());
+            success(new StringResourceModel("message.entity.saved", this, EntityPage.this.getModel()).getString());
+            if (modalMode) {
+                if (target.isPresent()) {
+                    AjaxRequestTarget t = target.get();
+                    hideModal(t);
+                    t.add(table);
+                }
+            } else {
+                RequestCycle.get().setResponsePage(this);
+            }
+            editMode = false;
+
+        } catch (Exception e) {
+            //error(e.getLocalizedMessage());
+            error(((DataIntegrityViolationException) e).getRootCause().getMessage());
+        }
+        target.ifPresent(
+                t -> t.add(feedback)
+        );
+    }
+
+    protected void onError(AjaxRequestTarget target, IModel<T> model) {
+        target.add(feedback);
+    }
+
+    public void onDelete(Optional<AjaxRequestTarget> target, IModel<T> model) {
+        if (model.isPresent().getObject()) {
+            T entity = model.getObject();
+            delete(entity);
+            warn(getString("message.entity.deleted", model));
+            target.ifPresent(t -> {
+                hideModal(t);
+                t.add(table);
+                t.add(feedback);
+            });
+        }
     }
 
     abstract protected T newInstance();

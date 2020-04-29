@@ -7,8 +7,7 @@
     <div wicket:id="feedback" style="z-index: 99999999"></div>
     <wicket:child></wicket:child>
 
-    <div class="container">
-
+    <div wicket:id="table-container" class="container">
         <div class="btn-group p-2">
             <button wicket:id="btn-new-row" class="btn btn-light border">
                 <i class="fa fa-plus"/>
@@ -18,6 +17,11 @@
         <div class="card">
             <table class="table table-sm table-striped" wicket:id="table">
             </table>
+        </div>
+    </div>
+
+    <div wicket:id="edit-form-container" class="container">
+        <div wicket:id="modal-content">
         </div>
     </div>
 
@@ -39,13 +43,18 @@
                     <i class="fa fa-save"/>
                     <span><wicket:message key="message.entity.save"/></span>
                 </button>
-                <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                <button wicket:id="btn-cancel-edit" class="btn btn-secondary" data-dismiss="modal" type="button">
+                    <i class="fa fa-ban"/>
+                    <span><wicket:message key="message.cancel"/></span>
+                </button>
+                <button wicket:id="btn-cancel-modal-edit" class="btn btn-secondary" data-dismiss="modal" type="button">
                     <i class="fa fa-ban"/>
                     <span><wicket:message key="message.cancel"/></span>
                 </button>
             </div>
         </form>
     </wicket:fragment>
+
     <wicket:fragment wicket:id="form-delete-fragment">
         <form wicket:id="form-delete">
             <div wicket:id="details-panel" class="modal-body">
@@ -66,8 +75,10 @@
     </wicket:fragment>
 
     <wicket:fragment wicket:id="edit-panel-fragment">
-        <a href="#" class="btn btn-light border" wicket:id="edit" wicket:message="title:message.entity.edit"><i class="fa fa-pencil"/></a>
-        <a href="#" class="btn btn-light border" wicket:id="delete" wicket:message="title:message.entity.delete"><i class="fa fa-close"/></a>
+        <a href="#" class="btn btn-light border" wicket:id="edit" wicket:message="title:message.entity.edit"><i
+                class="fa fa-pencil"/></a>
+        <a href="#" class="btn btn-light border" wicket:id="delete" wicket:message="title:message.entity.delete"><i
+                class="fa fa-close"/></a>
     </wicket:fragment>
 </wicket:extend>
 </body>
