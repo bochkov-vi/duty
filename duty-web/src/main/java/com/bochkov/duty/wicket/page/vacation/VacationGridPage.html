@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
-<table wicket:id="table" class="table table-sm table-striped"></table>
-<thead>
-<th></th>
-<th></th>
-</thead>
-<tbody>
-
-</tbody>
+<div class="container">
+    <table class="table table-sm table-striped table-bordered">
+        <thead>
+        <tr>
+            <th></th>
+            <th wicket:id="head1" class="text-center">
+                <div wicket:id="cell"></div>
+            </th>
+        </tr>
+        <tr>
+            <th></th>
+            <th wicket:id="head2" class="text-center">
+                <div wicket:id="cell"></div>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr wicket:id="employee">
+            <th wicket:id="employee"></th>
+            <th wicket:id="cells">
+                <div wicket:id="cell">
+                    <input wicket:id="input" type="hidden">
+                </div>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
