@@ -6,7 +6,7 @@ import com.bochkov.duty.jpa.repository.VacationRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
+import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.HiddenField;
@@ -21,8 +21,10 @@ import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @MountPath("vacation-grid")
 public class VacationGridPage extends BootstrapPage<Integer> {
@@ -60,30 +62,48 @@ public class VacationGridPage extends BootstrapPage<Integer> {
                 item.add(new AttributeAppender("colspan", 2));
             }
         };
-        List<Pair<Month, Integer>> halfs = Lists.newArrayList();
+        List<Pair<LocalDate, LocalDate>> halfs = Lists.newArrayList();
         for (Month m : months) {
-            halfs.add(Pair.of(m, 1));
-            halfs.add(Pair.of(m, 2));
+            LocalDate date1 = LocalDate.now().withMonth(m.getValue()).with(TemporalAdjusters.firstDayOfMonth());
+            LocalDate date2 = date1.with(TemporalAdjusters.lastDayOfMonth());
+            LocalDate mDate = date1.plusDays(ChronoUnit.DAYS.between(date1, date2) / 2-1);
+            halfs.add(Pair.of(date1, mDate));
+            halfs.add(Pair.of(mDate.plusDays(1), date2));
         }
-        ListView head2 = new ListView<Pair<Month, Integer>>("head2", halfs) {
+        ListView head2 = new ListView<Pair<LocalDate, LocalDate>>("head2", halfs) {
 
             @Override
-            protected void populateItem(ListItem<Pair<Month, Integer>> item) {
-                item.add(new Label("cell", item.getModel().map(Pair::getValue)));
+            protected void populateItem(ListItem<Pair<LocalDate, LocalDate>> item) {
+                item.add(new Label("cell", item.getModel().map(Pair::getKey).map(d -> d.format(DateTimeFormatter.ofPattern("dd.MM")))));
             }
         };
 
         ListView<Employee> rows = new ListView<Employee>("employee", employeeRepository.findAll()) {
             @Override
-            protected void populateItem(ListItem<Employee> item) {
-                item.add(new Label("employee", item.getModel().map(Employee::toString)));
-                ListView<Triple<Employee, Month, Integer>> cells = new ListView("cells", halfs.stream().map(pair -> Triple.of(item.getModelObject(), pair.getKey(), pair.getValue())).collect(Collectors.toList())) {
+            protected void populateItem(ListItem<Employee> employeeListItem) {
+                employeeListItem.add(new Label("employee", employeeListItem.getModel().map(Employee::toString)));
+
+                ListView cells = new ListView<Pair<LocalDate, LocalDate>>("cells", halfs) {
+
                     @Override
-                    protected void populateItem(ListItem item) {
-                        item.add(new HiddenField<Boolean>())
+                    protected void populateItem(ListItem<Pair<LocalDate, LocalDate>> item) {
+                        Employee employee = employeeListItem.getModelObject();
+                        LocalDate date1 = item.getModel().map(Pair::getKey).getObject();
+                        LocalDate date2 = item.getModel().map(Pair::getValue).getObject();
+                        Boolean value = vacationRepository.percentOverlap(date1, date2, employee)>0.5;
+                        item.add(new ClassAttributeModifier() {
+                            @Override
+                            protected Set<String> update(Set<String> oldClasses) {
+                                if(value){
+                                    oldClasses.add("alert-danger");
+                                }
+                                return oldClasses;
+                            }
+                        });
+                        item.add(new HiddenField<Boolean>("input", Model.of(value)));
                     }
                 };
-                item.add(cells);
+                employeeListItem.add(cells);
             }
         };
         add(head1, head2, rows);

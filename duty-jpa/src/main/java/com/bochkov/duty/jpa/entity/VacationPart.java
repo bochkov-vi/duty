@@ -1,5 +1,6 @@
 package com.bochkov.duty.jpa.entity;
 
+import com.google.common.collect.Range;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -8,6 +9,7 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,5 +50,24 @@ public class VacationPart implements Serializable, Comparable<VacationPart> {
 
     public String toString(DateTimeFormatter formatter) {
         return String.format("%s. (%s)", partNumber, Stream.of(start, end).map(d -> d.format(formatter)).collect(Collectors.joining("-")));
+    }
+
+    public double percentOverlap(LocalDate start, LocalDate end) {
+        double result = 0.0;
+        Range<LocalDate> request = Range.closed(start, end);
+        Range<LocalDate> thisData = Range.closed(this.start, this.end);
+        if (request.isConnected(thisData)) {
+            double count = ChronoUnit.DAYS.between(start, end);
+            Range<LocalDate> i = request.intersection(thisData);
+            double icount = ChronoUnit.DAYS.between(i.lowerEndpoint(), i.upperEndpoint());
+            if (icount > 0) {
+                result = icount / count;
+            }
+        }
+        return result;
+    }
+
+    public long daysCount() {
+        return ChronoUnit.DAYS.between(start, end);
     }
 }
