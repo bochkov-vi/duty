@@ -32,12 +32,8 @@ public class Report extends AbstractAuditableEntity<Integer> {
     @Column(name = "ID_REPORT", nullable = false)
     Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_SHIFT_TYPE")
-    ShiftType shiftType;
-
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "REPORT_PERSON", joinColumns = @JoinColumn(name = "ID_REPORT"), inverseJoinColumns = @JoinColumn(name = "ID_PERSON"))
+    @JoinTable(name = "REPORT_EMPLOYEE", joinColumns = @JoinColumn(name = "ID_REPORT",referencedColumnName = "ID_REPORT"), inverseJoinColumns = @JoinColumn(name = "ID_EMPLOYEE",referencedColumnName = "ID_EMPLOYEE"))
     Set<Employee> employees;
 
     @Column(name = "DATE", nullable = false)

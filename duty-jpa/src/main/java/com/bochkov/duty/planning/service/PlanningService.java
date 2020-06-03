@@ -1,7 +1,7 @@
 package com.bochkov.duty.planning.service;
 
-import com.bochkov.duty.jpa.entity.DutyRoster;
+import com.bochkov.duty.jpa.entity.ShiftRostering;
 
 public interface PlanningService {
-    DutyRoster solve(DutyRoster dutyRoster);
+    ShiftRostering solve(ShiftRostering shiftRostering);
 }

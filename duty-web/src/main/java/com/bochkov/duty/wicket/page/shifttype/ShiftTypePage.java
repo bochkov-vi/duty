@@ -1,4 +1,4 @@
-package com.bochkov.duty.wicket.page.dutytype;
+package com.bochkov.duty.wicket.page.shifttype;
 
 import com.bochkov.duty.jpa.entity.ShiftType;
 import com.bochkov.duty.jpa.entity.UiOptions;

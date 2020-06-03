@@ -32,11 +32,14 @@ public class VacationRepositoryTest {
 
     @Before
     public void setup() {
-        vacation = Vacation.of(2020, employeeRepository.getOne("bochkov")).setParts(Sets.newTreeSet(
+        vacation = Vacation.of(2020, employeeRepository.getOne("bochkov"));
+        vacation.setParts(Sets.newTreeSet(
                 Sets.newHashSet(
-                        VacationPart.of(LocalDate.of(2020, 5, 2), LocalDate.of(2020, 5, 26), 1),
-                        VacationPart.of(LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 15), 2)
+                        VacationPart.of(vacation, LocalDate.of(2020, 5, 2), LocalDate.of(2020, 5, 26), 1),
+                        VacationPart.of(vacation, LocalDate.of(2020, 1, 1), LocalDate.of(2020, 1, 15), 2)
                 )));
+        testDelete();
+        testCreate();
     }
 
     @Test
@@ -48,7 +51,9 @@ public class VacationRepositoryTest {
 
     @Test
     public void testDelete() {
-        repository.deleteById(vacation.getId());
+        if (repository.existsById(vacation.getId())) {
+            repository.deleteById(vacation.getId());
+        }
         System.out.println(vacation);
     }
 

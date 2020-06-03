@@ -2,6 +2,7 @@ package com.bochkov.duty.wicket.page.vacation;
 
 import com.bochkov.bootstrap.tempusdominus.LocalDateField;
 import com.bochkov.duty.jpa.entity.VacationPart;
+import com.bochkov.duty.jpa.entity.VacationPartPK;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.form.TextField;
@@ -29,7 +30,7 @@ public class VacationPartInputPanel extends FormComponentPanel<VacationPart> {
 
     @Override
     protected void onBeforeRender() {
-        start.setModelObject(getModel().map(VacationPart::getStart).orElse(null).getObject());
+        start.setModelObject(getModel().map(VacationPart::getId).map(VacationPartPK::getStart).orElse(null).getObject());
         end.setModelObject(getModel().map(VacationPart::getEnd).orElse(null).getObject());
         partNumber.setModelObject(getModel().map(VacationPart::getPartNumber).orElse(null).getObject());
         super.onBeforeRender();
@@ -38,7 +39,7 @@ public class VacationPartInputPanel extends FormComponentPanel<VacationPart> {
     @Override
     public void convertInput() {
         setConvertedInput(new VacationPart()
-                .setStart(start.getConvertedInput())
+                .setId(new VacationPartPK().setStart(start.getConvertedInput()))
                 .setEnd(end.getConvertedInput())
                 .setPartNumber(partNumber.getConvertedInput()));
     }

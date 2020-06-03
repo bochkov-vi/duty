@@ -97,7 +97,7 @@ public class DayRepositoryTests {
 
     @Test
     public void saveForMonth() {
-        LocalDate start = LocalDate.of(2020, 1, 1);
+        LocalDate start = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
         LocalDate end = start.with(TemporalAdjusters.lastDayOfMonth());
         dayRepository.findOrCreate(start, end);
 

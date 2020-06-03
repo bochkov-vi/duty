@@ -11,8 +11,8 @@
     <packaging>war</packaging>
     <artifactId>duty-web</artifactId>
     <properties>
-        <wicket.version>8.7.0</wicket.version>
-        <wicketstuff.version>8.7.0</wicketstuff.version>
+        <wicket.version>8.8.0</wicket.version>
+        <wicketstuff.version>8.8.0</wicketstuff.version>
         <wicket.mode>deployment</wicket.mode>
     </properties>
     <profiles>
@@ -36,11 +36,7 @@
             <version>${wicket.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-extensions</artifactId>
-            <version>${wicket.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-annotation</artifactId>
@@ -113,11 +109,7 @@
             <artifactId>bootstrap-datepicker</artifactId>
             <version>1.9.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-annotation</artifactId>
-            <version>${wicketstuff.version}</version>
-        </dependency>
+
         <!-- <dependency>
              <groupId>org.apache.wicket</groupId>
              <artifactId>wicket-ioc</artifactId>
@@ -128,11 +120,7 @@
             <artifactId>wicket-core</artifactId>
             <version>${wicket.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
-            <version>${wicket.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-extensions</artifactId>

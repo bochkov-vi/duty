@@ -14,23 +14,23 @@ import java.time.LocalDate;
 @Setter
 @Accessors(chain = true)
 @Embeddable
-public class DutyPK implements Serializable {
+public class ShiftPK implements Serializable {
 
-    @Column(name = "ID_PERSON", length = 15)
+    @Column(name = "ID_EMPLOYEE", length = 15)
     String idPerson;
 
     @Column(name = "DATE")
     LocalDate date;
 
-    public DutyPK() {
+    public ShiftPK() {
     }
 
-    public DutyPK(String idPerson, LocalDate date) {
+    public ShiftPK(String idPerson, LocalDate date) {
         this.idPerson = idPerson;
         this.date = date;
     }
 
-    public DutyPK(Employee employee, Day day) {
+    public ShiftPK(Employee employee, Day day) {
         this.idPerson = employee.id;
         this.date = day.id;
     }
@@ -40,12 +40,12 @@ public class DutyPK implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof DutyPK)) {
+        if (!(o instanceof ShiftPK)) {
             return false;
         }
-        DutyPK dutyPK = (DutyPK) o;
-        return Objects.equal(idPerson, dutyPK.idPerson) &&
-                Objects.equal(date, dutyPK.date);
+        ShiftPK shiftPK = (ShiftPK) o;
+        return Objects.equal(idPerson, shiftPK.idPerson) &&
+                Objects.equal(date, shiftPK.date);
     }
 
     @Override

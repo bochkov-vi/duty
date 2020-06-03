@@ -4,7 +4,7 @@ import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.entity.Shift;
 import com.bochkov.duty.jpa.entity.ShiftAssignment;
 import com.bochkov.duty.jpa.repository.*;
-import com.bochkov.duty.jpa.entity.DutyRoster;
+import com.bochkov.duty.jpa.entity.ShiftRostering;
 import com.bochkov.duty.planning.PlanningSpringConfiguration;
 import com.bochkov.duty.jpa.entity.EmployeeShiftTypeLimit;
 import com.bochkov.duty.planning.service.PlanningService;
@@ -55,9 +55,9 @@ public class PlanningTest {
     @Test
     public void createReport() {
 
-        DutyRoster dutyRoster = new DutyRoster();
+        ShiftRostering shiftRostering = new ShiftRostering();
 
-        dutyRoster.setEmployeeShiftTypeLimits(
+        shiftRostering.setEmployeeShiftTypeLimits(
                 Lists.newArrayList(
                         employeeRepository.findById("nod1").map(EmployeeShiftTypeLimit::new).map(l -> l.setMax(1)).get()
                         , employeeRepository.findById("nod2").map(EmployeeShiftTypeLimit::new).map(l -> l.setMax(2)).get()
@@ -68,26 +68,26 @@ public class PlanningTest {
         );
 
         //dayRepository.findOrCreate(start, start.plusDays(9)).forEach(day -> dayRepository.safeSave(day.setWeekend(true)));
-        dutyRoster.setDays(dayRepository.findOrCreate(start, end));
+        shiftRostering.setDays(dayRepository.findOrCreate(start, end));
 
-        dutyRoster.setEmployees(employeeRepository.findAll().stream().limit(8).collect(Collectors.toList()));
-        dutyRoster.setShiftTypes(shiftTypeRepository.findAllById(Lists.newArrayList(3)));
+        shiftRostering.setEmployees(employeeRepository.findAll().stream().limit(8).collect(Collectors.toList()));
+        shiftRostering.setShiftTypes(shiftTypeRepository.findAllById(Lists.newArrayList(3)));
         int[] index = new int[]{0};
 
-        dutyRoster.setShifts(
+        shiftRostering.setShifts(
                 dayRepository.findOrCreate(start, end).stream()
                         .map(d -> Shift.of(d, shiftTypeRepository.findById(3).get()).setId(index[0]++)).collect(Collectors.toList()));
 
-        dutyRoster.getShifts().addAll(dayRepository.findOrCreate(start, start.plusDays(9)).stream()
+        shiftRostering.getShifts().addAll(dayRepository.findOrCreate(start, start.plusDays(9)).stream()
                 .map(d -> Shift.of(d, shiftTypeRepository.findById(4).get()).setId(index[0]++)).collect(Collectors.toList()));
 
 //        dutyRoster.getShifts().addAll(dayRepository.findOrCreate(start, end).stream()
 //                .map(d -> Shift.of(d, shiftTypeRepository.findById(5).get()).setId(index[0]++)).collect(Collectors.toList()));
         int[] id = new int[]{0, 0};
-        dutyRoster.setShiftAssignments(dutyRoster.getShifts().stream().map(s -> s.setId(id[0]++))
+        shiftRostering.setShiftAssignments(shiftRostering.getShifts().stream().map(s -> s.setId(id[0]++))
                 .map(ShiftAssignment::of).map(sa -> sa.setId(id[1]++)).collect(Collectors.toList()));
 
-        DutyRoster plan = planningService.solve(dutyRoster);
+        ShiftRostering plan = planningService.solve(shiftRostering);
 
 
         System.out.println(plan);

@@ -34,10 +34,6 @@
             <version>0.3.4</version>
         </dependency>
         <dependency>
-            <groupId>org.optaplanner</groupId>
-            <artifactId>optaplanner-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.bochkov</groupId>
             <artifactId>duty-h2-server</artifactId>
             <version>0.0.1-SNAPSHOT</version>

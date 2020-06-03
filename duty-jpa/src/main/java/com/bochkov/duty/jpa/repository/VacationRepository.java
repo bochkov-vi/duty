@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface VacationRepository extends BaseRepository<Vacation, VacationPK> {
-    @Query("SELECT o FROM Vacation  o JOIN o.parts p WHERE p.end>=:start AND p.start<=:end AND o.employee=:employee")
+    @Query("SELECT o FROM Vacation  o JOIN o.parts p WHERE p.end>=:start AND p.id.start<=:end AND o.employee=:employee")
     List<Vacation> findAllByPeriod(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("employee") Employee employee);
 
 
@@ -20,7 +20,7 @@ public interface VacationRepository extends BaseRepository<Vacation, VacationPK>
         return !findAllByPeriod(start, end, employee).isEmpty();
     }
 
-    @Query("SELECT p FROM Vacation  o JOIN o.parts p WHERE p.end>=:start AND p.start<=:end AND o.employee=:employee")
+    @Query("SELECT p FROM Vacation  o JOIN o.parts p WHERE p.end>=:start AND p.id.start<=:end AND o.employee=:employee")
     List<VacationPart> findParts(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("employee") Employee employee);
 
     default double percentOverlap(@Param("start") LocalDate start, @Param("end") LocalDate end, @Param("employee") Employee employee) {

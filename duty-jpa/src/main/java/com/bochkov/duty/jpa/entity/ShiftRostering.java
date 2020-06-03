@@ -15,7 +15,7 @@ import org.hibernate.annotations.TypeDef;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
-import org.optaplanner.core.api.domain.solution.drools.ProblemFactCollectionProperty;
+import org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.persistence.jpa.impl.score.buildin.hardmediumsoft.HardMediumSoftScoreHibernateType;
@@ -36,34 +36,34 @@ import java.util.stream.Collectors;
 @Setter
 @Accessors(chain = true)
 @Entity
-@javax.persistence.Table(name = "DUTY_ROSTER")
+@javax.persistence.Table(name = "SHIFT_ROSTERING")
 @TypeDef(defaultForType = HardMediumSoftScore.class, typeClass = HardMediumSoftScoreHibernateType.class)
-public class DutyRoster extends AbstractEntity<Integer> {
+public class ShiftRostering extends AbstractEntity<Integer> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DUTY_ROSTER_SEQ")
-    @SequenceGenerator(name = "DUTY_ROSTER_SEQ", initialValue = 1000, allocationSize = 1)
-    @Column(name = "ID_DUTY_ROSTER")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SHIFT_ROSTERING_SEQ")
+    @SequenceGenerator(name = "SHIFT_ROSTERING_SEQ", initialValue = 1000, allocationSize = 1)
+    @Column(name = "ID_SHIFT_ROSTERING")
     Integer id;
 
     @ManyToMany
-    @JoinTable(name = "DUTY_ROSTER_SHIFT_TYPE", joinColumns = @JoinColumn(name = "ID_DUTY_ROSTER", referencedColumnName = "ID_DUTY_ROSTER")
+    @JoinTable(name = "SHIFT_ROSTERING_SHIFT_TYPE", joinColumns = @JoinColumn(name = "ID_SHIFT_ROSTERING", referencedColumnName = "ID_SHIFT_ROSTERING")
             , inverseJoinColumns = @JoinColumn(name = "ID_SHIFT_TYPE", referencedColumnName = "ID_SHIFT_TYPE"))
-    @ProblemFactCollectionProperty
+    @org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty
     List<ShiftType> shiftTypes;
 
-    @OneToMany(mappedBy = "dutyRoster", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "shiftRostering", cascade = CascadeType.ALL, orphanRemoval = true)
     @ProblemFactCollectionProperty
     List<EmployeeShiftTypeLimit> employeeShiftTypeLimits;
 
     @ManyToMany
-    @JoinTable(name = "DUTY_ROSTER_DAY", joinColumns = @JoinColumn(name = "ID_DUTY_ROSTER", referencedColumnName = "ID_DUTY_ROSTER")
+    @JoinTable(name = "SHIFT_ROSTERING_DAY", joinColumns = @JoinColumn(name = "ID_SHIFT_ROSTERING", referencedColumnName = "ID_SHIFT_ROSTERING")
             , inverseJoinColumns = @JoinColumn(name = "DATE", referencedColumnName = "DATE"))
     @ProblemFactCollectionProperty
     List<Day> days;
 
     @ManyToMany
-    @JoinTable(name = "DUTY_ROSTER_SHIFT", joinColumns = @JoinColumn(name = "ID_DUTY_ROSTER", referencedColumnName = "ID_DUTY_ROSTER")
+    @JoinTable(name = "SHIFT_ROSTERING_SHIFT", joinColumns = @JoinColumn(name = "ID_SHIFT_ROSTERING", referencedColumnName = "ID_SHIFT_ROSTERING")
             , inverseJoinColumns = @JoinColumn(name = "ID_SHIFT", referencedColumnName = "ID_SHIFT"))
     @ProblemFactCollectionProperty
     List<Shift> shifts;
@@ -71,15 +71,15 @@ public class DutyRoster extends AbstractEntity<Integer> {
 
     @ValueRangeProvider(id = "employees")
     @ManyToMany
-    @JoinTable(name = "DUTY_ROSTER_EMPLOYEE", joinColumns = @JoinColumn(name = "ID_DUTY_ROSTER", referencedColumnName = "ID_DUTY_ROSTER")
+    @JoinTable(name = "SHIFT_ROSTERING_EMPLOYEE", joinColumns = @JoinColumn(name = "ID_SHIFT_ROSTERING", referencedColumnName = "ID_SHIFT_ROSTERING")
             , inverseJoinColumns = @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE"))
     @ProblemFactCollectionProperty
     List<Employee> employees;
 
     @PlanningEntityCollectionProperty
     @ManyToMany
-    @JoinTable(name = "DUTY_ROSTER_EMPLOYEE", joinColumns =
-    @JoinColumn(name = "ID_DUTY_ROSTER", referencedColumnName = "ID_DUTY_ROSTER"),
+    @JoinTable(name = "SHIFT_ROSTERING_EMPLOYEE", joinColumns =
+    @JoinColumn(name = "ID_SHIFT_ROSTERING", referencedColumnName = "ID_SHIFT_ROSTERING"),
             inverseJoinColumns = @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE"))
     List<ShiftAssignment> shiftAssignments;
 
@@ -89,13 +89,13 @@ public class DutyRoster extends AbstractEntity<Integer> {
             @Column(name = "hardScore"), @Column(name = "mediumScore"), @Column(name = "softScore")})
     private HardMediumSoftScore score;
 
-    public static void printData(DutyRoster plan, PrintStream printStream, int indent) {
+    public static void printData(ShiftRostering plan, PrintStream printStream, int indent) {
         List<Employee> employeeList = plan.getEmployees();
         int startIndex = 2;
         Table<Integer, String, String> table = plan.getShiftAssignments().stream().collect(Tables.toTable(da -> employeeList.indexOf(da.getEmployee()) + startIndex
                 , da -> da.getDay().getId().format(DateTimeFormatter.ofPattern("dd"))
                 , da -> da.getShiftType().getUiOptions().getPlainText(),
-                () -> TreeBasedTable.create()));
+                TreeBasedTable::create));
         for (Employee employee : employeeList) {
             int index = employeeList.indexOf(employee);
             table.put(index + startIndex, "----", employee.toString());

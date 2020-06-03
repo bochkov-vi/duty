@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -23,8 +24,7 @@ public class Vacation extends AbstractEntity<VacationPK> {
     @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE", insertable = false, updatable = false)
     Employee employee;
 
-    @ElementCollection
-    @CollectionTable(name = "VACATION_PART", joinColumns = {@JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE"), @JoinColumn(name = "YEAR", referencedColumnName = "YEAR")})
+    @OneToMany(mappedBy = "vacation",orphanRemoval = true, cascade = CascadeType.ALL)
     @OrderBy("partNumber")
     Set<VacationPart> parts;
 
@@ -41,7 +41,7 @@ public class Vacation extends AbstractEntity<VacationPK> {
     public void preSave() {
         if (parts != null) {
             int i = 0;
-            for (VacationPart vp : parts) {
+            for (VacationPart vp : parts.stream().sorted(VacationPart.COMPARATOR).collect(Collectors.toList())) {
                 vp.setPartNumber(++i);
             }
         }

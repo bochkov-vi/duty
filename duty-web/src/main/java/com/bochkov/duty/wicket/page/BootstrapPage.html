@@ -45,11 +45,21 @@
                     <span><wicket:message key="shiftType.page.title"/></span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="vacation">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-plane"></i>
                     <span><wicket:message key="vacation.page.title"/></span>
                 </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="vacation">
+                        <i class="fa fa-list"></i>
+                        <span><wicket:message key="vacation-table.page.title"/></span>
+                    </a>
+                    <a class="dropdown-item" href="vacation-grid">
+                        <i class="fa fa-table"></i>
+                        <span><wicket:message key="vacation-grid.page.title"/></span>
+                    </a>
+                </div>
             </li>
 
             <li class="nav-item">

@@ -20,7 +20,7 @@ public class EmployeeShiftTypeLimit extends AbstractEntity<EmployeeShiftTypeLimi
 
     @ManyToOne
     @JoinColumn(name = "ID_DUTY_ROSTER", insertable = false, updatable = false)
-    DutyRoster dutyRoster;
+    ShiftRostering shiftRostering;
 
     @ManyToOne
     @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE", updatable = false, insertable = false)

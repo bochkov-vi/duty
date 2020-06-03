@@ -37,7 +37,7 @@ public class ShiftAssignment extends AbstractEntity<Integer> {
     @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE")
     Employee employee;
 
-    @Transient
+    /*@Transient
     Integer weekIndex;
 
     @Transient
@@ -53,7 +53,7 @@ public class ShiftAssignment extends AbstractEntity<Integer> {
     DayOfWeek dayOfWeek;
 
     @Transient
-    Boolean endOnNextDay;
+    Boolean endOnNextDay;*/
 
     public static ShiftAssignment of(Shift s) {
         return new ShiftAssignment().setShift(s);
@@ -68,45 +68,27 @@ public class ShiftAssignment extends AbstractEntity<Integer> {
     }
 
     public Integer getWeekIndex() {
-        if (weekIndex == null) {
-            return weekIndex = getDay().weekIndex();
-        }
-        return weekIndex;
+        return getDay().getWeekIndex();
     }
 
     public boolean isWeekend() {
-        if (weekend == null) {
-            return weekend = getShiftType().isStartOnWeekend(getDay()) || getShiftType().isEndOnWeekend(getDay());
-        }
-        return weekend;
+        return getShift().getWeekend();
     }
 
     public Duration getOverTime() {
-        if (overTime == null) {
-            return overTime = getShiftType().totalOvertime(getDay());
-        }
-        return overTime;
+        return getShift().getOverTime();
     }
 
-    public int getDayIndex() {
-        if (dayIndex < 0) {
-            dayIndex = (int) getDay().dayIndex();
-        }
-        return dayIndex;
+    public Long getDayIndex() {
+        return getDay().getDayIndex();
     }
 
     public DayOfWeek getDayOfWeek() {
-        if (dayOfWeek == null) {
-            return dayOfWeek = getDay().dayOfWeek();
-        }
-        return dayOfWeek;
+        return getDay().getDayOfWeek();
     }
 
-    public boolean isEndOnNextDay() {
-        if (endOnNextDay == null) {
-            endOnNextDay = getShiftType().isEndOnNextDay(getDay());
-        }
-        return endOnNextDay;
+    public Boolean isEndOnNextDay() {
+        return getShift().getEndOnNextDay();
     }
 
     public Boolean getWeekend() {

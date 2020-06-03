@@ -60,27 +60,25 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
     @JoinColumn(name = "ID_SHIFT_TYPE_DEFAULT", referencedColumnName = "ID_SHIFT_TYPE")
     ShiftType shiftType;
 
+    @Transient
+    Integer weekIndex;
+
+    @Transient
+    Long dayIndex;
+
+    @Transient
+    DayOfWeek dayOfWeek;
 
     public Day(LocalDate date) {
         this.id = date;
         weekend = isWeekendDate(date);
+
     }
 
     static public boolean isWeekendDate(LocalDate date) {
         DayOfWeek dayOfWeek = date.getDayOfWeek();
         return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
     }
-    /*public Integer daysToWeekend() {
-        Integer result = null;
-        if (next != null) {
-            if (next.getWeekend() != null && next.getWeekend()) {
-                result = 1;
-            } else {
-                result = next.daysToWeekend() + 1;
-            }
-        }
-        return result;
-    }*/
 
     public static Day setupDutyTypeTimeUsage(Day day, ShiftType shiftType) {
         day.setPeriods(calculateDutyTypeTimeUsage(day, shiftType));
@@ -104,6 +102,14 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
         return periods;
     }
 
+    @PostLoad
+    @PostUpdate
+    @PostPersist
+    public void calculateTransient() {
+        weekIndex = weekIndex();
+        dayIndex = dayIndex();
+        dayOfWeek = dayOfWeek();
+    }
 
     @PrePersist
     public void prePersist() {
@@ -117,7 +123,6 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
     }
 
     @Override
-
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("id", id.format(DateTimeFormatter.ofPattern("dd.MM.yyyy EEE")))
@@ -146,15 +151,15 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
         return Period.of().range(id);
     }
 
-    public DayOfWeek dayOfWeek() {
+    private DayOfWeek dayOfWeek() {
         return id.getDayOfWeek();
     }
 
-    public Integer weekIndex() {
+    private Integer weekIndex() {
         return id.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
     }
 
-    public long dayIndex() {
+    private Long dayIndex() {
         return id.toEpochDay();
     }
 }

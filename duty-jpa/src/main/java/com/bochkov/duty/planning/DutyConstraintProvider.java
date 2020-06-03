@@ -85,7 +85,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
                         filtering((dpo, d1, d2) -> d1.isEndOnNextDay() && d2.isEndOnNextDay()),
                         filtering((dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dpo.getMin())
                 )
-                .penalize("нельзя суточные дежурства надо пореже", HardMediumSoftScore.ONE_MEDIUM, (dpo, d1, d2) -> dpo.getMin() - (d1.getDayIndex() - d2.getDayIndex()));
+                .penalize("нельзя суточные дежурства надо пореже", HardMediumSoftScore.ONE_MEDIUM, (dpo, d1, d2) -> dpo.getMin() -(int) (d1.getDayIndex() - d2.getDayIndex()));
     }
 
     private Constraint moreIntervalBetweenDuties(ConstraintFactory factory) {
@@ -99,7 +99,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
                         greaterThanOrEqual((dti, d1) -> d1.getDayIndex(), ShiftAssignment::getDayIndex),
                         filtering((dti, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dti.getMin())
                 )
-                .penalize("надо больше промежутки между дежурствами", HardMediumSoftScore.ONE_SOFT, (dpo, d1, d2) -> dpo.getMin() - (d1.getDayIndex() - d2.getDayIndex()));
+                .penalize("надо больше промежутки между дежурствами", HardMediumSoftScore.ONE_SOFT, (dpo, d1, d2) -> dpo.getMin() - (int)(d1.getDayIndex() - d2.getDayIndex()));
     }
 
     private Constraint moreIntervalBetweenDutiesForAllType(ConstraintFactory factory) {
@@ -113,7 +113,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
                         greaterThanOrEqual((dpo, d1) -> d1.getDayIndex(), ShiftAssignment::getDayIndex),
                         filtering((dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dpo.getMin())
                 )
-                .penalize("больше интервалов между любыми дежурствами", HardMediumSoftScore.ONE_SOFT, (dpo, d1, d2) -> dpo.getMin() - (d1.getDayIndex() - d2.getDayIndex()));
+                .penalize("больше интервалов между любыми дежурствами", HardMediumSoftScore.ONE_SOFT, (dpo, d1, d2) -> dpo.getMin() - (int)(d1.getDayIndex() - d2.getDayIndex()));
     }
 
     private Constraint moreIntervalBetweenWeekendDuties(ConstraintFactory factory) {
@@ -131,7 +131,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
                         filtering((dpo, d1, d2) -> d2.isWeekend()),
                         filtering((dpo, d1, d2) -> d1.getDayIndex() - d2.getDayIndex() <= dpo.getMin())
                 )
-                .penalize("нельзя дежурства в выходные за подряд", HardMediumSoftScore.ONE_SOFT, (dpo, d1, d2) -> dpo.getMin() - (d1.getDayIndex() - d2.getDayIndex()));
+                .penalize("нельзя дежурства в выходные за подряд", HardMediumSoftScore.ONE_SOFT, (dpo, d1, d2) -> dpo.getMin() - (int)(d1.getDayIndex() - d2.getDayIndex()));
     }
 
 
@@ -160,7 +160,7 @@ public class DutyConstraintProvider implements ConstraintProvider {
     private Constraint fairDistributionDutyByCountAndDayType(ConstraintFactory factory) {
         return factory.from(ShiftAssignment.class)
                 .filter(da -> Objects.nonNull(da.getEmployee()))
-                .groupBy(da -> Pair.of(da.getEmployee(), da.getDay().dayOfWeek()), count())
+                .groupBy(da -> Pair.of(da.getEmployee(), da.getDay().getDayOfWeek()), count())
                 .groupBy(VarianceConstraintCollector.varianceBi())
                 /* .groupBy(StatisticCollectors.varianceBi())*/
                 .penalize("распределение дежурств у людей по видам дней", HardMediumSoftScore.ONE_SOFT,

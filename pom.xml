@@ -32,7 +32,7 @@
             <dependency>
                 <groupId>org.optaplanner</groupId>
                 <artifactId>optaplanner-bom</artifactId>
-                <version>7.36.1.Final</version>
+                <version>7.38.0.Final</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>

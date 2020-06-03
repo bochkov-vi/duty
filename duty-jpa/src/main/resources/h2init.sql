@@ -237,7 +237,6 @@ create table if not exists REPORT
     GENITIVE_DEPARTMENT_NAME VARCHAR(255) not null,
     REPORT_TITLE             VARCHAR(255) not null,
     CHIEF                    VARCHAR(15)  not null,
-    ID_SHIFT_TYPE            VARCHAR(15)  not null,
     EXECUTOR                 VARCHAR(15)  not null,
     CREATED_DATE             TIMESTAMP,
     CREATED_BY               VARCHAR(255),
@@ -245,8 +244,7 @@ create table if not exists REPORT
     LAST_MODIFIED_DATE       TIMESTAMP,
     DATE                     DATE         not null,
     constraint REPORT_EXECUTOR_FK foreign key (EXECUTOR) references EMPLOYEE (ID_EMPLOYEE),
-    constraint REPORT_CHIEF_FK foreign key (CHIEF) references EMPLOYEE (ID_EMPLOYEE),
-    constraint REPORT_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE (ID_SHIFT_TYPE)
+    constraint REPORT_CHIEF_FK foreign key (CHIEF) references EMPLOYEE (ID_EMPLOYEE)
 );
 
 create sequence if not exists REPORT_SEQ start with 100;
@@ -269,73 +267,75 @@ ALTER SEQUENCE REPORT_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_REPORT)+1,100) F
 
 -- ===================       ROSTER       =========================
 
-drop table if exists DUTY_ROSTER;
+drop table if exists SHIFT_ROSTERING;
 
-create table if not exists DUTY_ROSTER
+CREATE SEQUENCE IF NOT EXISTS SHIFT_ROSTERING_SEQ;
+
+create table if not exists SHIFT_ROSTERING
 (
-    ID_DUTY_ROSTER INTEGER not null,
-    CREATED_DATE   TIMESTAMP,
-    INITSCORE      INTEGER,
-    HARDSCORE      INTEGER,
-    MEDIUMSCORE    INTEGER,
-    SOFTSCORE      INTEGER,
-    constraint DUTY_ROSTER_PK primary key (ID_DUTY_ROSTER)
+    ID_SHIFT_ROSTERING INTEGER not null,
+    CREATED_DATE       TIMESTAMP,
+    INITSCORE          INTEGER,
+    HARDSCORE          INTEGER,
+    MEDIUMSCORE        INTEGER,
+    SOFTSCORE          INTEGER,
+    constraint SHIFT_ROSTERING_PK primary key (ID_SHIFT_ROSTERING)
 );
 
-drop table if exists DUTY_ROSTER_DAY;
-create table if not exists DUTY_ROSTER_DAY
+drop table if exists SHIFT_ROSTERING_DAY;
+create table if not exists SHIFT_ROSTERING_DAY
 (
-    ID_DUTY_ROSTER INTEGER not null,
-    DATE           DATE    not null,
-    constraint DUTY_ROSTER_DAY_DAY_FK foreign key (DATE) references DAY (DATE),
-    constraint DUTY_ROSTER_DAY_DUTY_ROSTER_FK foreign key (ID_DUTY_ROSTER) references DUTY_ROSTER (ID_DUTY_ROSTER)
+    ID_SHIFT_ROSTERING INTEGER not null,
+    DATE               DATE    not null,
+    constraint SHIFT_ROSTERING_DAY_DAY_FK foreign key (DATE) references DAY (DATE),
+    constraint SHIFT_ROSTERING_DAY_SHIFT_ROSTERING_FK foreign key (ID_SHIFT_ROSTERING) references SHIFT_ROSTERING (ID_SHIFT_ROSTERING)
 );
 
-drop table if exists DUTY_ROSTER_EMPLOYEE;
+drop table if exists SHIFT_ROSTERING_EMPLOYEE;
 
-create table if not exists DUTY_ROSTER_EMPLOYEE
+create table if not exists SHIFT_ROSTERING_EMPLOYEE
 (
-    ID_DUTY_ROSTER INTEGER     not null,
-    ID_EMPLOYEE    VARCHAR(15) not null,
-    constraint DUTY_ROSTER_EMPLOYEE_PK primary key (ID_DUTY_ROSTER, ID_EMPLOYEE),
-    constraint DUTY_ROSTER_EMPLOYEE_DUTY_ROSTER foreign key (ID_DUTY_ROSTER) references DUTY_ROSTER (ID_DUTY_ROSTER),
-    constraint DUTY_ROSTER_EMPLOYEE_EMPLOYEE foreign key (ID_EMPLOYEE) references EMPLOYEE (ID_EMPLOYEE)
+    ID_SHIFT_ROSTERING INTEGER     not null,
+    ID_EMPLOYEE        VARCHAR(15) not null,
+    constraint SHIFT_ROSTERING_EMPLOYEE_PK primary key (ID_SHIFT_ROSTERING, ID_EMPLOYEE),
+    constraint SHIFT_ROSTERING_EMPLOYEE_SHIFT_ROSTERING foreign key (ID_SHIFT_ROSTERING) references SHIFT_ROSTERING (ID_SHIFT_ROSTERING),
+    constraint SHIFT_ROSTERING_EMPLOYEE_EMPLOYEE foreign key (ID_EMPLOYEE) references EMPLOYEE (ID_EMPLOYEE)
 );
 
-drop table if exists DUTY_ROSTER_SHIFT;
-create table if not exists DUTY_ROSTER_SHIFT
+drop table if exists SHIFT_ROSTERING_SHIFT;
+create table if not exists SHIFT_ROSTERING_SHIFT
 (
-    ID_DUTY_ROSTER INTEGER not null,
-    ID_SHIFT       INTEGER not null,
-    constraint DUTY_ROSTER_SHIFT_PK primary key (ID_DUTY_ROSTER, ID_SHIFT),
-    constraint DUTY_ROSTER_SHIFT_SHIFT_FK foreign key (ID_SHIFT) references SHIFT (ID_SHIFT),
-    constraint DUTY_ROSTER_SHIFT_DUTY_ROSTER_FK foreign key (ID_DUTY_ROSTER) references DUTY_ROSTER (ID_DUTY_ROSTER)
+    ID_SHIFT_ROSTERING INTEGER not null,
+    ID_SHIFT           INTEGER not null,
+    constraint SHIFT_ROSTERING_SHIFT_PK primary key (ID_SHIFT_ROSTERING, ID_SHIFT),
+    constraint SHIFT_ROSTERING_SHIFT_SHIFT_FK foreign key (ID_SHIFT) references SHIFT (ID_SHIFT),
+    constraint SHIFT_ROSTERING_SHIFT_SHIFT_ROSTERING_FK foreign key (ID_SHIFT_ROSTERING) references SHIFT_ROSTERING (ID_SHIFT_ROSTERING)
 );
 
-drop table if exists DUTY_ROSTER_SHIFT_TYPE;
+drop table if exists SHIFT_ROSTERING_SHIFT_TYPE;
 
-create table if not exists DUTY_ROSTER_SHIFT_TYPE
+create table if not exists SHIFT_ROSTERING_SHIFT_TYPE
 (
-    ID_DUTY_ROSTER INTEGER not null,
-    ID_SHIFT_TYPE  INTEGER not null,
-    constraint DUTY_ROSTER_SHIFT_TYPE_PK primary key (ID_DUTY_ROSTER, ID_SHIFT_TYPE),
-    constraint DUTY_ROSTER_SHIFT_TYPE_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE (ID_SHIFT_TYPE),
-    constraint DUTY_ROSTER_SHIFT_TYPE_DUTY_ROSTER_FK foreign key (ID_DUTY_ROSTER) references DUTY_ROSTER (ID_DUTY_ROSTER)
+    ID_SHIFT_ROSTERING INTEGER not null,
+    ID_SHIFT_TYPE      INTEGER not null,
+    constraint SHIFT_ROSTERING_SHIFT_TYPE_PK primary key (ID_SHIFT_ROSTERING, ID_SHIFT_TYPE),
+    constraint SHIFT_ROSTERING_SHIFT_TYPE_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE (ID_SHIFT_TYPE),
+    constraint SHIFT_ROSTERING_SHIFT_TYPE_SHIFT_ROSTERING_FK foreign key (ID_SHIFT_ROSTERING) references SHIFT_ROSTERING (ID_SHIFT_ROSTERING)
 );
 
 drop table if exists EMPLOYEE_DUTY_TYPE_LIMIT;
 create table if not exists EMPLOYEE_DUTY_TYPE_LIMIT
 (
-    ID_DUTY_ROSTER INTEGER not null,
-    ID_EMPLOYEE    INTEGER not null,
-    ID_SHIFT_TYPE  INTEGER not null,
-    MIN            INTEGER,
-    MAX            INTEGER,
-    CREATED_DATE   TIMESTAMP,
-    constraint EMPLOYEE_DUTY_TYPE_LIMIT_PK primary key (ID_DUTY_ROSTER, ID_EMPLOYEE, ID_SHIFT_TYPE),
+    ID_SHIFT_ROSTERING INTEGER not null,
+    ID_EMPLOYEE        INTEGER not null,
+    ID_SHIFT_TYPE      INTEGER not null,
+    MIN                INTEGER,
+    MAX                INTEGER,
+    CREATED_DATE       TIMESTAMP,
+    constraint EMPLOYEE_DUTY_TYPE_LIMIT_PK primary key (ID_SHIFT_ROSTERING, ID_EMPLOYEE, ID_SHIFT_TYPE),
     constraint EMPLOYEE_DUTY_TYPE_LIMIT_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE (ID_SHIFT_TYPE),
     constraint EMPLOYEE_DUTY_TYPE_LIMIT_EMPLOYEE_FK foreign key (ID_EMPLOYEE) references EMPLOYEE (ID_EMPLOYEE),
-    constraint EMPLOYEE_DUTY_TYPE_LIMIT_DUTY_ROSTER_FK foreign key (ID_DUTY_ROSTER) references DUTY_ROSTER (ID_DUTY_ROSTER)
+    constraint EMPLOYEE_DUTY_TYPE_LIMIT_SHIFT_ROSTERING_FK foreign key (ID_SHIFT_ROSTERING) references SHIFT_ROSTERING (ID_SHIFT_ROSTERING)
 );
 
 drop table if exists VACATION_PART;
@@ -352,12 +352,13 @@ create table if not exists VACATION
 
 create table VACATION_PART
 (
-    ID_EMPLOYEE VARCHAR(255) not null,
-    YEAR        INTEGER      not null,
-    PART_NUMBER INTEGER      not null,
-    START       DATE         not null,
-    END         DATE         not null,
-    constraint VACATION_PART_PK primary key (ID_EMPLOYEE, YEAR, PART_NUMBER),
+    ID_EMPLOYEE  VARCHAR(255) not null,
+    YEAR         INTEGER      not null,
+    PART_NUMBER  INTEGER      not null,
+    START        DATE         not null,
+    END          DATE         not null,
+    CREATED_DATE TIMESTAMP,
+    constraint VACATION_PART_PK primary key (ID_EMPLOYEE, YEAR, START),
     constraint VACATION_PART_FK foreign key (ID_EMPLOYEE, YEAR) references VACATION (ID_EMPLOYEE, YEAR)
 );
 

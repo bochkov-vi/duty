@@ -4,9 +4,7 @@ import com.google.common.collect.Range;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import java.io.Serializable;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -19,14 +17,14 @@ import java.util.stream.Stream;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Embeddable
-@EqualsAndHashCode(of = "start")
-public class VacationPart implements Serializable, Comparable<VacationPart> {
+@Entity
+@Table(name = "VACATION_PART")
+public class VacationPart extends AbstractEntity<VacationPartPK> implements Comparable<VacationPart> {
 
-    public static Comparator<VacationPart> COMPARATOR = Comparator.comparing(VacationPart::getStart);
+    public static Comparator<VacationPart> COMPARATOR = Comparator.comparing(VacationPart::getId);
 
-    @Column(name = "START", nullable = false)
-    LocalDate start;
+    @EmbeddedId
+    VacationPartPK id;
 
     @Column(name = "END", nullable = false)
     LocalDate end;
@@ -34,8 +32,14 @@ public class VacationPart implements Serializable, Comparable<VacationPart> {
     @Column(name = "PART_NUMBER", nullable = false)
     Integer partNumber;
 
-    public static VacationPart of(LocalDate start, LocalDate end, Integer partNumber) {
-        return new VacationPart(start, end, partNumber);
+    @ManyToOne
+    @JoinColumns({@JoinColumn(name = "YEAR", referencedColumnName = "YEAR",insertable = false,updatable = false),
+            @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE",insertable = false,updatable = false)})
+    Vacation vacation;
+
+    public static VacationPart of(Vacation vacation, LocalDate start, LocalDate end, Integer partNumber) {
+        assert vacation.getId() != null;
+        return new VacationPart(new VacationPartPK(vacation.getId().getYear(), vacation.getId().getIdEmployeer(), start), end, partNumber, vacation);
     }
 
     @Override
@@ -45,17 +49,17 @@ public class VacationPart implements Serializable, Comparable<VacationPart> {
 
     @Override
     public String toString() {
-        return String.format("%s. (%s-%s)", partNumber, start, end);
+        return String.format("%s. (%s-%s)", partNumber, id.getStart(), end);
     }
 
     public String toString(DateTimeFormatter formatter) {
-        return String.format("%s. (%s)", partNumber, Stream.of(start, end).map(d -> d.format(formatter)).collect(Collectors.joining("-")));
+        return String.format("%s. (%s)", partNumber, Stream.of(id.getStart(), end).map(d -> d.format(formatter)).collect(Collectors.joining("-")));
     }
 
     public double percentOverlap(LocalDate start, LocalDate end) {
         double result = 0.0;
         Range<LocalDate> request = Range.closed(start, end);
-        Range<LocalDate> thisData = Range.closed(this.start, this.end);
+        Range<LocalDate> thisData = Range.closed(id.getStart(), this.end);
         if (request.isConnected(thisData)) {
             double count = ChronoUnit.DAYS.between(start, end);
             Range<LocalDate> i = request.intersection(thisData);
@@ -68,6 +72,7 @@ public class VacationPart implements Serializable, Comparable<VacationPart> {
     }
 
     public long daysCount() {
-        return ChronoUnit.DAYS.between(start, end);
+        return ChronoUnit.DAYS.between(id.getStart(), end);
     }
+
 }

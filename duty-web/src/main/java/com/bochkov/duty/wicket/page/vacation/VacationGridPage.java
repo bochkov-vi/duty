@@ -1,17 +1,28 @@
 package com.bochkov.duty.wicket.page.vacation;
 
 import com.bochkov.duty.jpa.entity.Employee;
+import com.bochkov.duty.jpa.entity.VacationPart;
 import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.duty.jpa.repository.VacationRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.google.common.collect.Lists;
+import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.wicket.ClassAttributeModifier;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -27,7 +38,14 @@ import java.util.List;
 import java.util.Set;
 
 @MountPath("vacation-grid")
+@Log4j
 public class VacationGridPage extends BootstrapPage<Integer> {
+
+    Form<VacationPart> form = new Form<VacationPart>("modal-form");
+
+    WebMarkupContainer modalWindow = new WebMarkupContainer("modal-dialog");
+
+
     @Inject
     EmployeeRepository employeeRepository;
 
@@ -48,6 +66,18 @@ public class VacationGridPage extends BootstrapPage<Integer> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+        modalWindow.add(form);
+        modalWindow.setOutputMarkupId(true);
+        form.setOutputMarkupId(true);
+        modalWindow.add(new AjaxSubmitLink("btn-save", form) {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                VacationPart vacation = form.getModelObject();
+                log.debug(vacation);
+            }
+        });
+        form.setModel(new CompoundPropertyModel<>(Model.of()));
+        add(modalWindow);
         if (getModel() == null) {
             setModel(Model.of());
         }
@@ -66,7 +96,7 @@ public class VacationGridPage extends BootstrapPage<Integer> {
         for (Month m : months) {
             LocalDate date1 = LocalDate.now().withMonth(m.getValue()).with(TemporalAdjusters.firstDayOfMonth());
             LocalDate date2 = date1.with(TemporalAdjusters.lastDayOfMonth());
-            LocalDate mDate = date1.plusDays(ChronoUnit.DAYS.between(date1, date2) / 2-1);
+            LocalDate mDate = date1.plusDays(ChronoUnit.DAYS.between(date1, date2) / 2 - 1);
             halfs.add(Pair.of(date1, mDate));
             halfs.add(Pair.of(mDate.plusDays(1), date2));
         }
@@ -87,61 +117,45 @@ public class VacationGridPage extends BootstrapPage<Integer> {
 
                     @Override
                     protected void populateItem(ListItem<Pair<LocalDate, LocalDate>> item) {
+                        item.setOutputMarkupId(true);
                         Employee employee = employeeListItem.getModelObject();
                         LocalDate date1 = item.getModel().map(Pair::getKey).getObject();
                         LocalDate date2 = item.getModel().map(Pair::getValue).getObject();
-                        Boolean value = vacationRepository.percentOverlap(date1, date2, employee)>0.5;
+                        Boolean exists = vacationRepository.percentOverlap(date1, date2, employee) > 0.5;
+                        VacationPart part = vacationRepository.findParts(date1, date2, employee).stream().findFirst().orElse(null);
+                        Triple<Employee, Pair<LocalDate, LocalDate>, Boolean> value = Triple.of(employee, item.getModelObject(), exists);
+                        IModel<Boolean> booleanIModel = Model.of(value.getRight());
+                        Behavior behavior = new AjaxEventBehavior("click") {
+                            @Override
+                            protected void onEvent(AjaxRequestTarget target) {
+                                form.setModelObject(part);
+                                target.add(form);
+                                target.appendJavaScript(String.format("$('#%s').modal('show')", modalWindow.getMarkupId()));
+                            }
+                        };
+                        item.add(behavior);
                         item.add(new ClassAttributeModifier() {
                             @Override
                             protected Set<String> update(Set<String> oldClasses) {
-                                if(value){
+                                if (booleanIModel.getObject()) {
                                     oldClasses.add("alert-danger");
                                 }
                                 return oldClasses;
                             }
                         });
-                        item.add(new HiddenField<Boolean>("input", Model.of(value)));
+                        item.add(new HiddenField<Boolean>("input", booleanIModel));
                     }
                 };
                 employeeListItem.add(cells);
             }
         };
         add(head1, head2, rows);
+        form.setOutputMarkupId(true);
     }
 
-   /* ISortableDataProvider<Vacation, String> provider() {
-        ISortableDataProvider<Vacation, String> provider = PersistableDataProvider.of(() -> vacationRepository, this::specification);
-        return provider;
-    }*/
-
-  /*  Specification<Vacation> specification() {
-        return (r, q, b) -> b.equal(r.get("id").get("year"), getModelObject());
-    }*/
-
-   /* List<IColumn<Vacation, String>> columns() {
-        List<IColumn<Vacation, String>> list = Lists.newArrayList();
-        for (int month = Month.JANUARY.getValue(); month <= Month.DECEMBER.getValue(); month++) {
-            list.add(new HalfMonthColumn(1, ))
-        }
-        return list;
-    }*/
-
-    /*static class HalfMonthColumn extends AbstractColumn<Vacation, String> {
-
-        Integer halfNumber;
-
-        Month month;
-
-
-        public HalfMonthColumn(IModel<String> displayModel, Integer halfNumber, Month month) {
-            super(displayModel);
-            this.halfNumber = halfNumber;
-            this.month = month;
-        }
-
-        @Override
-        public void populateItem(Item<ICellPopulator<Vacation>> cellItem, String componentId, IModel<Vacation> rowModel) {
-
-        }
-    }*/
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        //response.render(OnDomReadyHeaderItem.forScript(String.format("$('#%s').modal()", modalWindow.getMarkupId())));
+    }
 }

@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.time.Duration;
 import java.util.Set;
 
 @Getter
@@ -15,7 +16,7 @@ import java.util.Set;
 @Table(name = "SHIFT")
 @Entity
 @NoArgsConstructor
-@ToString(of = {"id","day","shiftType"})
+@ToString(of = {"id", "day", "shiftType"})
 public class Shift extends AbstractAuditableEntity<Integer> {
 
     @Id
@@ -34,16 +35,33 @@ public class Shift extends AbstractAuditableEntity<Integer> {
 
     @ElementCollection
     @CollectionTable(name = "SHIFT_PERIOD", joinColumns = {@JoinColumn(name = "ID_SHIFT", referencedColumnName = "ID_SHIFT")}
-            , foreignKey = @ForeignKey(name = "SHIFT_PERIOD_FK", foreignKeyDefinition = "foreign key (ID_PERSON, DATE) references DUTY(ID_PERSON,DATE) ON UPDATE CASCADE ON DELETE CASCADE")
+            , foreignKey = @ForeignKey(name = "SHIFT_PERIOD_FK", foreignKeyDefinition = "foreign key (ID_EMPLOYEE, DATE) references DUTY(ID_EMPLOYEE,DATE) ON UPDATE CASCADE ON DELETE CASCADE")
     )
     Set<Period> periods;
 
+    @Transient
+    Boolean weekend;
+
+    @Transient
+    Duration overTime;
+
+    @Transient
+    Boolean endOnNextDay;
 
     public static Shift of(Day day, ShiftType shiftType) {
         Shift _this = new Shift();
         _this.shiftType = shiftType;
         _this.day = day;
         return _this;
+    }
+
+    @PostPersist
+    @PostUpdate
+    @PostLoad
+    public void calculateTransientFields() {
+        weekend = getShiftType().isStartOnWeekend(getDay()) || getShiftType().isEndOnWeekend(getDay());
+        overTime = getShiftType().totalOvertime(getDay());
+        endOnNextDay = getShiftType().isEndOnNextDay(getDay());
     }
 
 

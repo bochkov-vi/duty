@@ -3,7 +3,7 @@ package com.bochkov.duty.wicket.page.employee;
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.repository.EmployeeGroupRepository;
 import com.bochkov.duty.jpa.repository.RangRepository;
-import com.bochkov.duty.wicket.page.dutytype.ShiftTypeFieldMultiSelect;
+import com.bochkov.duty.wicket.page.shifttype.ShiftTypeFieldMultiSelect;
 import com.bochkov.duty.wicket.page.employeegroup.EmployeeGroupFieldSelect;
 import com.bochkov.duty.wicket.page.rang.RangFieldSelect;
 import org.apache.wicket.markup.html.form.RequiredTextField;
