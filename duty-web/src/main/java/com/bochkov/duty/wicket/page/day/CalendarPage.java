@@ -91,8 +91,11 @@ public class CalendarPage extends BootstrapPage<Month> {
                 IModel<Day> dayIModel = LoadableDetachableModel.of(
                         () -> rowModel.map(weekNumber -> LocalDate.now().with(ChronoField.ALIGNED_WEEK_OF_YEAR, weekNumber.longValue()).with(dayOfWeek)).map(ld -> dayRepository.findOrCreate(ld)).getObject()
                 );
-
-                cellItem.add(new AjaxLink<Day>(componentId, dayIModel) {
+                WebMarkupContainer cell = new WebMarkupContainer(componentId);
+                cellItem.add(cell);
+                cell.add(new Label("daysFromWeekend", dayIModel.map(Day::getDaysFromWeekend)));
+                cell.add(new Label("daysToWeekend", dayIModel.map(Day::getDaysToWeekend)));
+                cell.add(new AjaxLink<Day>("link", dayIModel) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         log.debug(getModel().getObject());

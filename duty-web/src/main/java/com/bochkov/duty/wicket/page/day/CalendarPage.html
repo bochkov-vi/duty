@@ -15,13 +15,16 @@
             <tbody>
             <tr wicket:id="rows">
                 <td wicket:id="cells" class="text-center">
-                    <div class="row">
-                        <a wicket:id="cell" href="#" class="row">
-                            <div class="col-3">[FW]</div>
+                    <div wicket:id="cell" class="row">
+                        <div class="col-3">
+                            <div wicket:id="daysFromWeekend" class="badge">0</div>
+                        </div>
+                        <a wicket:id="link" href="#">
                             <span wicket:id="label" class="col-6">Дата</span>
-                            <div class="col-3">[TW]</div>
-
                         </a>
+                        <div class="col-3">
+                            <div wicket:id="daysToWeekend" class="badge">0</div>
+                        </div>
                     </div>
                 </td>
             </tr>
