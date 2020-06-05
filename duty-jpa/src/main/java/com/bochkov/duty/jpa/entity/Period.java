@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collection;
 
 @Data
 @NoArgsConstructor
@@ -60,6 +61,15 @@ public class Period implements Serializable, Comparable<Period> {
         return result;
     }
 
+    public static Duration totalDuration(Collection<Period> periods) {
+        Duration result = Duration.ZERO;
+        if (periods != null) {
+            for (Period period : periods) {
+                result = result.plus(period.getDuration());
+            }
+        }
+        return result;
+    }
 
     public Range<LocalDateTime> range(LocalDate date) {
         LocalDateTime d1 = date.atTime(start);

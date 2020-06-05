@@ -8,7 +8,18 @@
             :</label>
         <input type="text" class="form-control" wicket:id="id">
     </div>
-
+    <div class="form-group">
+        <label wicket:for="prev">
+            <wicket:message key="day.prev"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="prev">
+    </div>
+    <div class="form-group">
+        <label wicket:for="next">
+            <wicket:message key="day.next"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="next">
+    </div>
     <div class="form-group">
         <label wicket:for="shiftType">
             <wicket:message key="day.shiftType"/>
@@ -22,6 +33,36 @@
                 <wicket:message key="day.weekend"/>
             </label>
         </div>
+    </div>
+    <div class="form-group">
+        <label wicket:for="daysFromWeekend">
+            <wicket:message key="day.daysFromWeekend"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="daysFromWeekend">
+    </div>
+    <div class="form-group">
+        <label wicket:for="daysToWeekend">
+            <wicket:message key="day.daysToWeekend"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="daysToWeekend">
+    </div>
+    <div class="form-group">
+        <label wicket:for="weekIndex">
+            <wicket:message key="day.weekIndex"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="weekIndex">
+    </div>
+    <div class="form-group">
+        <label wicket:for="dayIndex">
+            <wicket:message key="day.dayIndex"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="dayIndex">
+    </div>
+    <div class="form-group">
+        <label wicket:for="dayOfWeek">
+            <wicket:message key="day.dayOfWeek"/>
+            :</label>
+        <input type="text" class="form-control" wicket:id="dayOfWeek">
     </div>
 </wicket:panel>
 </body>

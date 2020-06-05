@@ -29,6 +29,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -82,7 +83,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
     @Accessors(chain = true)
     boolean editMode = false;
 
-    WebMarkupContainer tableContainer = new WebMarkupContainer("table-container") {
+    protected WebMarkupContainer tableContainer = new WebMarkupContainer("table-container") {
         @Override
         public boolean isVisible() {
             return !editMode;
@@ -232,11 +233,15 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
     }
 
     protected ISortableDataProvider<T, String> dataProvider() {
-        return PersistableDataProvider.of(this::getRepository, this::createSpecification);
+        return PersistableDataProvider.of(this::getRepository, this::createSpecification, this::createSort);
     }
 
     public Specification<T> createSpecification() {
         return null;
+    }
+
+    public Sort createSort() {
+        return Sort.unsorted();
     }
 
     public void showModal(AjaxRequestTarget target) {

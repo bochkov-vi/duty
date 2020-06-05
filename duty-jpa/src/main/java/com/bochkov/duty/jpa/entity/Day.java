@@ -28,7 +28,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
+public class Day extends AbstractEntity<LocalDate> implements Comparable<Day>, IPeriodContainer {
 
     final static Comparator<Day> COMPARATOR = Comparator.nullsLast(Comparator.comparing(Day::getId));
 
@@ -69,6 +69,7 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
     @Transient
     DayOfWeek dayOfWeek;
 
+
     public Day(LocalDate date) {
         this.id = date;
         weekend = isWeekendDate(date);
@@ -101,6 +102,7 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day> {
         }
         return periods;
     }
+
 
     @PostLoad
     @PostUpdate

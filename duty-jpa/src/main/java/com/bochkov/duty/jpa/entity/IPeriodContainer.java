@@ -5,8 +5,7 @@ import com.google.common.collect.Range;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public interface IPeriodContainer {
@@ -104,4 +103,90 @@ public interface IPeriodContainer {
     }
 
     <C extends Collection<Period>> C getPeriods();
+
+    public default OvertimeData overtime(Day day, Employee employee) {
+        OvertimeData result = overtime(day);
+        if (isStartOnWeekend(day)) {
+            Optional.ofNullable(employee.getRoadToHomeTime()).ifPresent(rt ->
+                    result.setWeekendTime(result.getWeekendTime().plus(rt)));
+        }
+        if (isEndOnWeekend(day)) {
+            Optional.ofNullable(employee.getRoadToHomeTime()).ifPresent(rt ->
+                    result.setWeekendTime(result.getWeekendTime().plus(rt)));
+        }
+        return result;
+    }
+
+    public default OvertimeData overtime(Day day) {
+        Duration overTime = Duration.ZERO;
+        Duration weekendTime = Duration.ZERO;
+        Duration restTime = Duration.ZERO;
+        Duration overTime1 = this.diffDuration(day.getId(), day.getShiftType(), day.getId());
+
+        if (day.isWeekend()) {
+            weekendTime = weekendTime.plus(overTime1);
+        } else {
+            overTime = overTime.plus(overTime1);
+        }
+
+        Duration overTime2 = this.diffDuration(day.getId(), day.getNext().getId(), day.getNext().getShiftType(), day.getNext().getId());
+        if (day.getNext().isWeekend()) {
+            weekendTime = weekendTime.plus(overTime2);
+        } else {
+            overTime = overTime.plus(overTime2);
+        }
+
+        Duration resTime1 = day.getShiftType().diffDuration(day.getId(), this, day.getId());
+        restTime = restTime.plus(resTime1);
+
+
+        Duration resTime2 = day.getNext().getShiftType().diffDuration(day.getNext().getId(), day.getId(), this, day.getNext().getId());
+        restTime = restTime.plus(resTime2);
+
+        OvertimeData data = new OvertimeData(overTime, weekendTime, restTime);
+        return data;
+    }
+
+    public default Duration totalOvertime(Day day, Employee employee) {
+        return overtime(day, employee).getTotal();
+    }
+
+    public default Duration totalOvertime(Day day) {
+        return overtime(day).getTotal();
+    }
+
+    public default boolean isStartOnWeekend(Day day) {
+        return day.isWeekend();
+    }
+
+    public default boolean isEndOnWeekend(Day day) {
+        boolean result = false;
+        if (day.getNext() != null && day.getNext().isWeekend()) {
+            result = isEndOnNextDay(day);
+        }
+        return result;
+    }
+
+    public default boolean isEndOnNextDay(Day day) {
+        boolean result = false;
+        if (day.getNext() != null) {
+            Period last = lastPeriod();
+            if (last != null) {
+                result = last.range(day.getId()).isConnected(day.getNext().range());
+            }
+        }
+        return result;
+    }
+
+    public default Period lastPeriod() {
+        Set<Period> periods = getPeriods();
+        if (periods != null) {
+            return Collections.max(periods);
+        }
+        return null;
+    }
+
+    default Duration getTotalDuration() {
+        return Period.totalDuration(getPeriods());
+    }
 }
