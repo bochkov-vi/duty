@@ -22,7 +22,8 @@ create table if not exists DAY
     DAYS_FROM_WEEKEND     INTEGER,
     DAYS_TO_WEEKEND       INTEGER,
     NEXT                  DATE,
-    WEEKEND               BOOLEAN,
+    WEEKEND               BOOLEAN DEFAULT false NOT NULL ,
+    SHORTENED             BOOLEAN DEFAULT false NOT NULL ,
     CREATED_DATE          TIMESTAMP,
     constraint DAY_PRIMARY_KEY primary key (DATE),
     constraint NEXT_DAY_FK foreign key (DATE) references DAY (DATE),
@@ -267,6 +268,11 @@ ALTER SEQUENCE REPORT_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_REPORT)+1,100) F
 
 -- ===================       ROSTER       =========================
 
+drop table if exists SHIFT_ROSTERING_DAY;
+drop table if exists SHIFT_ROSTERING_EMPLOYEE;
+drop table if exists SHIFT_ROSTERING_SHIFT;
+drop table if exists SHIFT_ROSTERING_SHIFT_TYPE;
+
 drop table if exists SHIFT_ROSTERING;
 
 CREATE SEQUENCE IF NOT EXISTS SHIFT_ROSTERING_SEQ;
@@ -282,7 +288,6 @@ create table if not exists SHIFT_ROSTERING
     constraint SHIFT_ROSTERING_PK primary key (ID_SHIFT_ROSTERING)
 );
 
-drop table if exists SHIFT_ROSTERING_DAY;
 create table if not exists SHIFT_ROSTERING_DAY
 (
     ID_SHIFT_ROSTERING INTEGER not null,
@@ -290,8 +295,6 @@ create table if not exists SHIFT_ROSTERING_DAY
     constraint SHIFT_ROSTERING_DAY_DAY_FK foreign key (DATE) references DAY (DATE),
     constraint SHIFT_ROSTERING_DAY_SHIFT_ROSTERING_FK foreign key (ID_SHIFT_ROSTERING) references SHIFT_ROSTERING (ID_SHIFT_ROSTERING)
 );
-
-drop table if exists SHIFT_ROSTERING_EMPLOYEE;
 
 create table if not exists SHIFT_ROSTERING_EMPLOYEE
 (
@@ -302,7 +305,6 @@ create table if not exists SHIFT_ROSTERING_EMPLOYEE
     constraint SHIFT_ROSTERING_EMPLOYEE_EMPLOYEE foreign key (ID_EMPLOYEE) references EMPLOYEE (ID_EMPLOYEE)
 );
 
-drop table if exists SHIFT_ROSTERING_SHIFT;
 create table if not exists SHIFT_ROSTERING_SHIFT
 (
     ID_SHIFT_ROSTERING INTEGER not null,
@@ -311,8 +313,6 @@ create table if not exists SHIFT_ROSTERING_SHIFT
     constraint SHIFT_ROSTERING_SHIFT_SHIFT_FK foreign key (ID_SHIFT) references SHIFT (ID_SHIFT),
     constraint SHIFT_ROSTERING_SHIFT_SHIFT_ROSTERING_FK foreign key (ID_SHIFT_ROSTERING) references SHIFT_ROSTERING (ID_SHIFT_ROSTERING)
 );
-
-drop table if exists SHIFT_ROSTERING_SHIFT_TYPE;
 
 create table if not exists SHIFT_ROSTERING_SHIFT_TYPE
 (
@@ -323,7 +323,7 @@ create table if not exists SHIFT_ROSTERING_SHIFT_TYPE
     constraint SHIFT_ROSTERING_SHIFT_TYPE_SHIFT_ROSTERING_FK foreign key (ID_SHIFT_ROSTERING) references SHIFT_ROSTERING (ID_SHIFT_ROSTERING)
 );
 
-drop table if exists EMPLOYEE_DUTY_TYPE_LIMIT;
+drop table if exists EMPLOYEE_SHIFT_TYPE_LIMIT;
 create table if not exists EMPLOYEE_DUTY_TYPE_LIMIT
 (
     ID_SHIFT_ROSTERING INTEGER not null,

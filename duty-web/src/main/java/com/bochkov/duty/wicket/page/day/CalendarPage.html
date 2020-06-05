@@ -2,35 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:extend>
-    <div wicket:id="container" class="container">
-        <table class="table table-bordered table-striped table-sm ">
+    <div wicket:id="calendar" class="container">
 
-            <thead>
-            <tr>
-                <th wicket:id="heads" class="text-center">
-                    <div wicket:id="head"></div>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr wicket:id="rows">
-                <td wicket:id="cells" class="text-center">
-                    <div wicket:id="cell" class="row">
-                        <div class="col-3">
-                            <div wicket:id="daysFromWeekend" class="badge">0</div>
-                        </div>
-                        <a wicket:id="link" href="#">
-                            <span wicket:id="label" class="col-6">Дата</span>
-                        </a>
-                        <div class="col-3">
-                            <div wicket:id="daysToWeekend" class="badge">0</div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-
-        </table>
     </div>
 </wicket:extend>
 </body>

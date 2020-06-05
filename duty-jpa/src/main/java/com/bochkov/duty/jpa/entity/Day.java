@@ -52,6 +52,9 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day>, I
     @Column(name = "DAYS_FROM_WEEKEND")
     protected Integer daysFromWeekend;
 
+    @Column(name = "SHORTENED")
+    protected boolean shortened = false;
+
     @ElementCollection
     @CollectionTable(name = "DAY_PERIOD", joinColumns = @JoinColumn(name = "DATE", referencedColumnName = "DATE"), foreignKey = @ForeignKey(name = "DAY_TIME_USAGE_FK", foreignKeyDefinition = "foreign key (DATE) references DAY (DATE)"))
     protected Set<Period> periods;

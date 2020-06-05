@@ -12,14 +12,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Entity
-@Table(name = "EMPLOYEE_DUTY_TYPE_LIMIT")
+@Table(name = "EMPLOYEE_SHIFT_TYPE_LIMIT")
 public class EmployeeShiftTypeLimit extends AbstractEntity<EmployeeShiftTypeLimitPK> {
 
     @EmbeddedId
     EmployeeShiftTypeLimitPK id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_DUTY_ROSTER", insertable = false, updatable = false)
+    @JoinColumn(name = "ID_SHIFT_ROSTERING", insertable = false, updatable = false)
     ShiftRostering shiftRostering;
 
     @ManyToOne

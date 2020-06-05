@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <div class="text-center">
+        <div class="btn-group">
+            <div wicket:id="month-" class="btn btn-secondary">
+                <i class="fa fa-angle-left"/>
+            </div>
+            <div wicket:id="month-name" class="btn">
+                НАЗВАНИЕ МЕСЯЦА
+            </div>
+            <div wicket:id="month+" class="btn btn-secondary">
+                <i class="fa fa-angle-right"/>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped table-sm ">
+
+        <thead>
+        <tr>
+            <th wicket:id="heads" class="text-center">
+                <div wicket:id="head"></div>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr wicket:id="rows">
+            <wicket:container wicket:id="cells" >
+                <td wicket:id="cell" class="text-center">
+                    <div class="row m-0">
+                        <div class="col-lg-6 p-0">
+                            <a wicket:id="link" href="#">
+                                <span wicket:id="label">Дата</span>
+                            </a>
+                        </div>
+                        <div class="col-2 d-none d-lg-block p-0">
+                            <div wicket:id="daysFromWeekend" class="badge p-0">0</div>
+                            <div wicket:id="daysToWeekend" class="badge p-0">0</div>
+                        </div>
+                        <div class="col-2 d-none d-lg-block p-0">
+                            <i wicket:id="shortened" class="fa"/>
+                            <i wicket:id="weekend" class="fa"/>
+                        </div>
+                        <div class="col-2 d-lg-block d-none p-0">
+                            <span class="badge" wicket:id="usageTime"></span>
+                        </div>
+                    </div>
+
+                </td>
+            </wicket:container>
+        </tr>
+        </tbody>
+
+    </table>
+</wicket:panel>
+</body>
+</html>
