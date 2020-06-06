@@ -76,12 +76,12 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
 
     @Transactional
     default Day _save(Day day) {
-        _setupDutyType(day);
         day = _saveWithChilds(day);
         day = _saveWithWeekendRelationCalculate(day);
         _saveWithWeekendRelationCalculate(findChain(day, -5));
         _saveWithWeekendRelationCalculate(findChain(day, 5));
-        _setupDutyTypeTimeUsage(day);
+        day = _setupDutyType(day);
+        day = _setupDutyTypeTimeUsage(day);
         return save(day);
     }
 

@@ -136,7 +136,7 @@ public class CalendarPanel extends GenericPanel<Month> {
                         log.debug(getModel().getObject());
                         Day day = getModelObject();
                         day.setWeekend(!day.isWeekend());
-                        dayRepository.safeSave(day);
+                        day = dayRepository.safeSave(day);
                         target.add(CalendarPanel.this);
                     }
                 }.add(new Label("label", dayIModel.map(Day::getId).map(localDate -> localDate.format(DateTimeFormatter.ofPattern("dd.MM"))))
@@ -150,8 +150,8 @@ public class CalendarPanel extends GenericPanel<Month> {
                         if (day.isShortened() && day.isWeekend()) {
                             day.setShortened(false);
                         }
-                        dayRepository.safeSave(day);
-
+                        day = dayRepository.safeSave(day);
+                        log.debug(day);
                     }
                 };
                 weekend.add(new ClassAttributeModifier() {
@@ -167,17 +167,19 @@ public class CalendarPanel extends GenericPanel<Month> {
                 });
                 weekend.setOutputMarkupId(true);
                 cell.add(weekend);
+                cell.setOutputMarkupId(true);
                 AjaxLink shortened = new AjaxLink<Day>("shortened", dayIModel) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        target.add(this);
+                        target.add(CalendarPanel.this);
                         Day day = dayIModel.getObject();
                         day.setShortened(!day.isShortened());
                         if (day.isShortened() && day.isWeekend()) {
                             day.setWeekend(false);
-                            target.add(CalendarPanel.this);
+
                         }
-                        dayRepository.safeSave(day);
+                        day = dayRepository.safeSave(day);
+                        log.debug(day);
                     }
                 };
                 shortened.setOutputMarkupId(true);

@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -86,6 +87,13 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day>, I
 
     public static Day setupDutyTypeTimeUsage(Day day, ShiftType shiftType) {
         day.setPeriods(calculateDutyTypeTimeUsage(day, shiftType));
+        if (day.isShortened()) {
+            Period last = day.lastPeriod();
+            if (last != null) {
+                last.setDuration(last.getDuration().minus(Duration.ofHours(1)));
+                System.out.println(last);
+            }
+        }
         return day;
     }
 
