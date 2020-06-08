@@ -39,7 +39,16 @@ public class ReportPage extends EntityPage<Report, Integer> {
     protected List<IColumn<Report, String>> columns() {
         List<IColumn<Report, String>> list = Lists.newArrayList();
         list.add(new LambdaColumn<Report, String>(new ResourceModel("report.id"), "id", Report::getId));
-
+        List<IColumn<Report, String>> defaultColumns = this.reflectiveColumns(Report.class, "report.",
+                "date",
+                "dateFrom",
+                "dateTo",
+                "chief",
+                "executor",
+                "title",
+                "dateTitle",
+                "genitiveDepartment");
+        list.addAll(defaultColumns);
         return list;
     }
 

@@ -14,6 +14,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.*;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -25,6 +26,7 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -39,6 +41,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializable> extends BootstrapPage<T> {
 
@@ -380,5 +383,25 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
 
     abstract protected T newInstance();
 
+    protected IColumn<T, String> createPropertyColumn(String pname, boolean enableSort, String resourcePrefix) {
+        return new PropertyColumn<>(new ResourceModel(resourcePrefix + pname), pname, pname);
+    }
 
+    protected IColumn<T, String> createPropertyColumn(String pname, boolean enableSort, Class propertyClass, String resourcePrefix) {
+        return new PropertyColumn<>(new ResourceModel(resourcePrefix + pname), pname, pname);
+    }
+
+    protected List<IColumn<T, String>> reflectiveColumns(Class<T> class_, String resourcePrefix, String... properties) {
+        List<IColumn<T, String>> list = Lists.newArrayList();
+        Stream.of(properties).map(pname -> {
+            Class pclass = null;
+            try {
+                pclass = PropertyResolver.getPropertyClass(pname, class_);
+            } catch (Exception e) {
+            }
+            return createPropertyColumn(pname, true, pclass, resourcePrefix);
+        }).forEach(list::add);
+        //list.add(new LambdaColumn<Day, String>(new ResourceModel("day.id"), "id", Day::getId));
+        return list;
+    }
 }

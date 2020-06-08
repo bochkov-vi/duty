@@ -8,10 +8,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.wicket.ClassAttributeModifier;
-import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
@@ -23,7 +21,6 @@ import org.wicketstuff.annotation.mount.MountPath;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @MountPath("day")
 public class DayPage extends EntityPage<Day, LocalDate> {
@@ -57,34 +54,10 @@ public class DayPage extends EntityPage<Day, LocalDate> {
     protected List<IColumn<Day, String>> columns() {
         List<IColumn<Day, String>> list = Lists.newArrayList();
         //list.add(new LambdaColumn<Day, String>(new ResourceModel("day.id"), "id", Day::getId));
-        list.addAll(reflectiveColumns(Day.class));
+        list.addAll(reflectiveColumns(Day.class, "day.", "id", "weekend", "next", "prev", "daysToWeekend", "daysFromWeekend", "totalDuration", "shiftType.name", "weekIndex", "dayIndex", "dayOfWeek"));
         return list;
     }
 
-    protected List<IColumn<Day, String>> reflectiveColumns(Class class_) {
-        return reflectiveColumns(class_, "day.", "id", "weekend", "next", "prev", "daysToWeekend", "daysFromWeekend", "totalDuration", "shiftType.name", "weekIndex", "dayIndex", "dayOfWeek");
-    }
-
-    protected IColumn<Day, String> createPropertyColumn(String pname, boolean enableSort, Class propertyClass, String resourcePrefix) {
-        if ("totalDuration".equalsIgnoreCase(pname)) {
-            return new LambdaColumn<Day, String>(new ResourceModel("day.totalDuration"), day -> DurationFormatUtils.formatDuration(day.getTotalDuration().toMillis(), "HH:mm"));
-        }
-        return new PropertyColumn(new ResourceModel(resourcePrefix + pname), pname, pname);
-    }
-
-    protected List<IColumn<Day, String>> reflectiveColumns(Class class_, String resourcePrefix, String... properties) {
-        List<IColumn<Day, String>> list = Lists.newArrayList();
-        Stream.of(properties).map(pname -> {
-            Class pclass = null;
-            try {
-                pclass = PropertyResolver.getPropertyClass(pname, class_);
-            } catch (Exception e) {
-            }
-            return createPropertyColumn(pname, true, pclass, resourcePrefix);
-        }).forEach(list::add);
-        //list.add(new LambdaColumn<Day, String>(new ResourceModel("day.id"), "id", Day::getId));
-        return list;
-    }
 
     @Override
     protected DayRepository getRepository() {
@@ -110,4 +83,12 @@ public class DayPage extends EntityPage<Day, LocalDate> {
     public Sort createSort() {
         return Sort.by(Sort.Direction.ASC, "id");
     }
+
+    protected IColumn<Day, String> createPropertyColumn(String pname, boolean enableSort, Class propertyClass, String resourcePrefix) {
+        if ("totalDuration".equalsIgnoreCase(pname)) {
+            return new LambdaColumn<Day, String>(new ResourceModel("day.totalDuration"), day -> DurationFormatUtils.formatDuration(day.getTotalDuration().toMillis(), "HH:mm"));
+        }
+        return super.createPropertyColumn(pname, enableSort, propertyClass, resourcePrefix);
+    }
+
 }

@@ -3,6 +3,80 @@
 <body>
 <wicket:panel>
 
+    <div class="form-row">
+        <div class="form-group col-sm-6">
+            <label wicket:for="id" >
+                <wicket:message key="report.id"/>
+                :</label>
+            <input type="text" class="form-control form-control-sm" wicket:id="id">
+        </div>
+
+
+        <div class="form-group col-sm-6">
+            <label wicket:for="date">
+                <wicket:message key="report.date"/>
+                :</label>
+            <input type="text" class="form-control form-control-sm" wicket:id="date">
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-sm-6">
+            <label wicket:for="dateFrom">
+                <wicket:message key="report.dateFrom"/>
+                :</label>
+            <input type="text" class="form-control form-control-sm" wicket:id="dateFrom">
+        </div>
+
+        <div class="form-group col-sm-6">
+            <label wicket:for="dateTo">
+                <wicket:message key="report.dateTo"/>
+                :</label>
+            <input type="text" class="form-control form-control-sm" wicket:id="dateTo">
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-sm-6">
+            <label wicket:for="chief">
+                <wicket:message key="report.chief"/>
+                :</label>
+            <select class="form-control form-control-sm" wicket:id="chief"></select>
+        </div>
+
+        <div class="form-group col-sm-6">
+            <label wicket:for="executor">
+                <wicket:message key="report.executor"/>
+                :</label>
+            <select class="form-control form-control-sm" wicket:id="executor"></select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="title">
+            <wicket:message key="report.title"/>
+            :</label>
+        <textarea class="form-control form-control-sm" wicket:id="title" rows="3">
+        </textarea>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-sm-6">
+            <label wicket:for="dateTitle">
+                <wicket:message key="report.dateTitle"/>
+                :</label>
+            <input type="text" class="form-control form-control-sm" wicket:id="dateTitle">
+        </div>
+
+        <div class="form-group col-sm-6">
+            <label wicket:for="genitiveDepartment">
+                <wicket:message key="report.genitiveDepartment"/>
+                :</label>
+            <input type="text" class="form-control form-control-sm" wicket:id="genitiveDepartment">
+        </div>
+    </div>
+
+
 </wicket:panel>
 </body>
 </html>
