@@ -33,6 +33,7 @@ public class ReportPage extends EntityPage<Report, Integer> {
     protected void onInitialize() {
         this.setModalMode(false);
         super.onInitialize();
+        add(new TabsNavidgationPanel("tabs", getModel()));
     }
 
     @Override

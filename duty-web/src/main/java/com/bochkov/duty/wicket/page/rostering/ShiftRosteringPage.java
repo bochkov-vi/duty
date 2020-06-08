@@ -8,6 +8,7 @@ import com.bochkov.duty.wicket.page.day.calendar.CalendarPanel;
 import com.bochkov.wicket.component.toast.ToastFeedbackPanel;
 import com.bochkov.wicket.data.model.PersistableModel;
 import com.google.common.collect.Lists;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -31,6 +32,7 @@ public class ShiftRosteringPage extends BootstrapPage<Report> {
     ReportRepository repository;
     ToastFeedbackPanel feedbackPanel = new ToastFeedbackPanel("feedback");
     IModel<Integer> selectedTab = Model.of(0);
+    TabbedPanel tabbedPanel;
 
     public ShiftRosteringPage(PageParameters parameters) {
         super(parameters);
@@ -52,7 +54,9 @@ public class ShiftRosteringPage extends BootstrapPage<Report> {
     protected void onInitialize() {
         super.onInitialize();
         add(feedbackPanel);
-        TabbedPanel tabbedPanel = new TabbedPanel<ITab>("tabs-panel", createTabs(), selectedTab);
+
+        tabbedPanel = new TabbedPanel<ITab>("tabs-panel", createTabs(), selectedTab);
+        tabbedPanel.setOutputMarkupId(true);
         add(tabbedPanel);
     }
 
@@ -67,7 +71,15 @@ public class ShiftRosteringPage extends BootstrapPage<Report> {
         ITab tab = new AbstractTab(new ResourceModel("report.main-data")) {
             @Override
             public WebMarkupContainer getPanel(String panelId) {
-                return new MainReportDataPanel(panelId, getModel()).setFeedbackPanel(feedbackPanel);
+                return new MainReportDataPanel(panelId, getModel()) {
+                    @Override
+                    public void onUpdate(AjaxRequestTarget target) {
+                        super.onUpdate(target);
+                        target.add(tabbedPanel);
+                        target.add(feedbackPanel);
+
+                    }
+                };
             }
         };
         return tab;

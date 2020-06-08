@@ -195,6 +195,11 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         };
     }
 
+    public EntityPage<T, ID> doEdit(T entity) {
+        this.setEditMode(true).setModelObject(entity);
+        return this;
+    }
+
     public void onEditLinkClick(Optional<AjaxRequestTarget> target, IModel<T> model) {
         if (modalMode) {
             modalContainer.replace(formInputFragment);
