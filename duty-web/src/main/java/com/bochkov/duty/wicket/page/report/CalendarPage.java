@@ -5,11 +5,13 @@ import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.bochkov.duty.wicket.page.day.calendar.CalendarPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.temporal.TemporalAdjusters;
 
+@MountPath("report-calendar")
 public class CalendarPage extends BootstrapPage<Month> {
 
     IModel<Report> reportModel;

@@ -9,4 +9,6 @@ import java.util.List;
 public interface EmployeeRepository extends BaseRepository<Employee, String> {
 
     List<Employee> findByShiftTypesContaining(ShiftType shiftType);
+
+
 }

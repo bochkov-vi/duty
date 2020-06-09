@@ -31,6 +31,11 @@ public class TabsNavidgationPanel extends GenericPanel<Report> {
                 RequestCycle.get().setResponsePage(new CalendarPage(getModel()));
             }
         }.add(ActiveLinkBehavior.of(CalendarPage.class)));
-
+        add(new Link<Report>("", getModel()) {
+            @Override
+            public void onClick() {
+                RequestCycle.get().setResponsePage(new ShiftGridPage(getModelObject()));
+            }
+        }.add(ActiveLinkBehavior.of(ShiftGridPage.class)));
     }
 }
