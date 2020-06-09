@@ -19,7 +19,10 @@ public class TabsNavidgationPanel extends GenericPanel<Report> {
         add(new Link<Report>("main-data", getModel()) {
             @Override
             public void onClick() {
-                RequestCycle.get().setResponsePage(new ReportPage().doEdit(getModelObject()));
+                Report entity1 = TabsNavidgationPanel.this.getModelObject();
+                Report entity2 = getModelObject();
+
+                RequestCycle.get().setResponsePage(new ReportPage(getModelObject()).setEditMode(true));
             }
         }.add(ActiveLinkBehavior.of(ReportPage.class)));
         add(new Link<Report>("calendar", getModel()) {

@@ -92,12 +92,14 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
             return !editMode;
         }
     };
+
     WebMarkupContainer editFormContainer = new WebMarkupContainer("edit-form-container") {
         @Override
         public boolean isVisible() {
             return editMode && !modalMode;
         }
     };
+
     WebMarkupContainer table;
 
     public EntityPage() {
@@ -160,6 +162,9 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
             modalMode = false;
         }
         editFormContainer.add(new EmptyPanel(MODAL_CONTENT_ID));
+        if (editMode) {
+            editFormContainer.replace(formInputFragment);
+        }
     }
 
     abstract protected <R extends JpaRepository<T, ID> & JpaSpecificationExecutor<T>> R getRepository();

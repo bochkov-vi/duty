@@ -38,7 +38,7 @@ public class ReportInputPanel extends GenericPanel<Report> {
     @Override
     protected void onConfigure() {
         super.onConfigure();
-        idField.setEnabled(getModel().map(Persistable::isNew).getObject());
+        idField.setEnabled(getModel().map(Persistable::isNew).orElse(false).getObject());
     }
 
 }

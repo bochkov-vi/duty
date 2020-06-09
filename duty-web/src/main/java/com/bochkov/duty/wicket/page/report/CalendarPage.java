@@ -31,6 +31,7 @@ public class CalendarPage extends BootstrapPage<Month> {
                 report.setDateTo(date.with(TemporalAdjusters.lastDayOfMonth()));
             }
         }));
+        reportModel = model;
     }
 
     @Override
