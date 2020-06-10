@@ -33,8 +33,12 @@ public class Report extends AbstractAuditableEntity<Integer> {
     Integer id;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "REPORT_EMPLOYEE", joinColumns = @JoinColumn(name = "ID_REPORT",referencedColumnName = "ID_REPORT"), inverseJoinColumns = @JoinColumn(name = "ID_EMPLOYEE",referencedColumnName = "ID_EMPLOYEE"))
+    @JoinTable(name = "REPORT_EMPLOYEE", joinColumns = @JoinColumn(name = "ID_REPORT", referencedColumnName = "ID_REPORT"), inverseJoinColumns = @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE"))
     Set<Employee> employees;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "REPORT_SHIFT_TYPE", joinColumns = @JoinColumn(name = "ID_REPORT", referencedColumnName = "ID_REPORT"), inverseJoinColumns = @JoinColumn(name = "ID_SHIFT_TYPE", referencedColumnName = "ID_SHIFT_TYPE"))
+    Set<ShiftType> shiftTypes;
 
     @Column(name = "DATE", nullable = false)
     LocalDate date;

@@ -11,14 +11,12 @@ public class ShiftGridPage extends BootstrapPage<Report> {
     @SpringBean
     ReportRepository reportRepository;
 
+
     public ShiftGridPage(Report report) {
         super();
         Integer pk = report.getId();
         setModel(LoadableDetachableModel.of(() -> reportRepository.findById(pk).get()));
     }
 
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
-    }
+
 }
