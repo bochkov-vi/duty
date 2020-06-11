@@ -64,6 +64,25 @@
             <artifactId>font-awesome</artifactId>
             <version>4.7.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>bootstrap-input-spinner</artifactId>
+            <version>1.13.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.webjars.npm</groupId>
+                    <artifactId>bootstrap</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars.npm</groupId>
+                    <artifactId>jquery</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars.npm</groupId>
+                    <artifactId>popper.js</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <!--  <dependency>
               <groupId>org.webjars</groupId>
               <artifactId>font-awesome</artifactId>
