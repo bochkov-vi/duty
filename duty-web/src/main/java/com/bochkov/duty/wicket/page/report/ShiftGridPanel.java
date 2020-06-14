@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,7 +37,7 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
 
     @Getter
     @Setter
-    private List<SerializableFunction<Integer, IColumn<T, ?>>> firstColmnCreators = Lists.newArrayList();
+    private List<SerializableFunction<Integer, ? extends IColumn<T, ?>>> firstColmnCreators = Lists.newArrayList();
 
 
     public ShiftGridPanel(String id, IModel<List<T>> model, LocalDate dateFrom, LocalDate dateTo) {
@@ -62,14 +63,17 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
     protected void onInitialize() {
         super.onInitialize();
         ISortableDataProvider<T, String> provider = provider();
-        List<IColumn<T, ?>> columns = Lists.newArrayList();
+        List<? extends IColumn<T, ?>> columns = Lists.newArrayList();
         int i = 0;
-        for (SerializableFunction<Integer, IColumn<T, ?>> function : firstColmnCreators) {
-            columns.add(function.apply(i++));
+
+        for (Function<Integer, ? extends IColumn<T, ?>> function : firstColmnCreators) {
+            IColumn<T, ?> column =  function.apply(i++);
+            columns.add(column);
         }
-        DataTable<T, String> table = new DataTable<T, String>("table", columns(dateFrom, dateTo), provider, 100);
+        columns.addAll(columns(dateFrom, dateTo));
+        DataTable<T, String> table = new DataTable<T, String>("table", columns, provider, 100);
         table.addTopToolbar(new HeadersToolbar<>(table, provider));
-        table.addTopToolbar(new DayToolbar(table));
+        table.addTopToolbar(new DayToolbar(table, "EE"));
         add(table);
     }
 
@@ -94,15 +98,18 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
     }
 
 
-    protected List<IColumn<T, String>> columns(LocalDate d1, LocalDate d2) {
-        List<IColumn<T, String>> columns = Lists.newArrayList();
-        createData(d1, d2).stream().map(this::createColumn).forEach(col -> columns.add(col));
+    protected <C extends IColumn<T, String>> List<C> columns(LocalDate d1, LocalDate d2) {
+        List<C> columns = Lists.newArrayList();
+        createData(d1, d2).stream().map(this::createColumn).forEach(col -> {
+            C column = (C) col;
+            columns.add(column);
+        });
         return columns;
     }
 
 
     protected IColumn<T, String> createColumn(LocalDate date) {
-        return new AbstractColumn<T, String>(Model.of(date).map(d -> d.format(DateTimeFormatter.ofPattern("dd.MM")))) {
+        return new DayColumn<T>(Model.of(date).map(d -> d.format(DateTimeFormatter.ofPattern("dd.MM"))), date) {
             @Override
             public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId, IModel<T> rowModel) {
                 ShiftGridPanel.this.populateItem(cellItem, componentId, rowModel, date);
@@ -115,5 +122,22 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
     }
 
     public abstract IModel<T> model(T object);
+
+    public static abstract class DayColumn<T> extends AbstractColumn<T, String> implements DayToolbar.IDateAware {
+
+        LocalDate date;
+
+        public DayColumn(IModel<String> displayModel, LocalDate date) {
+            super(displayModel);
+            this.date = date;
+        }
+
+
+        @Override
+        public LocalDate getDate() {
+            return date;
+        }
+
+    }
 
 }

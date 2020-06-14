@@ -1,6 +1,5 @@
 package com.bochkov.duty.wicket.page.report;
 
-import com.bochkov.duty.jpa.entity.Day;
 import com.google.common.collect.Lists;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
@@ -13,6 +12,7 @@ import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
@@ -21,15 +21,16 @@ public class DayToolbar extends AbstractToolbar {
 
     String pattern;
 
-    public <T> DayToolbar(DataTable<T, String> table) {
+    public DayToolbar(DataTable<?, ?> table, String pattern) {
         super(table);
+        this.pattern = pattern;
     }
 
     public void populateItem(Item<IColumn<T, String>> item) {
         WebMarkupContainer header = new WebMarkupContainer("header");
         item.add(header);
-        if (item.getModelObject() instanceof DayColumn) {
-            populateHeaderDayColumn((DayColumn<T>) item.getModelObject(), header, "label");
+        if (item.getModelObject() instanceof IDateAware) {
+            populateHeaderDayColumn((IDateAware) item.getModelObject(), header, "label");
         } else {
             populateHeaderColumn(item.getModelObject(), header, "label");
         }
@@ -42,8 +43,7 @@ public class DayToolbar extends AbstractToolbar {
             @Override
             protected Iterator<IModel<IColumn<T, String>>> getItemModels() {
                 List<IModel<IColumn<T, String>>> list = Lists.newArrayList();
-
-                getTable().getColumns().stream().filter(c->c instanceof DayColumn).forEach(iColumn -> list.add((IModel<IColumn<T, String>>) Model.of((IColumn<T, String>) iColumn)));
+                getTable().getColumns().stream().filter(c -> c instanceof IDateAware).forEach(iColumn -> list.add((IModel<IColumn<T, String>>) Model.of((IColumn<T, String>) iColumn)));
                 return list.iterator();
             }
 
@@ -59,7 +59,12 @@ public class DayToolbar extends AbstractToolbar {
         item.add(column.getHeader(componentId));
     }
 
-    public void populateHeaderDayColumn(DayColumn<T> column, WebMarkupContainer item, String componentId) {
-        item.add(new Label(componentId, column.getDayModel().map(Day::getId).map(ld -> ld.format(DateTimeFormatter.ofPattern("EE")))));
+    public void populateHeaderDayColumn(IDateAware column, WebMarkupContainer item, String componentId) {
+        item.add(new Label(componentId, column.getDate().format(DateTimeFormatter.ofPattern(pattern))));
+    }
+
+    public static interface IDateAware {
+
+        LocalDate getDate();
     }
 }
