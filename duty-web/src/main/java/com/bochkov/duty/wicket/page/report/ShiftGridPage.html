@@ -3,8 +3,11 @@
 <body>
 <wicket:extend>
     <div class="container-fluid">
-        <table wicket:id="table" class="table table-sm table-striped "></table>
+        <div wicket:id="grid"></div>
     </div>
+    <wicket:fragment wicket:id="cell-input">
+        <input type="number" size="1" min="0" max="5">
+    </wicket:fragment>
 </wicket:extend>
 </body>
 </html>

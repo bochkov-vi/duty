@@ -15,14 +15,12 @@
             </button>
         </div>
         <div class="card">
-            <table class="table table-sm table-striped" wicket:id="table">
-            </table>
+            <table class="table table-sm table-striped" wicket:id="table"></table>
         </div>
     </div>
 
     <div wicket:id="edit-form-container" class="container">
-        <div wicket:id="modal-content">
-        </div>
+        <div wicket:id="modal-content"></div>
     </div>
 
     <div wicket:id="modal" class="modal fade" tabindex="-1" role="dialog">
@@ -75,10 +73,10 @@
     </wicket:fragment>
 
     <wicket:fragment wicket:id="edit-panel-fragment">
-        <a href="#" class="btn btn-light border" wicket:id="edit" wicket:message="title:message.entity.edit"><i
-                class="fa fa-pencil"/></a>
-        <a href="#" class="btn btn-light border" wicket:id="delete" wicket:message="title:message.entity.delete"><i
-                class="fa fa-close"/></a>
+        <div class="btn-group">
+            <a href="#" class="btn btn-light border" wicket:id="edit" wicket:message="title:message.entity.edit"><i class="fa fa-pencil"/></a>
+            <a href="#" class="btn btn-light border" wicket:id="delete" wicket:message="title:message.entity.delete"><i class="fa fa-close"/></a>
+        </div>
     </wicket:fragment>
 </wicket:extend>
 </body>
