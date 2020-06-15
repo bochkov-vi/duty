@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.*;
 import org.apache.wicket.markup.html.basic.Label;
@@ -12,15 +13,15 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.danekja.java.util.function.serializable.SerializableFunction;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
-import java.util.function.Function;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,7 +38,7 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
 
     @Getter
     @Setter
-    private List<SerializableFunction<Integer, ? extends IColumn<T, ?>>> firstColmnCreators = Lists.newArrayList();
+    private List<? extends IColumn<T, ?>> firstColumns = Lists.newArrayList();
 
 
     public ShiftGridPanel(String id, IModel<List<T>> model, LocalDate dateFrom, LocalDate dateTo) {
@@ -62,17 +63,12 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        ISortableDataProvider<T, String> provider = provider();
-        List<? extends IColumn<T, ?>> columns = Lists.newArrayList();
-        int i = 0;
+        ISortableDataProvider<T, ?> provider = provider();
+        List<? extends IColumn<T, ?>> columns = Lists.newArrayList(this.firstColumns);
 
-        for (Function<Integer, ? extends IColumn<T, ?>> function : firstColmnCreators) {
-            IColumn<T, ?> column =  function.apply(i++);
-            columns.add(column);
-        }
         columns.addAll(columns(dateFrom, dateTo));
-        DataTable<T, String> table = new DataTable<T, String>("table", columns, provider, 100);
-        table.addTopToolbar(new HeadersToolbar<>(table, provider));
+        DataTable table = new DataTable("table", columns, provider, 100);
+        table.addTopToolbar(new HeadersToolbar(table, provider));
         table.addTopToolbar(new DayToolbar(table, "EE"));
         add(table);
     }
@@ -98,7 +94,7 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
     }
 
 
-    protected <C extends IColumn<T, String>> List<C> columns(LocalDate d1, LocalDate d2) {
+    protected <C extends IColumn> List<C> columns(LocalDate d1, LocalDate d2) {
         List<C> columns = Lists.newArrayList();
         createData(d1, d2).stream().map(this::createColumn).forEach(col -> {
             C column = (C) col;
@@ -108,17 +104,42 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
     }
 
 
-    protected IColumn<T, String> createColumn(LocalDate date) {
-        return new DayColumn<T>(Model.of(date).map(d -> d.format(DateTimeFormatter.ofPattern("dd.MM"))), date) {
+    protected IColumn createColumn(LocalDate date) {
+        IStyledColumn column = new DayColumn<T>(Model.of(date).map(d -> d.format(DateTimeFormatter.ofPattern("dd.MM"))), date) {
             @Override
             public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId, IModel<T> rowModel) {
                 ShiftGridPanel.this.populateItem(cellItem, componentId, rowModel, date);
             }
+
+            @Override
+            public String getCssClass() {
+                String result = null;
+                if (date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+                    return "bg-danger";
+                }
+                if (date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+                    return "bg-danger";
+                }
+
+                return super.getCssClass();
+            }
         };
+
+        return column;
     }
 
     public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId, IModel<T> rowModel, LocalDate date) {
-        cellItem.add(new Label(componentId, Model.of(date).map(d -> d.format(DateTimeFormatter.ofPattern("dd")))));
+        cellItem.add(new Label(componentId, Model.of(date).map(d -> d.format(DateTimeFormatter.ofPattern("dd"))))
+                .add(new ClassAttributeModifier() {
+                    @Override
+                    protected Set<String> update(Set<String> oldClasses) {
+                        if (date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+                            oldClasses.add("special-color");
+                        }
+                        return oldClasses;
+                    }
+                })
+        );
     }
 
     public abstract IModel<T> model(T object);
