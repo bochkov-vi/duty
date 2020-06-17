@@ -1,32 +1,36 @@
 package com.bochkov.duty.wicket.page.report;
 
+import com.bochkov.duty.jpa.entity.Day;
+import com.bochkov.duty.jpa.repository.DayRepository;
+import com.bochkov.wicket.data.model.PersistableModel;
 import com.bochkov.wicket.data.provider.SortedListModelDataProvider;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.*;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
-import java.time.DayOfWeek;
+import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Accessors(chain = true)
 public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
+
+    @Inject
+    DayRepository dayRepository;
 
     @Getter
     @Setter
@@ -75,7 +79,7 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
 
     List<LocalDate> createData(LocalDate start, LocalDate end) {
         List<LocalDate> dates = Stream.iterate(start, date -> date.plusDays(1))
-                .limit(ChronoUnit.DAYS.between(start, end))
+                .limit(ChronoUnit.DAYS.between(start, end.plusDays(1)))
                 .collect(Collectors.toList());
         return dates;
     }
@@ -103,60 +107,50 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
         return columns;
     }
 
+    protected DayColumn createColumn(LocalDate date) {
+        DayColumn column = createColumn(PersistableModel.of(date, id -> Optional.of(dayRepository.findOrCreate(id))));
+        return column;
+    }
 
-    protected IColumn createColumn(LocalDate date) {
-        IStyledColumn column = new DayColumn<T>(Model.of(date).map(d -> d.format(DateTimeFormatter.ofPattern("dd.MM"))), date) {
+    protected DayColumn createColumn(IModel<Day> day) {
+        DayColumn column = new DayColumn<T>(day.map(Day::getId).map(d -> d.format(DateTimeFormatter.ofPattern("dd"))), day) {
             @Override
             public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId, IModel<T> rowModel) {
-                ShiftGridPanel.this.populateItem(cellItem, componentId, rowModel, date);
+                ShiftGridPanel.this.populateItem(cellItem, componentId, rowModel, day);
             }
 
             @Override
             public String getCssClass() {
-                String result = null;
-                if (date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-                    return "bg-danger";
-                }
-                if (date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
-                    return "bg-danger";
-                }
-
-                return super.getCssClass();
+                return ShiftGridPanel.this.getCssClass(this.day);
             }
         };
 
         return column;
     }
 
-    public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId, IModel<T> rowModel, LocalDate date) {
-        cellItem.add(new Label(componentId, Model.of(date).map(d -> d.format(DateTimeFormatter.ofPattern("dd"))))
-                .add(new ClassAttributeModifier() {
-                    @Override
-                    protected Set<String> update(Set<String> oldClasses) {
-                        if (date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
-                            oldClasses.add("special-color");
-                        }
-                        return oldClasses;
-                    }
-                })
-        );
+    public String getCssClass(IModel<Day> day) {
+        return day.map(Day::isWeekend).orElse(false).getObject() ? "bg-danger" :null;
+    }
+
+    public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId, IModel<T> rowModel, IModel<Day> day) {
+        cellItem.add(new Label(componentId, day.map(Day::getId).map(d -> d.format(DateTimeFormatter.ofPattern("dd")))));
     }
 
     public abstract IModel<T> model(T object);
 
-    public static abstract class DayColumn<T> extends AbstractColumn<T, String> implements DayToolbar.IDateAware {
+    public static abstract class DayColumn<T> extends AbstractColumn<T, String> implements DayToolbar.IDayAware {
 
-        LocalDate date;
+        IModel<Day> day;
 
-        public DayColumn(IModel<String> displayModel, LocalDate date) {
+        public DayColumn(IModel<String> displayModel, IModel<Day> day) {
             super(displayModel);
-            this.date = date;
+            this.day = day;
         }
 
 
         @Override
-        public LocalDate getDate() {
-            return date;
+        public IModel<Day> getDay() {
+            return day;
         }
 
     }

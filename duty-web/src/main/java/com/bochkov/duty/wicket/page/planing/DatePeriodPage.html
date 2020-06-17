@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <div class="container">
+        <form wicket:id="form">
+            <div class="form-group">
+                <div class="form-group col-sm-6">
+                    <label wicket:for="dateFrom">
+                        <wicket:message key="planing.dateFrom"/>
+                        :</label>
+                    <input type="text" class="form-control form-control-sm" wicket:id="dateFrom">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-group col-sm-6">
+                    <label wicket:for="dateTo">
+                        <wicket:message key="planing.dateTo"/>
+                        :</label>
+                    <input type="text" class="form-control form-control-sm" wicket:id="dateTo">
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-arrow-right"></i>
+                    <span><wicket:message key="message.forward"/></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</wicket:extend>
+</body>
+</html>

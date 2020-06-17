@@ -1,5 +1,6 @@
 package com.bochkov.duty.wicket.page.report;
 
+import com.bochkov.duty.jpa.entity.Day;
 import com.bochkov.duty.jpa.entity.Report;
 import com.bochkov.duty.jpa.entity.ShiftType;
 import com.bochkov.duty.jpa.repository.DayRepository;
@@ -20,8 +21,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.annotation.mount.MountPath;
-
-import java.time.LocalDate;
 
 @MountPath("shift-grid")
 public class ShiftGridPage extends BootstrapPage<Report> {
@@ -68,7 +67,7 @@ public class ShiftGridPage extends BootstrapPage<Report> {
             }
 
             @Override
-            public void populateItem(Item<ICellPopulator<ShiftType>> cellItem, String componentId, IModel<ShiftType> rowModel, LocalDate date) {
+            public void populateItem(Item<ICellPopulator<ShiftType>> cellItem, String componentId, IModel<ShiftType> rowModel, IModel<Day> date) {
                 Fragment fragment = new Fragment(componentId, "cell-input", getPage());
                 fragment.add(new TextField<Integer>("input", Model.of()));
                 cellItem.add(fragment);
@@ -79,6 +78,12 @@ public class ShiftGridPage extends BootstrapPage<Report> {
                 new ResourceModel("shiftType"),
                 ShiftType::toString
         ) {
+
+            @Override
+            public String getCssClass() {
+                return "text-nowrap";
+            }
+
             @Override
             public int getHeaderRowspan() {
                 return 2;
