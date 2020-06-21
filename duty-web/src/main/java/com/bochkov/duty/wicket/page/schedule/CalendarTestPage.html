@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <div class="container">
+        <div class="row">
+            <wicket:container wicket:id="heads1">
+                <div wicket:id="cell" class="col bg-light border text-center h4">
+                </div>
+            </wicket:container>
+        </div>
+
+        <div wicket:id="rows" class="row">
+            <wicket:container wicket:id="cells">
+                <div wicket:id="cell" class="col border">
+
+                </div>
+            </wicket:container>
+        </div>
+    </div>
+    <wicket:fragment wicket:id="cell-panel">
+        <div>
+                <div wicket:id="label"></div>
+        </div>
+    </wicket:fragment>
+</wicket:extend>
+
+</body>
+</html>
