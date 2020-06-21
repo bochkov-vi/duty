@@ -3,7 +3,6 @@ package com.bochkov.duty.wicket.page.schedule;
 import com.bochkov.duty.jpa.repository.DayRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.google.common.collect.Lists;
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -77,7 +76,7 @@ public class CalendarTestPage extends BootstrapPage<List<Integer>> {
                     @Override
                     protected void populateItem(ListItem<DayOfWeek> cellItem) {
                         IModel<LocalDate> dateModel = rowItem.getModel().combineWith(cellItem.getModel(), (weekNumber, dayOfWeek) -> LocalDate.now().with(ChronoField.ALIGNED_WEEK_OF_YEAR, weekNumber.longValue()).with(dayOfWeek));
-                        cellItem.add(populateCell("cell", dateModel));
+                        populateCell("cell", dateModel, cellItem);
                     }
                 };
                 rowItem.add(cells);
@@ -86,10 +85,10 @@ public class CalendarTestPage extends BootstrapPage<List<Integer>> {
         add(rows);
     }
 
-    public Component populateCell(String compId, IModel<LocalDate> dateModel) {
+    public void populateCell(String compId, IModel<LocalDate> dateModel, ListItem<DayOfWeek> cellItem) {
         Fragment fragment = new Fragment(compId, "cell-panel", getPage());
         fragment.add(new Label("label", dateModel.map(d -> d.format(DateTimeFormatter.ofPattern("dd")))));
-        return fragment;
+        cellItem.add(fragment);
     }
 
     @Override
