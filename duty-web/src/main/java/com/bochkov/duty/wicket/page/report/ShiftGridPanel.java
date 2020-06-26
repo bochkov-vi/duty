@@ -67,6 +67,7 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
         ISortableDataProvider<T, ?> provider = provider();
         List<? extends IColumn<T, ?>> columns = Lists.newArrayList(this.firstColumns);
 
@@ -129,7 +130,7 @@ public abstract class ShiftGridPanel<T> extends GenericPanel<List<T>> {
     }
 
     public String getCssClass(IModel<Day> day) {
-        return day.map(Day::isWeekend).orElse(false).getObject() ? "bg-danger" :null;
+        return day.map(Day::isWeekend).orElse(false).getObject() ? "bg-danger" : null;
     }
 
     public void populateItem(Item<ICellPopulator<T>> cellItem, String componentId, IModel<T> rowModel, IModel<Day> day) {

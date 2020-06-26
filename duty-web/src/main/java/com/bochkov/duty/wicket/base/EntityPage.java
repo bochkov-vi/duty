@@ -9,8 +9,10 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.wicket.Application;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -29,6 +31,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.domain.Sort;
@@ -112,6 +115,22 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
     public EntityPage(T entity) {
         this();
         setModelObject(entity);
+    }
+
+    public static <ID extends Serializable> PageParameters pageParameters(ID id, Class<ID> _class) {
+        String parameter = Optional.ofNullable(id).map(val -> Application.get().getConverterLocator().getConverter(_class).convertToString(val, Session.get().getLocale())).orElse(null);
+        return new PageParameters().set(0, parameter);
+    }
+
+    public static <ID extends Serializable> PageParameters pageParameters(IModel<ID> id, Class<ID> _class) {
+        return pageParameters(id.getObject(), _class);
+    }
+
+    public static <ID extends Serializable> ID extractFromParameters(PageParameters pageParameters, Class<ID> _class) {
+        String value = Optional.ofNullable(pageParameters.get(0)).map(stringValue -> stringValue.toOptionalString()).orElseGet(
+                () -> Optional.ofNullable(pageParameters.get("id")).map(stringValue -> stringValue.toOptionalString()).orElse(null));
+        ID id = Application.get().getConverterLocator().getConverter(_class).convertToObject(value, Session.get().getLocale());
+        return id;
     }
 
     protected void setModalContent(Component component) {

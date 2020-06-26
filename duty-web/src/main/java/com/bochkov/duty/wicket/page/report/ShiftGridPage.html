@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<wicket:head>
+    <title>Планирование</title>
+</wicket:head>
 <body>
 <wicket:extend>
-    <div class="container-fluid ">
-        <div wicket:id="grid"></div>
+    <div wicket:id="tabs"></div>
+    <div class="card">
+        <div class="card-header">Планируемые дежурства</div>
+        <div class="card-body">
+            <form wicket:id="shift-form">
+                <div class="btn-group-sm">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save"></i>
+                    </button>
+                </div>
+                <div class="container-fluid ">
+                    <div wicket:id="grid"></div>
+                </div>
+
+            </form>
+        </div>
     </div>
     <wicket:fragment wicket:id="cell-input">
-        <input wicket:id="input"  size="1" class="form-control-sm" style="width: 100%">
+        <input wicket:id="input" size="1" class="form-control-sm" style="width: 100%">
+        <input type="hidden" wicket:id="shiftType">
+        <input type="hidden" wicket:id="day">
     </wicket:fragment>
 </wicket:extend>
 </body>

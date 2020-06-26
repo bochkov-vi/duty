@@ -11,13 +11,14 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.HeaderlessCo
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -36,10 +37,15 @@ public class ReportPage extends EntityPage<Report, Integer> {
         super(entity);
     }
 
+    public static PageParameters pageParameters(IModel<Report> model) {
+        return EntityPage.pageParameters(model.map(Report::getId), Integer.class);
+    }
+
     @Override
     protected void onInitialize() {
         this.setModalMode(false);
         super.onInitialize();
+        add(new TabsNavidgationPanel("tabs", getModel()));
     }
 
     @Override
@@ -59,12 +65,7 @@ public class ReportPage extends EntityPage<Report, Integer> {
         list.add(new HeaderlessColumn<Report, String>() {
             @Override
             public void populateItem(Item<ICellPopulator<Report>> cellItem, String componentId, IModel<Report> rowModel) {
-                Link link = new Link<Report>(componentId, rowModel) {
-                    @Override
-                    public void onClick() {
-                        RequestCycle.get().setResponsePage(new ShiftGridPage(getModelObject()));
-                    }
-                };
+                Link link = new BookmarkablePageLink(componentId, ShiftGridPage.class, new PageParameters().set(0, rowModel.map(Report::getId).getObject()));
                 link.setBody(Model.of("<button type='button' class='btn btn-light border'><i class='fa fa-table'></i></button>")).setEscapeModelStrings(false);
                 cellItem.add(link);
             }
@@ -72,7 +73,6 @@ public class ReportPage extends EntityPage<Report, Integer> {
 
         return list;
     }
-
 
     @Override
     protected ReportRepository getRepository() {
