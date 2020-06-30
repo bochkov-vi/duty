@@ -49,14 +49,10 @@ import java.util.stream.Stream;
 public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializable> extends BootstrapPage<T> {
 
     static String MODAL_CONTENT_ID = "modal-content";
-
     @Accessors(chain = true)
     public final String MODAL_SMALL = "modal-sm";
-
     public final String MODAL_NORMAL = "";
-
     public final String MODAL_LARGE = "modal-lg";
-
     public final String MODAL_EXTRA_LARGE = "modal-xl";
 
     @Getter
@@ -117,10 +113,22 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         setModelObject(entity);
     }
 
+    public EntityPage(PageParameters parameters) {
+        super(parameters);
+        ID pk = EntityPage.extractFromParameters(parameters, getIdClass());
+        PersistableModel<T, ID> model = PersistableModel.of(id -> {
+            return getRepository().findById(id);
+        }, this::newInstance);
+        model.setId(pk);
+        setModel(model);
+        editMode = true;
+    }
+
     public static <ID extends Serializable> PageParameters pageParameters(ID id, Class<ID> _class) {
         String parameter = Optional.ofNullable(id).map(val -> Application.get().getConverterLocator().getConverter(_class).convertToString(val, Session.get().getLocale())).orElse(null);
         return new PageParameters().set(0, parameter);
     }
+
 
     public static <ID extends Serializable> PageParameters pageParameters(IModel<ID> id, Class<ID> _class) {
         return pageParameters(id.getObject(), _class);
@@ -131,6 +139,10 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
                 () -> Optional.ofNullable(pageParameters.get("id")).map(stringValue -> stringValue.toOptionalString()).orElse(null));
         ID id = Application.get().getConverterLocator().getConverter(_class).convertToObject(value, Session.get().getLocale());
         return id;
+    }
+
+    public Class<ID> getIdClass() {
+        throw new UnsupportedOperationException(String.format("%s getIdClass not implements", getClass().getName()));
     }
 
     protected void setModalContent(Component component) {

@@ -34,6 +34,7 @@ public class VacationPage extends EntityPage<Vacation, VacationPK> {
     private VacationRepository repository;
 
     public VacationPage() {
+        super();
     }
 
     public VacationPage(Vacation entity) {

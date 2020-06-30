@@ -3,6 +3,7 @@ package com.bochkov.duty.wicket;
 import com.bochkov.duty.jpa.entity.*;
 import com.bochkov.duty.jpa.repository.*;
 import com.bochkov.duty.wicket.page.home.HomePage;
+import com.bochkov.wicket.component.select2.Select2ApplicationExtension;
 import com.google.common.primitives.Ints;
 import de.agilecoders.wicket.webjars.WicketWebjars;
 import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceReference;
@@ -58,6 +59,7 @@ public class WicketDutyApplication extends WebApplication {
                 WebApplicationContextUtils.getRequiredWebApplicationContext(
                         getServletContext())));
         getMarkupSettings().setStripWicketTags(true);
+        Select2ApplicationExtension.install(this);
         //getRequestCycleListeners().add(new OpenSessionInViewRequestCycleListener(this));
     }
 

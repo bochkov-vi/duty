@@ -23,6 +23,7 @@ public class ShiftPage extends EntityPage<Shift, Integer> {
     private ShiftRepository repository;
 
     public ShiftPage() {
+        super();
     }
 
     public ShiftPage(Shift entity) {

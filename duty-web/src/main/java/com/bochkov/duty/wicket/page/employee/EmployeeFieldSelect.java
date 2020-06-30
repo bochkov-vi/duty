@@ -27,11 +27,12 @@ public class EmployeeFieldSelect extends Select2Choice<Employee> {
     @Override
     protected void onInitialize() {
         getSettings().setCloseOnSelect(true);
+        getSettings().setTheme("bootstrap4");
         setProvider(new EmployeeDataProvider());
         add(new StyleAttributeModifier() {
             @Override
             protected Map<String, String> update(Map<String, String> oldStyles) {
-                oldStyles.put("width", "100%");
+                //oldStyles.put("width", "100%");
                 return oldStyles;
             }
         });

@@ -28,6 +28,7 @@ public class ShiftTypePage extends EntityPage<ShiftType, Integer> {
     private ShiftTypeRepository shiftTypeRepository;
 
     public ShiftTypePage() {
+        super();
     }
 
     public ShiftTypePage(ShiftType entity) {
@@ -41,10 +42,10 @@ public class ShiftTypePage extends EntityPage<ShiftType, Integer> {
         list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("shiftType.name"), "name", "name"));
         list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("shiftType.uiOptions.htmlClass"), "uiOptions.htmlClass", "uiOptions.htmlClass"));
         list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("shiftType.uiOptions.plainText"), "uiOptions.plainText", "uiOptions.plainText"));
-        list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("shiftType.uiOptions.faIcon"), "uiOptions.faIcon","uiOptions.faIcon"){
+        list.add(new PropertyColumn<ShiftType, String>(new ResourceModel("shiftType.uiOptions.faIcon"), "uiOptions.faIcon", "uiOptions.faIcon") {
             @Override
             public void populateItem(Item<ICellPopulator<ShiftType>> item, String componentId, IModel<ShiftType> rowModel) {
-                item.add(new FaIcon(componentId,getDataModel(rowModel)));
+                item.add(new FaIcon(componentId, getDataModel(rowModel)));
             }
         });
         return list;

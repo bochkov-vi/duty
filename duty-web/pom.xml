@@ -110,8 +110,8 @@
         </dependency>
         <dependency>
             <groupId>org.webjars.npm</groupId>
-            <artifactId>select2-bootstrap4-theme</artifactId>
-            <version>1.0.0</version>
+            <artifactId>github-com-ttskch-select2-bootstrap4-theme</artifactId>
+            <version>1.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.wicketstuff</groupId>

@@ -31,21 +31,32 @@ public class ReportPage extends EntityPage<Report, Integer> {
     private ReportRepository repository;
 
     public ReportPage() {
+        super();
     }
 
     public ReportPage(Report entity) {
         super(entity);
     }
 
-    public static PageParameters pageParameters(IModel<Report> model) {
-        return EntityPage.pageParameters(model.map(Report::getId), Integer.class);
+    public ReportPage(PageParameters parameters) {
+        super(parameters);
+    }
+
+    @Override
+    public Class<Integer> getIdClass() {
+        return Integer.class;
     }
 
     @Override
     protected void onInitialize() {
         this.setModalMode(false);
         super.onInitialize();
-        add(new TabsNavidgationPanel("tabs", getModel()));
+        add(new TabsNavidgationPanel("tabs", getModel()){
+            @Override
+            public boolean isVisible() {
+                return super.isVisible() && isEditMode();
+            }
+        });
     }
 
     @Override
