@@ -18,6 +18,8 @@ public class ShiftTypeFieldSelect extends Select2Choice<ShiftType> {
 
     @Override
     protected void onInitialize() {
+        getSettings().setCloseOnSelect(true);
+        getSettings().setTheme("bootstrap4");
         setProvider(new ShiftTypeChoiceProvider());
         super.onInitialize();
     }

@@ -394,7 +394,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
             } else {
                 RequestCycle.get().setResponsePage(this);
             }
-            editMode = false;
+            editMode = editModeOnEditComplete();
 
         } catch (Exception e) {
             //error(e.getLocalizedMessage());
@@ -403,6 +403,10 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         target.ifPresent(
                 t -> t.add(feedback)
         );
+    }
+
+    public boolean editModeOnEditComplete() {
+        return false;
     }
 
     protected void onError(AjaxRequestTarget target, IModel<T> model) {

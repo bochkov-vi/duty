@@ -5,10 +5,10 @@
 
     <div class="form-row">
         <div class="form-group col-sm-6">
-            <label wicket:for="id" >
+            <label wicket:for="id">
                 <wicket:message key="report.id"/>
                 :</label>
-            <input type="text" class="form-control form-control-sm" wicket:id="id">
+            <input type="text" class="form-control" wicket:id="id">
         </div>
 
 
@@ -16,7 +16,7 @@
             <label wicket:for="date">
                 <wicket:message key="report.date"/>
                 :</label>
-            <input type="text" class="form-control form-control-sm" wicket:id="date">
+            <input type="text" class="form-control" wicket:id="date">
         </div>
     </div>
 
@@ -25,14 +25,14 @@
             <label wicket:for="dateFrom">
                 <wicket:message key="report.dateFrom"/>
                 :</label>
-            <input type="text" class="form-control form-control-sm" wicket:id="dateFrom">
+            <input type="text" class="form-control" wicket:id="dateFrom">
         </div>
 
         <div class="form-group col-sm-6">
             <label wicket:for="dateTo">
                 <wicket:message key="report.dateTo"/>
                 :</label>
-            <input type="text" class="form-control form-control-sm" wicket:id="dateTo">
+            <input type="text" class="form-control" wicket:id="dateTo">
         </div>
     </div>
 
@@ -41,14 +41,14 @@
             <label wicket:for="chief">
                 <wicket:message key="report.chief"/>
                 :</label>
-            <select class="form-control form-control-sm" wicket:id="chief"></select>
+            <select class="form-control " wicket:id="chief"></select>
         </div>
 
         <div class="form-group col-sm-6">
             <label wicket:for="executor">
                 <wicket:message key="report.executor"/>
                 :</label>
-            <select class="form-control form-control-sm" wicket:id="executor"></select>
+            <select class="form-control " wicket:id="executor"></select>
         </div>
     </div>
 
@@ -56,7 +56,7 @@
         <label wicket:for="title">
             <wicket:message key="report.title"/>
             :</label>
-        <textarea class="form-control form-control-sm" wicket:id="title" rows="3">
+        <textarea class="form-control " wicket:id="title" rows="3">
         </textarea>
     </div>
 
@@ -65,18 +65,41 @@
             <label wicket:for="dateTitle">
                 <wicket:message key="report.dateTitle"/>
                 :</label>
-            <input type="text" class="form-control form-control-sm" wicket:id="dateTitle">
+            <input type="text" class="form-control " wicket:id="dateTitle">
         </div>
 
         <div class="form-group col-sm-6">
             <label wicket:for="genitiveDepartment">
                 <wicket:message key="report.genitiveDepartment"/>
                 :</label>
-            <input type="text" class="form-control form-control-sm" wicket:id="genitiveDepartment">
+            <input type="text" class="form-control " wicket:id="genitiveDepartment">
         </div>
     </div>
-
-<div wicket:id="employees"></div>
+    <div class="form-group">
+        <div class="card">
+            <div class="card-header">
+                <span><wicket:message key="report.shiftTypes"/>:</span>
+            </div>
+            <div class="card-body">
+                <wicket:container wicket:id="shiftTypes"></wicket:container>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="btn-group-sm">
+            <button wicket:id="btn-add-empl-by-shift-type" type="button" class="btn btn-outline-secondary">
+                <i class="fa fa-refresh"/>
+                <span><wicket:message
+                        key="add-all-employyes-by-ship-type">[Добавить всех сотрудников для дежурств]</wicket:message></span>
+            </button>
+        </div>
+        <div class="card">
+            <div class="card-header"><span><wicket:message key="report.employees"/>:</span></div>
+            <div class="card-body">
+                <div wicket:id="employees"></div>
+            </div>
+        </div>
+    </div>
 </wicket:panel>
 </body>
 </html>

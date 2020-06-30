@@ -51,7 +51,7 @@ public class ReportPage extends EntityPage<Report, Integer> {
     protected void onInitialize() {
         this.setModalMode(false);
         super.onInitialize();
-        add(new TabsNavidgationPanel("tabs", getModel()){
+        add(new TabsNavidgationPanel("tabs", getModel()) {
             @Override
             public boolean isVisible() {
                 return super.isVisible() && isEditMode();
@@ -103,5 +103,10 @@ public class ReportPage extends EntityPage<Report, Integer> {
     @Override
     protected Report newInstance() {
         return new Report();
+    }
+
+    @Override
+    public boolean editModeOnEditComplete() {
+        return true;
     }
 }
