@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <div class="row m-0 p-0 flex-nowrap">
+        <div class="row m-0 p-0 col-xl-2 col-lg-3 col-md-4 col-sm-5 col-6 d-none d-sm-block table-striped">
+            <div class="col-12 p-0">
+                <div class="font-weight-bold border-white border">&nbsp;</div>
+                <div class="font-weight-bold border-white border">&nbsp;</div>
+                <div wicket:id="primary-column" class="border cell bg-secondary text-light">
+                    <div wicket:id="cell">[primary column]</div>
+                </div>
+
+            </div>
+        </div>
+        <div wicket:id="container" class="row m-0 p-0 overflow-auto flex-nowrap col p-0 border">
+            <div wicket:id="columns" class="col p-0">
+                <div wicket:id="date-cell" class="border font-weight-bold p-0 m-0 text-center" >
+                    [header-1]
+                </div>
+                <div wicket:id="day-of-week-cell" class="border font-weight-bolder p-0 m-0 text-center">
+                    [header-2]
+                </div>
+                <wicket:container wicket:id="cells">
+                    <div wicket:id="cell" class="border cell p-0 m-0">[cell1]</div>
+                </wicket:container>
+            </div>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>
