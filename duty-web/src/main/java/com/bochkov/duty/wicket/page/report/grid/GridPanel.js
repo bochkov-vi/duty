@@ -26,12 +26,12 @@ function enableCellHover() {
 };
 
 function scrollToDateColumn(containerId, dateId) {
-    var cont = $('#' + containerId);
-    var elem = $("[data-date-id='" + dateId + "']");
-    var contOffsetLeft = cont.offset().left;
-    var elemOffsetLeft = elem.offset().left;
-    var contScrollLeft = cont.scrollLeft();
-    var scrollLeft = elemOffsetLeft - contOffsetLeft + contScrollLeft;
+    const cont = $('#' + containerId);
+    const elem = $("[data-date-id='" + dateId + "']");
+    const contOffsetLeft = cont.offset().left;
+    const elemOffsetLeft = elem.offset().left;
+    const contScrollLeft = cont.scrollLeft();
+    const scrollLeft = elemOffsetLeft - contOffsetLeft + contScrollLeft;
     cont.animate({
         scrollLeft: scrollLeft
     }, 500)

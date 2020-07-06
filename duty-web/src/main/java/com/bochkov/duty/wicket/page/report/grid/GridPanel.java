@@ -118,15 +118,25 @@ public class GridPanel<T> extends GenericPanel<T> {
                         }
                     });
                 }
+                boolean enabled = columnItem.getModel().combineWith(modelStart, (columnDate, start) -> !columnDate.isBefore(start)).getObject()
+                        && columnItem.getModel().combineWith(modelEnd, (columnDate, end) -> !columnDate.isAfter(end)).getObject();
                 ListView<Employee> cells = new ListView<Employee>("cells", rowModel) {
                     @Override
                     protected void populateItem(ListItem<Employee> cellItem) {
-                        pupulateCellItem(cellItem, "cell", columnItem.getModel(), cellItem.getModel()).add(new AttributeAppender("data-employee-id", cellItem.getModel().map(Employee::getId)));
+                        pupulateCellItem(cellItem, "cell", columnItem.getModel(), cellItem.getModel());
+                        cellItem.add(new AttributeAppender("data-employee-id", cellItem.getModel().map(Employee::getId)));
+                        if (!enabled) {
+                            cellItem.add(new StyleAttributeModifier() {
+                                @Override
+                                protected Map<String, String> update(Map<String, String> oldStyles) {
+                                    oldStyles.put("background", " rgba(0,0,0,0.25)");
+                                    return oldStyles;
+                                }
+                            });
+                        }
                     }
                 };
 
-                boolean enabled = columnItem.getModel().combineWith(modelStart, (columnDate, start) -> !columnDate.isBefore(start)).getObject()
-                        && columnItem.getModel().combineWith(modelEnd, (columnDate, end) -> !columnDate.isAfter(end)).getObject();
                 columnItem.setEnabled(enabled);
                 IModel<String> ddMmModel = columnItem.getModel().map(d -> d.format(DateTimeFormatter.ofPattern("dd.MM")));
                 if (!enabled) {
@@ -138,13 +148,13 @@ public class GridPanel<T> extends GenericPanel<T> {
                             return oldClasses;
                         }
                     });
-                    columnItem.add(new StyleAttributeModifier() {
+                   /* columnItem.add(new StyleAttributeModifier() {
                         @Override
                         protected Map<String, String> update(Map<String, String> oldStyles) {
                             oldStyles.put("background", " rgb(119,136,153)");
                             return oldStyles;
                         }
-                    });
+                    });*/
                 } else if (firstColumnDateId == null) {
                     firstColumnDateId = ddMmModel.getObject();
                 }
@@ -167,10 +177,9 @@ public class GridPanel<T> extends GenericPanel<T> {
 
     }
 
-    public Component pupulateCellItem(ListItem<Employee> cellItem, String compId, IModel<LocalDate> dateModel, IModel<Employee> employeeModel) {
+    public void pupulateCellItem(ListItem<Employee> cellItem, String compId, IModel<LocalDate> dateModel, IModel<Employee> employeeModel) {
         Component component = new Label(compId, "-");
         cellItem.add(component);
-        return component;
     }
 
     @Override

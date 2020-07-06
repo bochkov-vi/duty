@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<wicket:head>
+    <script>
+
+    </script>
+</wicket:head>
+<body>
+
+<wicket:panel>
+    <form wicket:id="form" class="h-100">
+        <div wicket:id="dropdown" class="dropdown">
+            <div wicket:id="btn-select" class="btn btn-outline-dark dropdown-toggle h-100 border-0"
+                 data-toggle="dropdown">
+                <span>-</span>
+                <span wicket:id="label"></span>
+            </div>
+            <div wicket:id="drop-down-menu" class="dropdown-menu bg-light">
+                <button wicket:id="items" class="dropdown-item" type="button">
+                    <span wicket:id="label"></span>
+                    <span wicket:id="shiftTypeName"></span>
+
+                </button>
+            </div>
+        </div>
+        <input type="hidden" wicket:id="select">
+    </form>
+</wicket:panel>
+</body>
+</html>
