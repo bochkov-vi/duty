@@ -33,7 +33,7 @@ public class ShiftTypeReportPanel extends FormComponentPanel<Collection<ShiftTyp
     ShiftTypeRepository shiftTypeRepository;
 
     IModel<Collection<ShiftType>> shiftTypeModel = CollectionModel.of(shiftTypeRepository::findById);
-    FormComponent<ShiftType> select = new ShiftTypeFieldSelect("shiftType", PersistableModel.of(shiftTypeRepository::findById));
+    FormComponent<ShiftType> select = new ShiftTypeFieldSelect("shiftType", PersistableModel.of(shiftTypeRepository::findById), shiftTypeModel);
     Component table = table("table");
 
     public ShiftTypeReportPanel(String id) {

@@ -36,7 +36,7 @@ public class EmployeeReportPanel extends FormComponentPanel<Collection<Employee>
     IModel<Collection<Employee>> employeeModel = CollectionModel.of(employeeRepository::findById);
     Component table = table("table");
     IModel<Employee> selectedEmployee = PersistableModel.of(employeeRepository::findById);
-    EmployeeFieldSelect select = new EmployeeFieldSelect("employee", selectedEmployee);
+    EmployeeFieldSelect select = new EmployeeFieldSelect("employee", selectedEmployee, employeeModel);
 
     public EmployeeReportPanel(String id) {
         super(id);
@@ -50,7 +50,6 @@ public class EmployeeReportPanel extends FormComponentPanel<Collection<Employee>
     protected void onInitialize() {
         super.onInitialize();
         employeeModel.setObject(getModelObject());
-
         add(table);
         select.setOutputMarkupId(true);
         select.add(new AjaxFormComponentUpdatingBehavior("change") {
@@ -96,7 +95,7 @@ public class EmployeeReportPanel extends FormComponentPanel<Collection<Employee>
         columns.add(new LambdaColumn<>(new ResourceModel("employee.lastName"), "lastName", Employee::getLastName));
         columns.add(new LambdaColumn<>(new ResourceModel("employee.firstName"), "firstName", Employee::getFirstName));
         columns.add(new LambdaColumn<>(new ResourceModel("employee.middleName"), "middleName", Employee::getMiddleName));
-        columns.add(new LambdaColumn<>(new ResourceModel("employee.shiftTypes"), e->e.getShiftTypes().stream().map(ShiftType::getName).collect(Collectors.joining("; "))));
+        columns.add(new LambdaColumn<>(new ResourceModel("employee.shiftTypes"), e -> e.getShiftTypes().stream().map(ShiftType::getName).collect(Collectors.joining("; "))));
         columns.add(new HeaderlessColumn<Employee, Object>() {
             @Override
             public void populateItem(Item<ICellPopulator<Employee>> cellItem, String componentId, IModel<Employee> rowModel) {
