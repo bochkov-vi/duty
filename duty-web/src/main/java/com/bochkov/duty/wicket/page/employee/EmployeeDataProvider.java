@@ -15,14 +15,15 @@ public class EmployeeDataProvider extends PersistableChoiceProvider<Employee, St
     @Inject
     EmployeeRepository repository;
 
-    IModel<Collection<Employee>> excludeEmployeeModel;
+    IModel<Collection<Employee>> excludes;
 
     public EmployeeDataProvider() {
         super("lastName", "firstName", "id");
     }
 
-    public EmployeeDataProvider(IModel<Collection<Employee>> excludeEmployeeModel) {
-        this.excludeEmployeeModel = LoadableDetachableModel.of(excludeEmployeeModel::getObject);
+    public EmployeeDataProvider(IModel<Collection<Employee>> excludes) {
+        this();
+        this.excludes = LoadableDetachableModel.of(excludes::getObject);
     }
 
     @Override
@@ -40,11 +41,19 @@ public class EmployeeDataProvider extends PersistableChoiceProvider<Employee, St
 
     @Override
     public Collection<Employee> excludes() {
-        return excludeEmployeeModel.getObject();
+        return excludes.getObject();
     }
 
     @Override
     public String toId(String str) {
         return str;
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        if (excludes != null) {
+            excludes.detach();
+        }
     }
 }

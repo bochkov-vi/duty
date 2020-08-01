@@ -1,7 +1,6 @@
 package com.bochkov.duty.wicket.base;
 
 import com.bochkov.duty.wicket.page.BootstrapPage;
-import com.bochkov.wicket.component.toast.ToastFeedbackPanel;
 import com.bochkov.wicket.data.model.PersistableModel;
 import com.bochkov.wicket.data.provider.PersistableDataProvider;
 import com.google.common.collect.ImmutableList;
@@ -23,6 +22,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.markup.repeater.Item;
@@ -65,7 +65,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
 
     WebMarkupContainer emptyContent = new WebMarkupContainer(MODAL_CONTENT_ID);
 
-    ToastFeedbackPanel feedback = new ToastFeedbackPanel("feedback");
+    Component feedback = new FeedbackPanel("feedback") ;
 
     WebMarkupContainer modalSizer = new WebMarkupContainer("modal-size");
 
@@ -157,7 +157,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         super.onInitialize();
 
         feedback.setOutputMarkupId(true);
-        feedback.setDelay(30000L);
+        //feedback.setDelay(30000L);
         add(feedback);
         add(tableContainer, editFormContainer);
         tableContainer.add(table = table("table"));
