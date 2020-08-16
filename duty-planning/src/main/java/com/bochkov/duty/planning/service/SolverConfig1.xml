@@ -3,8 +3,8 @@
     <!--<environmentMode>FULL_ASSERT</environmentMode>--><!-- To slowly prove there are no bugs in this code -->
     <!--<moveThreadCount>AUTO</moveThreadCount>--><!-- To solve faster by saturating multiple CPU cores -->
 
-    <solutionClass>com.bochkov.duty.jpa.entity.ShiftRostering</solutionClass>
-    <entityClass>com.bochkov.duty.jpa.entity.ShiftAssignment</entityClass>
+    <solutionClass>com.bochkov.duty.planning.domain.ShiftRostering</solutionClass>
+    <entityClass>com.bochkov.duty.planning.domain.ShiftAssignment</entityClass>
 
     <scoreDirectorFactory>
         <constraintProviderClass>com.bochkov.duty.planning.DutyConstraintProvider</constraintProviderClass>

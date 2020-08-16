@@ -25,37 +25,21 @@
     </profiles>
 
     <dependencies>
-
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
-            <version>${wicket.version}</version>
+            <groupId>com.giffing.wicket.spring.boot.starter</groupId>
+            <artifactId>wicket-spring-boot-starter</artifactId>
+            <version>2.1.9</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-annotation</artifactId>
-            <version>${wicket.version}</version>
-        </dependency>
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>jquery-selectors</artifactId>
             <version>2.0.6</version>
         </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
-        </dependency>
+
         <dependency>
             <groupId>com.bochkov</groupId>
-            <artifactId>duty-planning</artifactId>
+            <artifactId>duty-jpa</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -113,11 +97,7 @@
             <artifactId>github-com-ttskch-select2-bootstrap4-theme</artifactId>
             <version>1.0.4</version>
         </dependency>
-        <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-select2</artifactId>
-            <version>${wicketstuff.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>

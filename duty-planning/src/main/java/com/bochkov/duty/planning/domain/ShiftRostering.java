@@ -1,4 +1,4 @@
-package com.bochkov.duty.jpa.entity;
+package com.bochkov.duty.planning.domain;
 
 import com.bochkov.duty.planning.service.DutyTypeInterval;
 import com.google.common.collect.Table;
@@ -20,11 +20,7 @@ import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.persistence.jpa.impl.score.buildin.hardmediumsoft.HardMediumSoftScoreHibernateType;
 
-import javax.persistence.*;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -35,59 +31,31 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@Entity
-@javax.persistence.Table(name = "SHIFT_ROSTERING")
-@TypeDef(defaultForType = HardMediumSoftScore.class, typeClass = HardMediumSoftScoreHibernateType.class)
-public class ShiftRostering extends AbstractEntity<Integer> {
+public class ShiftRostering implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SHIFT_ROSTERING_SEQ")
-    @SequenceGenerator(name = "SHIFT_ROSTERING_SEQ", initialValue = 1000, allocationSize = 1)
-    @Column(name = "ID_SHIFT_ROSTERING")
-    Integer id;
 
-    @ManyToMany
-    @JoinTable(name = "SHIFT_ROSTERING_SHIFT_TYPE", joinColumns = @JoinColumn(name = "ID_SHIFT_ROSTERING", referencedColumnName = "ID_SHIFT_ROSTERING")
-            , inverseJoinColumns = @JoinColumn(name = "ID_SHIFT_TYPE", referencedColumnName = "ID_SHIFT_TYPE"))
-    @org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty
     List<ShiftType> shiftTypes;
 
-    @OneToMany(mappedBy = "shiftRostering", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ProblemFactCollectionProperty
+
     List<EmployeeShiftTypeLimit> employeeShiftTypeLimits;
 
-    @ManyToMany
-    @JoinTable(name = "SHIFT_ROSTERING_DAY", joinColumns = @JoinColumn(name = "ID_SHIFT_ROSTERING", referencedColumnName = "ID_SHIFT_ROSTERING")
-            , inverseJoinColumns = @JoinColumn(name = "DATE", referencedColumnName = "DATE"))
-    @ProblemFactCollectionProperty
+      @ProblemFactCollectionProperty
     List<Day> days;
 
-    @ManyToMany
-    @JoinTable(name = "SHIFT_ROSTERING_SHIFT", joinColumns = @JoinColumn(name = "ID_SHIFT_ROSTERING", referencedColumnName = "ID_SHIFT_ROSTERING")
-            , inverseJoinColumns = @JoinColumn(name = "ID_SHIFT", referencedColumnName = "ID_SHIFT"))
-    @ProblemFactCollectionProperty
+      @ProblemFactCollectionProperty
     List<Shift> shifts;
 
 
     @ValueRangeProvider(id = "employees")
-    @ManyToMany
-    @JoinTable(name = "SHIFT_ROSTERING_EMPLOYEE", joinColumns = @JoinColumn(name = "ID_SHIFT_ROSTERING", referencedColumnName = "ID_SHIFT_ROSTERING")
-            , inverseJoinColumns = @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE"))
-    @ProblemFactCollectionProperty
+       @ProblemFactCollectionProperty
     List<Employee> employees;
 
     @PlanningEntityCollectionProperty
-    @ManyToMany
-    @JoinTable(name = "SHIFT_ROSTERING_EMPLOYEE", joinColumns =
-    @JoinColumn(name = "ID_SHIFT_ROSTERING", referencedColumnName = "ID_SHIFT_ROSTERING"),
-            inverseJoinColumns = @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE"))
-    List<ShiftAssignment> shiftAssignments;
+      List<ShiftAssignment> shiftAssignments;
 
 
     @PlanningScore
-    @Columns(columns = {@Column(name = "initScore"),
-            @Column(name = "hardScore"), @Column(name = "mediumScore"), @Column(name = "softScore")})
-    private HardMediumSoftScore score;
+     private HardMediumSoftScore score;
 
     public static void printData(ShiftRostering plan, PrintStream printStream, int indent) {
         List<Employee> employeeList = plan.getEmployees();

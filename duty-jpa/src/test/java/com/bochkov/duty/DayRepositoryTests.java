@@ -2,9 +2,9 @@ package com.bochkov.duty;
 
 import com.bochkov.duty.jpa.DutyJpaConfig;
 import com.bochkov.duty.jpa.entity.Day;
-import com.bochkov.duty.jpa.entity.ShiftType;
-import com.bochkov.duty.jpa.entity.OvertimeData;
 import com.bochkov.duty.jpa.entity.Employee;
+import com.bochkov.duty.jpa.entity.OvertimeData;
+import com.bochkov.duty.jpa.entity.ShiftType;
 import com.bochkov.duty.jpa.repository.DayRepository;
 import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.duty.jpa.repository.ShiftTypeRepository;
@@ -13,15 +13,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 
+@SpringBootTest(classes = DutyJpaConfig.class)
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = DutyJpaConfig.class)
 public class DayRepositoryTests {
 
     @Autowired

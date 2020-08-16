@@ -148,5 +148,5 @@ rule "распределение дежурств у людей по време�
 end
 
 
-import accumulate com.bochkov.shift.planning.service.functions.LoadBalanceByCountAccumulateFunction loadBalanceByCount;
-import accumulate com.bochkov.shift.planning.service.functions.LoadBalanceAccumulateFunction loadBalance;
+import accumulate com.bochkov.shift.com.bochkov.duty.planning.service.functions.LoadBalanceByCountAccumulateFunction loadBalanceByCount;
+import accumulate com.bochkov.shift.com.bochkov.duty.planning.service.functions.LoadBalanceAccumulateFunction loadBalance;

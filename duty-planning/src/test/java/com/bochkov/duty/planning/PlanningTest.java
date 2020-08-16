@@ -1,4 +1,4 @@
-package com.bochkov.duty.planing;
+package com.bochkov.duty.planning;
 
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.entity.Shift;
