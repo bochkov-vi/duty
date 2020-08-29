@@ -30,14 +30,20 @@ public class Shift extends AbstractAuditableEntity<Integer> {
     Day day;
 
     @ManyToOne
-    @JoinColumn(name = "ID_SHIFT_TYPE", nullable = false, foreignKey = @ForeignKey(name = "DUTY_DUTY_TYPE_FK", value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "ID_SHIFT_TYPE", nullable = false, foreignKey = @ForeignKey(name = "SHIFT_SHIFT_TYPE_FK", value = ConstraintMode.NO_CONSTRAINT))
     ShiftType shiftType;
 
     @ElementCollection
     @CollectionTable(name = "SHIFT_PERIOD", joinColumns = {@JoinColumn(name = "ID_SHIFT", referencedColumnName = "ID_SHIFT")}
-            , foreignKey = @ForeignKey(name = "SHIFT_PERIOD_FK", foreignKeyDefinition = "foreign key (ID_EMPLOYEE, DATE) references DUTY(ID_EMPLOYEE,DATE) ON UPDATE CASCADE ON DELETE CASCADE")
+            , foreignKey = @ForeignKey(name = "SHIFT_PERIOD_FK", foreignKeyDefinition = "foreign key (ID_SHIFT) references SHIFT(ID_SHIFT) ON UPDATE CASCADE ON DELETE CASCADE")
     )
     Set<Period> periods;
+
+    @JoinTable(name = "SHIFT_EMPLOYEE", inverseJoinColumns =
+    @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE"),
+            joinColumns = @JoinColumn(name = "ID_SHIFT", referencedColumnName = "ID_SHIFT"))
+    @ManyToMany
+    Set<Employee> employees;
 
     @Transient
     Boolean weekend;

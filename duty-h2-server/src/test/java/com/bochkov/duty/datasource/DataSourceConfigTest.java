@@ -1,24 +1,27 @@
-package com.bochkov.duty.h2;
+package com.bochkov.duty.datasource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
 
 import static org.junit.Assert.assertNotNull;
 
-@SpringBootTest(classes = SpringH2ServerConfig.class)
+@SpringBootTest(classes = DataSourceConfig.class)
 @RunWith(SpringRunner.class)
-public class SpringH2ServerConfigTest {
+@Slf4j
+public class DataSourceConfigTest {
 
-    @Autowired()
+    @Autowired
     Server server;
 
-    @Autowired()
+    @Autowired
     DataSource dataSource;
 
     @Test
@@ -29,5 +32,13 @@ public class SpringH2ServerConfigTest {
     @Test
     public void testDataSource() {
         assertNotNull(dataSource);
+    }
+
+    @Test
+    public void testSqlCommand() {
+        JdbcTemplate template = new JdbcTemplate(dataSource);
+        int result = template.update("CREATE SCHEMA  IF NOT EXISTS test  ");
+        result = template.update("DROP SCHEMA IF EXISTS test");
+        log.debug(String.format("UPDATES IS SUCCESSFULL!!! %s", result));
     }
 }

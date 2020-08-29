@@ -19,10 +19,6 @@ public class EmployeeShiftTypeLimit extends AbstractEntity<EmployeeShiftTypeLimi
     EmployeeShiftTypeLimitPK id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_SHIFT_ROSTERING", insertable = false, updatable = false)
-    ShiftRostering shiftRostering;
-
-    @ManyToOne
     @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE", updatable = false, insertable = false)
     Employee employee;
 
@@ -35,6 +31,9 @@ public class EmployeeShiftTypeLimit extends AbstractEntity<EmployeeShiftTypeLimi
 
     @Column(name = "MAX")
     Integer min;
+
+    @Column(name = "DAYS_COUNT")
+    Integer daysCount;
 
     public EmployeeShiftTypeLimit(Employee employee) {
         this.employee = employee;

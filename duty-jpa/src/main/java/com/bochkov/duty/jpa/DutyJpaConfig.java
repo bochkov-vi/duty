@@ -1,33 +1,25 @@
 package com.bochkov.duty.jpa;
 
-import com.bochkov.duty.h2.SpringH2ServerConfig;
-import com.google.common.collect.Maps;
-import org.hibernate.SessionFactory;
+import com.bochkov.duty.datasource.DataSourceConfig;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-import java.util.Map;
 import java.util.Optional;
 
 @Configuration
 @EnableJpaRepositories("com.bochkov.duty.jpa.repository")
 @EnableJpaAuditing()
 @EnableTransactionManagement
-@Import(SpringH2ServerConfig.class)
+@Import(DataSourceConfig.class)
+@EntityScan("com.bochkov.duty.jpa.entity")
+@PropertySource("classpath:application.properties")
 public class DutyJpaConfig {
 
 
@@ -36,21 +28,21 @@ public class DutyJpaConfig {
         return () -> Optional.ofNullable("test");
     }
 
-    @Bean
+  /*  @Bean
     public SessionFactory sessionFactory(EntityManagerFactory entityManagerFactory) {
         return entityManagerFactory.unwrap(SessionFactory.class);
-    }
+    }*/
 
-    @Bean
+   /* @Bean
     LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dutyDataSource, AbstractJpaVendorAdapter jpaVendorAdapter, ResourceLoader resourceLoader) {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-     /*   for (String sqlScript : ImmutableList.of("classpath:init.sql")) {
+     *//*   for (String sqlScript : ImmutableList.of("classpath:init.sql")) {
             Resource sqlScriptResource = resourceLoader.getResource(sqlScript);
 
             populator.addScript(sqlScriptResource);
         }
         populator.setContinueOnError(true);
-        DatabasePopulatorUtils.execute(populator, dutyDataSource);*/
+        DatabasePopulatorUtils.execute(populator, dutyDataSource);*//*
 
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 //        entityManagerFactory.setJpaDialect(new HibernateJpaDialect());
@@ -75,6 +67,6 @@ public class DutyJpaConfig {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
-    }
+    }*/
 
 }

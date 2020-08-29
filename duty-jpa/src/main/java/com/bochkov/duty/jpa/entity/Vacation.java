@@ -24,9 +24,13 @@ public class Vacation extends AbstractEntity<VacationPK> {
     @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE", insertable = false, updatable = false)
     Employee employee;
 
-    @OneToMany(mappedBy = "vacation",orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "vacation", orphanRemoval = true, cascade = CascadeType.ALL)
     @OrderBy("partNumber")
     Set<VacationPart> parts;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "VACATION_TYPE")
+    VacationType type;
 
     public Vacation(VacationPK id) {
         this.id = id;
