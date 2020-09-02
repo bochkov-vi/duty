@@ -1,5 +1,6 @@
 package com.bochkov.duty.planning.domain;
 
+import com.bochkov.duty.jpa.entity.*;
 import com.bochkov.duty.planning.service.DutyTypeInterval;
 import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
@@ -10,15 +11,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.tuple.Pair;
-import org.hibernate.annotations.Columns;
-import org.hibernate.annotations.TypeDef;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
-import org.optaplanner.persistence.jpa.impl.score.buildin.hardmediumsoft.HardMediumSoftScoreHibernateType;
 
 import java.io.*;
 import java.time.format.DateTimeFormatter;

@@ -1,6 +1,6 @@
 package com.bochkov.duty.wicket.page.report;
 
-import com.bochkov.duty.jpa.entity.Report;
+import com.bochkov.duty.jpa.entity.Roster;
 import com.bochkov.duty.jpa.repository.ReportRepository;
 import com.bochkov.duty.wicket.base.DetailsPanel;
 import com.bochkov.duty.wicket.base.EntityPage;
@@ -25,7 +25,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 import java.util.List;
 
 @MountPath("report")
-public class ReportPage extends EntityPage<Report, Integer> {
+public class ReportPage extends EntityPage<Roster, Integer> {
 
     @SpringBean
     private ReportRepository repository;
@@ -34,7 +34,7 @@ public class ReportPage extends EntityPage<Report, Integer> {
         super();
     }
 
-    public ReportPage(Report entity) {
+    public ReportPage(Roster entity) {
         super(entity);
     }
 
@@ -60,10 +60,10 @@ public class ReportPage extends EntityPage<Report, Integer> {
     }
 
     @Override
-    protected List<IColumn<Report, String>> columns() {
-        List<IColumn<Report, String>> list = Lists.newArrayList();
-        list.add(new LambdaColumn<Report, String>(new ResourceModel("report.id"), "id", Report::getId));
-        List<IColumn<Report, String>> defaultColumns = this.reflectiveColumns(Report.class, "report.",
+    protected List<IColumn<Roster, String>> columns() {
+        List<IColumn<Roster, String>> list = Lists.newArrayList();
+        list.add(new LambdaColumn<Roster, String>(new ResourceModel("report.id"), "id", Roster::getId));
+        List<IColumn<Roster, String>> defaultColumns = this.reflectiveColumns(Roster.class, "report.",
                 "date",
                 "dateFrom",
                 "dateTo",
@@ -73,10 +73,10 @@ public class ReportPage extends EntityPage<Report, Integer> {
                 "dateTitle",
                 "genitiveDepartment");
         list.addAll(defaultColumns);
-        list.add(new HeaderlessColumn<Report, String>() {
+        list.add(new HeaderlessColumn<Roster, String>() {
             @Override
-            public void populateItem(Item<ICellPopulator<Report>> cellItem, String componentId, IModel<Report> rowModel) {
-                Link link = new BookmarkablePageLink(componentId, ShiftGridPage.class, new PageParameters().set(0, rowModel.map(Report::getId).getObject()));
+            public void populateItem(Item<ICellPopulator<Roster>> cellItem, String componentId, IModel<Roster> rowModel) {
+                Link link = new BookmarkablePageLink(componentId, ShiftGridPage.class, new PageParameters().set(0, rowModel.map(Roster::getId).getObject()));
                 link.setBody(Model.of("<button type='button' class='btn btn-light border'><i class='fa fa-table'></i></button>")).setEscapeModelStrings(false);
                 cellItem.add(link);
             }
@@ -91,18 +91,18 @@ public class ReportPage extends EntityPage<Report, Integer> {
     }
 
     @Override
-    protected WebMarkupContainer createInputPanel(String id, IModel<Report> model) {
+    protected WebMarkupContainer createInputPanel(String id, IModel<Roster> model) {
         return new ReportInputPanel(id, model);
     }
 
     @Override
-    protected GenericPanel<Report> createDetailsPanel(String id, IModel<Report> model) {
-        return new DetailsPanel<Report>(id, getModel(), ImmutableList.of("id"), "report.");
+    protected GenericPanel<Roster> createDetailsPanel(String id, IModel<Roster> model) {
+        return new DetailsPanel<Roster>(id, getModel(), ImmutableList.of("id"), "report.");
     }
 
     @Override
-    protected Report newInstance() {
-        return new Report();
+    protected Roster newInstance() {
+        return new Roster();
     }
 
     @Override

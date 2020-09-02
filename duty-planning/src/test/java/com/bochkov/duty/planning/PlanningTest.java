@@ -1,16 +1,7 @@
 package com.bochkov.duty.planning;
 
-import com.bochkov.duty.jpa.entity.Employee;
-import com.bochkov.duty.jpa.entity.Shift;
-import com.bochkov.duty.jpa.entity.ShiftAssignment;
 import com.bochkov.duty.jpa.repository.*;
-import com.bochkov.duty.jpa.entity.ShiftRostering;
-import com.bochkov.duty.planning.PlanningSpringConfiguration;
-import com.bochkov.duty.jpa.entity.EmployeeShiftTypeLimit;
 import com.bochkov.duty.planning.service.PlanningService;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,11 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
@@ -52,7 +39,7 @@ public class PlanningTest {
     LocalDate end = LocalDate.of(2020, 01, 31);
 
 
-    @Test
+   /* @Test
     public void createReport() {
 
         ShiftRostering shiftRostering = new ShiftRostering();
@@ -114,7 +101,7 @@ public class PlanningTest {
 
         System.out.println(plan.getScore());
         System.out.println(plan.asTextTable());
-    }
+    }*/
 
     @Test
     public void testStatistic() {

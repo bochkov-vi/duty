@@ -1,6 +1,6 @@
 package com.bochkov.duty.planning.domain;
 
-import com.bochkov.duty.jpa.entity.AbstractEntity;
+import com.bochkov.duty.jpa.entity.Day;
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.entity.Shift;
 import com.bochkov.duty.jpa.entity.ShiftType;
@@ -12,7 +12,6 @@ import lombok.experimental.Accessors;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
-import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.Duration;
 

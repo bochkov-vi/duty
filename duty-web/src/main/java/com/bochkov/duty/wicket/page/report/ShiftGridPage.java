@@ -1,12 +1,10 @@
 package com.bochkov.duty.wicket.page.report;
 
 import com.bochkov.duty.jpa.entity.Employee;
-import com.bochkov.duty.jpa.entity.Report;
-import com.bochkov.duty.jpa.entity.ShiftAssignment;
+import com.bochkov.duty.jpa.entity.Roster;
 import com.bochkov.duty.jpa.entity.ShiftType;
 import com.bochkov.duty.jpa.repository.DayRepository;
 import com.bochkov.duty.jpa.repository.ReportRepository;
-import com.bochkov.duty.jpa.repository.ShiftAssignmentRepository;
 import com.bochkov.duty.jpa.repository.ShiftTypeRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.bochkov.duty.wicket.page.report.grid.GridPanel;
@@ -26,7 +24,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @MountPath("shift-grid")
-public class ShiftGridPage extends BootstrapPage<Report> {
+public class ShiftGridPage extends BootstrapPage<Roster> {
 
     @SpringBean
     ReportRepository reportRepository;
@@ -37,10 +35,10 @@ public class ShiftGridPage extends BootstrapPage<Report> {
     @SpringBean
     ShiftTypeRepository shiftTypeRepository;
 
-    @SpringBean
+  /*  @SpringBean
     ShiftAssignmentRepository shiftAssignmentRepository;
-
-    public ShiftGridPage(Report report) {
+*/
+    public ShiftGridPage(Roster report) {
         super();
         PersistableModel model = PersistableModel.of(report, reportRepository::findById);
         setModel(model);
@@ -78,7 +76,7 @@ public class ShiftGridPage extends BootstrapPage<Report> {
         };
         add(form);
 
-        GridPanel grid = new GridPanel<Void>("grid", getModel().map(Report::getDateFrom).getObject(), getModel().map(Report::getEmployees)) {
+        GridPanel grid = new GridPanel<Void>("grid", getModel().map(Roster::getDateFrom).getObject(), getModel().map(Roster::getEmployees)) {
             @Override
             public void pupulateCellItem(ListItem<Employee> cellItem, String compId, IModel<LocalDate> dateModel, IModel<Employee> employeeModel) {
                 IModel<ShiftType> shiftTypeModel = LoadableDetachableModel.of(() -> shiftAssignmentRepository.findAll(dateModel.getObject(), employeeModel.getObject()).stream().findFirst().map(ShiftAssignment::getShiftType).orElse(null));

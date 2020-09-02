@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;
@@ -17,10 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
-import java.util.Comparator;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -42,6 +41,7 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day>, I
 
     @OneToOne
     @JoinColumn(name = "NEXT", referencedColumnName = "DATE", foreignKey = @ForeignKey(name = "NEXT_DAY_FK"))
+    @Fetch(FetchMode.JOIN)
     protected Day next;
 
     @OneToOne(mappedBy = "next")
@@ -52,9 +52,6 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day>, I
 
     @Column(name = "DAYS_FROM_WEEKEND")
     protected Integer daysFromWeekend;
-
-    @Column(name = "SHORTENED")
-    protected boolean shortened = false;
 
     @ElementCollection
     @CollectionTable(name = "DAY_PERIOD", joinColumns = @JoinColumn(name = "DATE", referencedColumnName = "DATE"), foreignKey = @ForeignKey(name = "DAY_TIME_USAGE_FK", foreignKeyDefinition = "foreign key (DATE) references DAY (DATE)"))
@@ -73,11 +70,15 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day>, I
     @Transient
     DayOfWeek dayOfWeek;
 
+    @OneToOne
+    @JoinColumn(name = "DATE", referencedColumnName = "DATE")
+    @Fetch(FetchMode.JOIN)
+    HolidayDay holiday;
+
 
     public Day(LocalDate date) {
         this.id = date;
         weekend = isWeekendDate(date);
-
     }
 
     static public boolean isWeekendDate(LocalDate date) {
@@ -114,6 +115,17 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day>, I
         return periods;
     }
 
+    public boolean isShortened() {
+        return Optional.ofNullable(holiday).map(HolidayDay::isShortened).orElse(false);
+    }
+
+    public boolean isHolidayWeekend() {
+        return Optional.ofNullable(holiday).map(HolidayDay::isWeekend).orElse(false);
+    }
+
+    public boolean isHolidayWorkday() {
+        return Optional.ofNullable(holiday).map(HolidayDay::isWeekend).orElse(false);
+    }
 
     @PostLoad
     @PostUpdate
@@ -126,7 +138,9 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day>, I
 
     @PrePersist
     public void prePersist() {
-        if (daysFromWeekend != null && daysFromWeekend == 0) {
+        if (isHolidayWeekend()) {
+            weekend = true;
+        } else if (daysFromWeekend != null && daysFromWeekend == 0) {
             weekend = true;
         } else if (daysToWeekend != null && daysToWeekend == 0) {
             weekend = true;
@@ -135,11 +149,20 @@ public class Day extends AbstractEntity<LocalDate> implements Comparable<Day>, I
         }
     }
 
+
+    @PreUpdate
+    public void preUpdate() {
+        if (isHolidayWeekend()) {
+            weekend = true;
+        }
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("id", id.format(DateTimeFormatter.ofPattern("dd.MM.yyyy EEE")))
                 .add("weekend", weekend)
+                .add("shortened", isShortened())
                 .toString();
     }
 

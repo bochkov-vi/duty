@@ -4,7 +4,7 @@ import com.bochkov.duty.jpa.entity.Day;
 import com.bochkov.duty.jpa.repository.DayRepository;
 import com.bochkov.wicket.data.provider.ListModelDataProvider;
 import com.google.common.collect.Lists;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Session;
@@ -36,7 +36,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Log4j
+@Slf4j
 public class CalendarPanel extends GenericPanel<Month> {
 
     @SpringBean
@@ -133,7 +133,7 @@ public class CalendarPanel extends GenericPanel<Month> {
                 cell.add(new AjaxLink<Day>("link", dayIModel) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        log.debug(getModel().getObject());
+                        log.debug("{}", getModel().getObject());
                         Day day = getModelObject();
                         day.setWeekend(!day.isWeekend());
                         day = dayRepository.safeSave(day);
@@ -151,7 +151,7 @@ public class CalendarPanel extends GenericPanel<Month> {
                             day.setShortened(false);
                         }
                         day = dayRepository.safeSave(day);
-                        log.debug(day);
+                        log.debug("{}", day);
                     }
                 };
                 weekend.add(new ClassAttributeModifier() {
@@ -179,7 +179,7 @@ public class CalendarPanel extends GenericPanel<Month> {
 
                         }
                         day = dayRepository.safeSave(day);
-                        log.debug(day);
+                        log.debug("{}", day);
                     }
                 };
                 shortened.setOutputMarkupId(true);

@@ -23,21 +23,21 @@ import java.util.stream.Stream;
 @Setter
 @Accessors(chain = true)
 @Entity
-@Table(name = "REPORT")
-public class Report extends AbstractAuditableEntity<Integer> {
+@Table(name = "ROSTER")
+public class Roster extends AbstractAuditableEntity<Integer> {
 
     @Id
-    @GeneratedValue(generator = "REPORT_SEQ")
-    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "REPORT_SEQ")
-    @Column(name = "ID_REPORT", nullable = false)
+    @GeneratedValue(generator = "ROSTER_SEQ")
+    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "ROSTER_SEQ")
+    @Column(name = "ID_ROSTER", nullable = false)
     Integer id;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "REPORT_EMPLOYEE", joinColumns = @JoinColumn(name = "ID_REPORT", referencedColumnName = "ID_REPORT"), inverseJoinColumns = @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE"))
+    @JoinTable(name = "ROSTER_EMPLOYEE", joinColumns = @JoinColumn(name = "ID_ROSTER", referencedColumnName = "ID_ROSTER"), inverseJoinColumns = @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE"))
     Set<Employee> employees;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "REPORT_SHIFT_TYPE", joinColumns = @JoinColumn(name = "ID_REPORT", referencedColumnName = "ID_REPORT"), inverseJoinColumns = @JoinColumn(name = "ID_SHIFT_TYPE", referencedColumnName = "ID_SHIFT_TYPE"))
+    @JoinTable(name = "ROSTER_SHIFT_TYPE", joinColumns = @JoinColumn(name = "ID_ROSTER", referencedColumnName = "ID_ROSTER"), inverseJoinColumns = @JoinColumn(name = "ID_SHIFT_TYPE", referencedColumnName = "ID_SHIFT_TYPE"))
     Set<ShiftType> shiftTypes;
 
     @Column(name = "DATE", nullable = false)
@@ -57,7 +57,7 @@ public class Report extends AbstractAuditableEntity<Integer> {
     @JoinColumn(name = "EXECUTOR", nullable = false)
     Employee executor;
 
-    @Column(name = "REPORT_TITLE", nullable = false)
+    @Column(name = "ROSTER_TITLE", nullable = false)
     String title;
 
     @Column(name = "DATE_TITLE", nullable = false)

@@ -1,7 +1,7 @@
 package com.bochkov.duty.wicket.page.rostering;
 
 import com.bochkov.bootstrap.tab.TabbedPanel;
-import com.bochkov.duty.jpa.entity.Report;
+import com.bochkov.duty.jpa.entity.Roster;
 import com.bochkov.duty.jpa.repository.ReportRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.bochkov.duty.wicket.page.day.calendar.CalendarPanel;
@@ -26,7 +26,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 @MountPath("rostering")
-public class ShiftRosteringPage extends BootstrapPage<Report> {
+public class ShiftRosteringPage extends BootstrapPage<Roster> {
 
     @SpringBean
     ReportRepository repository;
@@ -38,7 +38,7 @@ public class ShiftRosteringPage extends BootstrapPage<Report> {
         super(parameters);
     }
 
-    public ShiftRosteringPage(Report report) {
+    public ShiftRosteringPage(Roster report) {
         setModel(PersistableModel.of(report, repository::findById));
     }
 
@@ -47,7 +47,7 @@ public class ShiftRosteringPage extends BootstrapPage<Report> {
     }
 
     public ShiftRosteringPage() {
-        setModel(PersistableModel.of(repository::findById, Report::new));
+        setModel(PersistableModel.of(repository::findById, Roster::new));
     }
 
     @Override

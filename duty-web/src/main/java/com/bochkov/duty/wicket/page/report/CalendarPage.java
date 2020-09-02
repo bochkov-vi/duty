@@ -1,6 +1,6 @@
 package com.bochkov.duty.wicket.page.report;
 
-import com.bochkov.duty.jpa.entity.Report;
+import com.bochkov.duty.jpa.entity.Roster;
 import com.bochkov.duty.jpa.repository.ReportRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.bochkov.duty.wicket.page.day.calendar.CalendarPanel;
@@ -19,7 +19,7 @@ import java.time.temporal.TemporalAdjusters;
 @MountPath("report-calendar")
 public class CalendarPage extends BootstrapPage<Month> {
 
-    IModel<Report> reportModel;
+    IModel<Roster> reportModel;
 
     @Inject
     ReportRepository reportRepository;
@@ -38,7 +38,7 @@ public class CalendarPage extends BootstrapPage<Month> {
         reportModel = PersistableModel.of(id, reportRepository::findById);
     }
 
-    public CalendarPage(IModel<Report> model) {
+    public CalendarPage(IModel<Roster> model) {
         this();
         reportModel = model;
     }

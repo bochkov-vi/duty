@@ -2,7 +2,7 @@ package com.bochkov.duty.planning;
 
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.entity.EmployeeShiftTypeLimit;
-import com.bochkov.duty.jpa.entity.ShiftAssignment;
+import com.bochkov.duty.planning.domain.ShiftAssignment;
 import com.bochkov.duty.planning.service.DutyTypeInterval;
 import com.bochkov.duty.planning.service.VarianceConstraintCollector;
 import org.apache.commons.lang3.tuple.Pair;

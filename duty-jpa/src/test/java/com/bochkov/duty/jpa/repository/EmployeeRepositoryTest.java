@@ -17,10 +17,10 @@ public class EmployeeRepositoryTest {
     @Autowired
     RangRepository rangRepository;
 
+
     @Test
     public void createEmployee() {
-        Employee employee = new Employee().setId("bochkov").setRang(rangRepository.getOne((short) 25));
-
+        Employee employee = new Employee().setId("bochkov").setRang(rangRepository.getOne((short) 25)).setFirstName("Виктор").setMiddleName("Иванович").setLastName("Бочков");
         employee = repository.save(employee);
         Assert.assertNotNull(employee);
     }

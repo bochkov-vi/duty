@@ -1,6 +1,6 @@
 package com.bochkov.duty.wicket.page.rostering;
 
-import com.bochkov.duty.jpa.entity.Report;
+import com.bochkov.duty.jpa.entity.Roster;
 import com.bochkov.duty.jpa.repository.ReportRepository;
 import com.bochkov.duty.wicket.page.report.ReportInputPanel;
 import lombok.experimental.Accessors;
@@ -14,18 +14,18 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 @Accessors(chain = true)
-public class MainReportDataPanel extends GenericPanel<Report> {
+public class MainReportDataPanel extends GenericPanel<Roster> {
     @SpringBean
     ReportRepository reportRepository;
 
     FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 
-    Form<Report> form = new Form<Report>("form") {
+    Form<Roster> form = new Form<Roster>("form") {
         @Override
         protected void onSubmit() {
             super.onSubmit();
             try {
-                Report report = reportRepository.save(getModelObject());
+                Roster report = reportRepository.save(getModelObject());
                 setModelObject(null);
                 setModelObject(report);
                 info("График успешно сохранен");
@@ -36,7 +36,7 @@ public class MainReportDataPanel extends GenericPanel<Report> {
     };
 
 
-    public MainReportDataPanel(String id, IModel<Report> model) {
+    public MainReportDataPanel(String id, IModel<Roster> model) {
         super(id, model);
     }
 

@@ -6,7 +6,7 @@ import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.duty.jpa.repository.VacationRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.google.common.collect.Lists;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.wicket.ClassAttributeModifier;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 @MountPath("vacation-grid")
-@Log4j
+@Slf4j
 public class VacationGridPage extends BootstrapPage<Integer> {
 
     Form<VacationPart> form = new Form<VacationPart>("modal-form");
@@ -73,7 +73,7 @@ public class VacationGridPage extends BootstrapPage<Integer> {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 VacationPart vacation = form.getModelObject();
-                log.debug(vacation);
+                log.debug("{}",vacation);
             }
         });
         form.setModel(new CompoundPropertyModel<>(Model.of()));

@@ -1,11 +1,11 @@
 package com.bochkov.duty.jpa;
 
 import com.bochkov.duty.datasource.DataSourceConfig;
+import com.bochkov.duty.xmlcalendar.XmlCalendarConfig;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
+import org.springframework.data.auditing.CurrentDateTimeProvider;
+import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -15,17 +15,24 @@ import java.util.Optional;
 
 @Configuration
 @EnableJpaRepositories("com.bochkov.duty.jpa.repository")
-@EnableJpaAuditing()
+@EnableJpaAuditing(auditorAwareRef = "auditorAware", dateTimeProviderRef = "dateTimeProvider")
 @EnableTransactionManagement
-@Import(DataSourceConfig.class)
+@Import({DataSourceConfig.class, XmlCalendarConfig.class})
 @EntityScan("com.bochkov.duty.jpa.entity")
 @PropertySource("classpath:application.properties")
+@ComponentScan("com.bochkov.duty.jpa.service")
 public class DutyJpaConfig {
 
 
     @Bean
     AuditorAware<String> auditorAware() {
         return () -> Optional.ofNullable("test");
+    }
+
+    @Bean
+    DateTimeProvider dateTimeProvider() {
+        CurrentDateTimeProvider currentDateTimeProvider = CurrentDateTimeProvider.INSTANCE;
+        return currentDateTimeProvider;
     }
 
   /*  @Bean

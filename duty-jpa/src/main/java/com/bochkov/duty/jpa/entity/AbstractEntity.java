@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
@@ -20,17 +19,13 @@ import java.time.LocalDateTime;
 @Setter
 @Accessors(chain = true)
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractEntity<ID extends Serializable> implements Persistable<ID>, Serializable {
+public abstract class AbstractEntity<ID extends Serializable> implements Serializable {
 
     @OrderColumn()
     @CreatedDate
     @Column(name = "CREATED_DATE")
     LocalDateTime createdDate;
 
-    @Override
-    public boolean isNew() {
-        return createdDate == null;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -43,6 +38,8 @@ public abstract class AbstractEntity<ID extends Serializable> implements Persist
         AbstractEntity<?> that = (AbstractEntity<?>) o;
         return Objects.equal(getId(), that.getId());
     }
+
+    protected abstract ID getId();
 
     @Override
     public int hashCode() {

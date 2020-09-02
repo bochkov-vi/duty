@@ -13,12 +13,23 @@
     <properties>
         <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
     </properties>
+    <profiles>
 
+        <profile>
+            <id>h2</id>
+
+
+        </profile>
+    </profiles>
     <dependencies>
         <dependency>
             <groupId>com.bochkov</groupId>
             <artifactId>duty-h2-server</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bochkov</groupId>
+            <artifactId>xmlcalendar-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

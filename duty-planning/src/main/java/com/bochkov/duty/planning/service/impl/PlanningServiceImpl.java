@@ -1,6 +1,6 @@
 package com.bochkov.duty.planning.service.impl;
 
-import com.bochkov.duty.jpa.entity.ShiftRostering;
+import com.bochkov.duty.planning.domain.ShiftRostering;
 import com.bochkov.duty.planning.service.PlanningService;
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;

@@ -5,7 +5,7 @@ import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.bochkov.wicket.data.model.nonser.CollectionModel;
 import com.google.common.collect.Table;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -18,7 +18,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.Collection;
 
 @MountPath("test-grid")
-@Log4j
+@Slf4j
 public class TestGridPage<R, C, V> extends BootstrapPage<Table<R, C, V>> {
     @Inject
     EmployeeRepository employeeRepository;

@@ -213,18 +213,18 @@ create table if not exists SHIFT_PERIOD (
 
 
 
-drop table if exists REPORT_EMPLOYEE;
-drop table if exists REPORT_SHIFT_TYPE;
+drop table if exists ROSTER_EMPLOYEE;
+drop table if exists ROSTER_SHIFT_TYPE;
 
-drop table if exists REPORT;
+drop table if exists ROSTER;
 
-create table if not exists REPORT (
-    ID_REPORT                INTEGER      not null primary key,
+create table if not exists ROSTER (
+    ID_ROSTER                INTEGER      not null primary key,
     DATE_FROM                DATE         not null,
     DATE_TITLE               VARCHAR(255) not null,
     DATE_TO                  DATE         not null,
     GENITIVE_DEPARTMENT_NAME VARCHAR(255) not null,
-    REPORT_TITLE             VARCHAR(255) not null,
+    ROSTER_TITLE             VARCHAR(255) not null,
     CHIEF                    VARCHAR(15)  not null,
     EXECUTOR                 VARCHAR(15)  not null,
     CREATED_DATE             TIMESTAMP,
@@ -232,31 +232,31 @@ create table if not exists REPORT (
     LAST_MODIFIED_BY         VARCHAR(255),
     LAST_MODIFIED_DATE       TIMESTAMP,
     DATE                     DATE         not null,
-    constraint REPORT_EXECUTOR_FK foreign key (EXECUTOR) references EMPLOYEE(ID_EMPLOYEE),
-    constraint REPORT_CHIEF_FK foreign key (CHIEF) references EMPLOYEE(ID_EMPLOYEE)
+    constraint ROSTER_EXECUTOR_FK foreign key (EXECUTOR) references EMPLOYEE(ID_EMPLOYEE),
+    constraint ROSTER_CHIEF_FK foreign key (CHIEF) references EMPLOYEE(ID_EMPLOYEE)
 );
-create sequence if not exists REPORT_SEQ start with 100;
+create sequence if not exists ROSTER_SEQ start with 100;
 
-create table REPORT_SHIFT_TYPE (
-    ID_REPORT     INTEGER not null,
+create table ROSTER_SHIFT_TYPE (
+    ID_ROSTER     INTEGER not null,
     ID_SHIFT_TYPE INTEGER not null,
-    constraint REPORT_SHIFT_TYPE_PK primary key (ID_REPORT, ID_SHIFT_TYPE),
-    constraint REPORT_SHIFT_TYPE_REPORT_FK foreign key (ID_REPORT) references REPORT(ID_REPORT) on update cascade on delete cascade,
-    constraint REPORT_SHIFT_TYPE_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE) on update cascade on delete cascade
+    constraint ROSTER_SHIFT_TYPE_PK primary key (ID_ROSTER, ID_SHIFT_TYPE),
+    constraint ROSTER_SHIFT_TYPE_ROSTER_FK foreign key (ID_ROSTER) references ROSTER(ID_ROSTER) on update cascade on delete cascade,
+    constraint ROSTER_SHIFT_TYPE_SHIFT_TYPE_FK foreign key (ID_SHIFT_TYPE) references SHIFT_TYPE(ID_SHIFT_TYPE) on update cascade on delete cascade
 );
-create table REPORT_EMPLOYEE (
-    ID_REPORT   INTEGER     not null,
+create table ROSTER_EMPLOYEE (
+    ID_ROSTER   INTEGER     not null,
     ID_EMPLOYEE VARCHAR(15) not null,
-    primary key (ID_REPORT, ID_EMPLOYEE),
-    constraint REPORT_EMPLOYEE_REPORT_FK foreign key (ID_REPORT) references REPORT(ID_REPORT) on update cascade on delete cascade,
-    constraint REPORT_EMPLOYEE_EMPLOYEE_FK foreign key (ID_EMPLOYEE) references EMPLOYEE(ID_EMPLOYEE) on update cascade on delete cascade
+    primary key (ID_ROSTER, ID_EMPLOYEE),
+    constraint ROSTER_EMPLOYEE_ROSTER_FK foreign key (ID_ROSTER) references ROSTER(ID_ROSTER) on update cascade on delete cascade,
+    constraint ROSTER_EMPLOYEE_EMPLOYEE_FK foreign key (ID_EMPLOYEE) references EMPLOYEE(ID_EMPLOYEE) on update cascade on delete cascade
 );
 
 
 ALTER SEQUENCE SHIFT_TYPE_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_SHIFT_TYPE)+1,1) FROM PUBLIC.SHIFT_TYPE);
 ALTER SEQUENCE RANG_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_RANG)+1,1) FROM PUBLIC.RANG);
 ALTER SEQUENCE EMPLOYEE_GROUP_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_EMPLOYEE_GROUP)+1,1) FROM EMPLOYEE_GROUP);
-ALTER SEQUENCE REPORT_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_REPORT)+1,100) FROM REPORT);
+ALTER SEQUENCE ROSTER_SEQ RESTART WITH (SELECT COALESCE(MAX (ID_ROSTER)+1,100) FROM ROSTER);
 
 
 -- ===================       ROSTER       =========================

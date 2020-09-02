@@ -24,10 +24,6 @@ public class Rang extends AbstractEntity<Short> {
     @Column(name = "FULL_NAME")
     String fullName;
 
-    @Override
-    public boolean isNew() {
-        return super.isNew();
-    }
 
     @Override
     public String toString() {

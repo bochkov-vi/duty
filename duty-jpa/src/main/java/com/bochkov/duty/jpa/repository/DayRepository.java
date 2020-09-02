@@ -75,7 +75,8 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
     }
 
     @Transactional
-    default Day _save(Day day) {
+    default Day _save(Day entity) {
+        Day day = save(entity);
         day = _saveWithChilds(day);
         day = _saveWithWeekendRelationCalculate(day);
         _saveWithWeekendRelationCalculate(findChain(day, -5));
@@ -85,10 +86,26 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
         return save(day);
     }
 
+    @Transactional
+    default ShiftType _syncFromHoliday(Day day) {
+        return Optional.ofNullable(day).map(Day::getHoliday).map(h -> {
+            switch (h.getType()) {
+                case WORKED:
+                case SHORTENED: {
+                    return findShiftTypeById(1);
+                }
+                case WEEKEND: {
+                    return findShiftTypeById(0);
+                }
+            }
+            return null;
+        }).orElse(null);
+
+    }
 
     @Transactional
     default Day _setupDutyTypeTimeUsage(Day day) {
-        ShiftType shiftType = findDutyTypeByDaysToWeekend(day.getDaysToWeekend());
+        ShiftType shiftType = findShiftTypeByDaysToWeekend(day.getDaysToWeekend());
         if (shiftType != null) {
             Day.setupDutyTypeTimeUsage(day, shiftType);
         }
@@ -97,7 +114,10 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
 
     @Transactional
     default Day _setupDutyType(Day day) {
-        ShiftType shiftType = findDutyTypeByDaysToWeekend(day.getDaysToWeekend());
+        ShiftType shiftType = _syncFromHoliday(day);
+        if (shiftType == null) {
+            shiftType = findShiftTypeByDaysToWeekend(day.getDaysToWeekend());
+        }
         day.setShiftType(shiftType);
         return day;
     }
@@ -153,7 +173,11 @@ public interface DayRepository extends BaseRepository<Day, LocalDate> {
 
     @Transactional
     @Query("SELECT o FROM ShiftType o JOIN o.daysToWeekend w WHERE w = ?1")
-    public ShiftType findDutyTypeByDaysToWeekend(Integer daysToWeekend);
+    public ShiftType findShiftTypeByDaysToWeekend(Integer daysToWeekend);
+
+    @Transactional
+    @Query("SELECT o FROM ShiftType o WHERE o.id = ?1")
+    public ShiftType findShiftTypeById(Integer idShiftType);
 
 
 }

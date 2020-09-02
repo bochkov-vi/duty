@@ -14,6 +14,7 @@
         <module>duty-jpa</module>
         <module>duty-web</module>
         <module>duty-planning</module>
+        <module>xmlcalendar-client</module>
     </modules>
     <groupId>com.bochkov</groupId>
     <artifactId>duty</artifactId>
@@ -63,6 +64,11 @@
             <dependency>
                 <groupId>com.bochkov</groupId>
                 <artifactId>duty-jpa</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bochkov</groupId>
+                <artifactId>xmlcalendar-client</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
