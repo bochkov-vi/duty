@@ -2,6 +2,7 @@ package com.bochkov.duty.jpa;
 
 import com.bochkov.duty.datasource.DataSourceConfig;
 import com.bochkov.duty.xmlcalendar.XmlCalendarConfig;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
 import org.springframework.data.auditing.CurrentDateTimeProvider;
@@ -14,12 +15,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import java.util.Optional;
 
 @Configuration
+@EnableAutoConfiguration
 @EnableJpaRepositories("com.bochkov.duty.jpa.repository")
 @EnableJpaAuditing(auditorAwareRef = "auditorAware", dateTimeProviderRef = "dateTimeProvider")
 @EnableTransactionManagement
 @Import({DataSourceConfig.class, XmlCalendarConfig.class})
 @EntityScan("com.bochkov.duty.jpa.entity")
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:com/bochkov/duty/jpa/application.properties")
 @ComponentScan("com.bochkov.duty.jpa.service")
 public class DutyJpaConfig {
 

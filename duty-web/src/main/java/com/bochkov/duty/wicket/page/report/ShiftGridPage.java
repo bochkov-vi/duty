@@ -2,9 +2,11 @@ package com.bochkov.duty.wicket.page.report;
 
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.entity.Roster;
+import com.bochkov.duty.jpa.entity.Shift;
 import com.bochkov.duty.jpa.entity.ShiftType;
 import com.bochkov.duty.jpa.repository.DayRepository;
 import com.bochkov.duty.jpa.repository.ReportRepository;
+import com.bochkov.duty.jpa.repository.ShiftRepository;
 import com.bochkov.duty.jpa.repository.ShiftTypeRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.bochkov.duty.wicket.page.report.grid.GridPanel;
@@ -35,9 +37,12 @@ public class ShiftGridPage extends BootstrapPage<Roster> {
     @SpringBean
     ShiftTypeRepository shiftTypeRepository;
 
-  /*  @SpringBean
-    ShiftAssignmentRepository shiftAssignmentRepository;
-*/
+    @SpringBean
+    ShiftRepository shiftRepository;
+
+    /*  @SpringBean
+      ShiftAssignmentRepository shiftAssignmentRepository;
+  */
     public ShiftGridPage(Roster report) {
         super();
         PersistableModel model = PersistableModel.of(report, reportRepository::findById);
@@ -79,7 +84,7 @@ public class ShiftGridPage extends BootstrapPage<Roster> {
         GridPanel grid = new GridPanel<Void>("grid", getModel().map(Roster::getDateFrom).getObject(), getModel().map(Roster::getEmployees)) {
             @Override
             public void pupulateCellItem(ListItem<Employee> cellItem, String compId, IModel<LocalDate> dateModel, IModel<Employee> employeeModel) {
-                IModel<ShiftType> shiftTypeModel = LoadableDetachableModel.of(() -> shiftAssignmentRepository.findAll(dateModel.getObject(), employeeModel.getObject()).stream().findFirst().map(ShiftAssignment::getShiftType).orElse(null));
+                IModel<ShiftType> shiftTypeModel = LoadableDetachableModel.of(() -> shiftRepository.find(dateModel.getObject(), employeeModel.getObject()).map(Shift::getShiftType).orElse(null));
                 // ShiftTypeLabel label = new ShiftTypeLabel(compId, shiftTypeModel);
                 // cellItem.add(label);
                 ShiftTypeEditor editor = new ShiftTypeEditor(compId, PersistableModel.of(shiftTypeModel.getObject(), shiftTypeRepository::findById));

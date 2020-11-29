@@ -147,9 +147,9 @@ public class CalendarPanel extends GenericPanel<Month> {
                         target.add(CalendarPanel.this);
                         Day day = dayIModel.getObject();
                         day.setWeekend(!day.isWeekend());
-                        if (day.isShortened() && day.isWeekend()) {
+                       /* if (day.isShortened() && day.isWeekend()) {
                             day.setShortened(false);
-                        }
+                        }*/
                         day = dayRepository.safeSave(day);
                         log.debug("{}", day);
                     }
@@ -173,7 +173,7 @@ public class CalendarPanel extends GenericPanel<Month> {
                     public void onClick(AjaxRequestTarget target) {
                         target.add(CalendarPanel.this);
                         Day day = dayIModel.getObject();
-                        day.setShortened(!day.isShortened());
+//                        day.setShortened(!day.isShortened());
                         if (day.isShortened() && day.isWeekend()) {
                             day.setWeekend(false);
 

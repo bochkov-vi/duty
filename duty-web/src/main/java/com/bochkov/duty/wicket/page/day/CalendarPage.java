@@ -2,7 +2,7 @@ package com.bochkov.duty.wicket.page.day;
 
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.bochkov.duty.wicket.page.day.calendar.CalendarPanel;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.Month;
 
 @MountPath("calendar")
-@Log4j
+@Slf4j
 public class CalendarPage extends BootstrapPage<Month> {
 
     public CalendarPage() {

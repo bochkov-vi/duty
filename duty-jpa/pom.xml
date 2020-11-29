@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
     <artifactId>duty-jpa</artifactId>
     <properties>
-        <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
+        <spring-boot.repackage.skip>false</spring-boot.repackage.skip>
     </properties>
     <profiles>
 

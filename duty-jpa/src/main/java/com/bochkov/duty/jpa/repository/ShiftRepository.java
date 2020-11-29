@@ -1,13 +1,23 @@
 package com.bochkov.duty.jpa.repository;
 
 import com.bochkov.duty.jpa.BaseRepository;
+import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.entity.Shift;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ShiftRepository extends BaseRepository<Shift, Integer> {
     @Override
     List<Shift> findAll();
+
+    default Optional<Shift> find(LocalDate date, Employee employee) {
+        return findByDayIdAndEmployees(date, employee);
+    }
+
+    Optional<Shift> findByDayIdAndEmployees(LocalDate date, Employee employee);
+
 
     /*  default Optional<Shift> findByPersonAndDay(Employee employee, Day day) {
         return findById(new DutyPK(employee, day));
