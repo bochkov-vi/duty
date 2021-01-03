@@ -32,7 +32,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.core.NestedRuntimeException;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -398,7 +398,8 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
 
         } catch (Exception e) {
             //error(e.getLocalizedMessage());
-            error(((DataIntegrityViolationException) e).getRootCause().getMessage());
+
+            error(((NestedRuntimeException) e).getRootCause().getMessage());
         }
         target.ifPresent(
                 t -> t.add(feedback)

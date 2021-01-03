@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class ShiftPK implements Serializable {
 
     @Column(name = "ID_EMPLOYEE", length = 15)
-    String idPerson;
+    Integer idEmployee;
 
     @Column(name = "DATE")
     LocalDate date;
@@ -25,13 +25,13 @@ public class ShiftPK implements Serializable {
     public ShiftPK() {
     }
 
-    public ShiftPK(String idPerson, LocalDate date) {
-        this.idPerson = idPerson;
+    public ShiftPK(Integer idEmployee, LocalDate date) {
+        this.idEmployee = idEmployee;
         this.date = date;
     }
 
     public ShiftPK(Employee employee, Day day) {
-        this.idPerson = employee.id;
+        this.idEmployee = employee.id;
         this.date = day.id;
     }
 
@@ -44,20 +44,20 @@ public class ShiftPK implements Serializable {
             return false;
         }
         ShiftPK shiftPK = (ShiftPK) o;
-        return Objects.equal(idPerson, shiftPK.idPerson) &&
+        return Objects.equal(idEmployee, shiftPK.idEmployee) &&
                 Objects.equal(date, shiftPK.date);
     }
 
     @Override
     public String toString() {
         return "DutyPK{" +
-                "idPerson='" + idPerson + '\'' +
+                "idPerson='" + idEmployee + '\'' +
                 ", date=" + date +
                 '}';
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(idPerson, date);
+        return Objects.hashCode(idEmployee, date);
     }
 }

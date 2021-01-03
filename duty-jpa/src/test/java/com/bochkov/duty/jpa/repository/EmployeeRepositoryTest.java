@@ -20,7 +20,7 @@ public class EmployeeRepositoryTest {
 
     @Test
     public void createEmployee() {
-        Employee employee = new Employee().setId("bochkov").setRang(rangRepository.getOne((short) 25)).setFirstName("Виктор").setMiddleName("Иванович").setLastName("Бочков");
+        Employee employee = new Employee().setLogin("bochkov").setRang(rangRepository.getOne((short) 25)).setFirstName("Виктор").setMiddleName("Иванович").setLastName("Бочков");
         employee = repository.save(employee);
         Assert.assertNotNull(employee);
     }

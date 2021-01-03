@@ -15,11 +15,16 @@ import java.util.Set;
 @Accessors(chain = true)
 @Table(name = "EMPLOYEE")
 @Entity
-public class Employee extends AbstractEntity<String> implements Comparable<Employee> {
+public class Employee extends AbstractEntity<Integer> implements Comparable<Employee> {
 
     @Id
-    @Column(name = "ID_EMPLOYEE", length = 15)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLOYEE_SEQ")
+    @SequenceGenerator(name = "EMPLOYEE_SEQ", allocationSize = 1, initialValue = 1000)
+    @Column(name = "ID_EMPLOYEE")
+    Integer id;
+
+    @Column(unique = true)
+    String login;
 
     @ManyToOne
     @JoinColumn(name = "ID_RANG", nullable = false)

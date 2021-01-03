@@ -32,7 +32,7 @@ public class VacationRepositoryTest {
 
     @Before
     public void setup() {
-        vacation = Vacation.of(2020, employeeRepository.getOne("bochkov"));
+        vacation = Vacation.of(2020, employeeRepository.findByLogin("bochkov").get());
         vacation.setParts(Sets.newTreeSet(
                 Sets.newHashSet(
                         VacationPart.of(vacation, LocalDate.of(2020, 5, 2), LocalDate.of(2020, 5, 26), 1),
@@ -59,7 +59,7 @@ public class VacationRepositoryTest {
 
     @Test
     public void testExists() {
-        Employee employee = employeeRepository.findById("bochkov").get();
+        Employee employee = employeeRepository.findByLogin("bochkov").get();
         LocalDate start = LocalDate.of(2020, 1, 1);
         LocalDate end = LocalDate.of(2020, 1, 15);
         repository.existsByPeriod(start, end, employee);
@@ -67,7 +67,7 @@ public class VacationRepositoryTest {
 
     @Test
     public void findParts() {
-        Employee employee = employeeRepository.findById("bochkov").get();
+        Employee employee = employeeRepository.findByLogin("bochkov").get();
         LocalDate start = LocalDate.of(2020, 1, 1);
         LocalDate end = LocalDate.of(2020, 1, 15);
         List<VacationPart> parts = repository.findParts(start, end, employee);
@@ -76,7 +76,7 @@ public class VacationRepositoryTest {
 
     @Test
     public void testPercentOverlap() {
-        Employee employee = employeeRepository.findById("bochkov").get();
+        Employee employee = employeeRepository.findByLogin("bochkov").get();
         LocalDate start = LocalDate.of(2020, 1, 1);
         LocalDate end = LocalDate.of(2020, 1, 30);
         double po = repository.percentOverlap(start, end, employee);

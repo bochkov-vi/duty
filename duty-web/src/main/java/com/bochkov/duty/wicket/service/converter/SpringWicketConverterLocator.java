@@ -33,6 +33,10 @@ public class SpringWicketConverterLocator extends ConverterLocator {
     @Autowired
     IConverter<Day> dayConverter;
 
+    public SpringWicketConverterLocator() {
+        super();
+    }
+
     @PostConstruct
     public void postConstruct() {
         set(ShiftPK.class, shiftPkConverter);

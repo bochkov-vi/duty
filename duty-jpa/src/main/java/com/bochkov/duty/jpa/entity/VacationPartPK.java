@@ -26,7 +26,7 @@ public class VacationPartPK implements Serializable, Comparable<VacationPartPK> 
     Integer year;
 
     @Column(name = "ID_EMPLOYEE")
-    String IdEmployeer;
+    Integer idEmployeer;
 
     @Column(name = "START")
     LocalDate start;

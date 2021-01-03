@@ -2,10 +2,10 @@ package com.bochkov.duty;
 
 import com.bochkov.duty.jpa.DutyJpaConfig;
 import com.bochkov.duty.jpa.entity.Employee;
-import com.bochkov.duty.jpa.repository.ShiftTypeRepository;
 import com.bochkov.duty.jpa.repository.EmployeeGroupRepository;
 import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.duty.jpa.repository.RangRepository;
+import com.bochkov.duty.jpa.repository.ShiftTypeRepository;
 import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,8 +37,9 @@ public class EmployeeRepositoryTests {
 
     @Test
     public void saveBochkov() {
-        Employee employee = new Employee().setId("bochkov")
+        Employee employee = new Employee()
                 .setRang(rangRepository.getOne((short) 25))
+                .setLogin("bochkov")
                 .setFirstName("Виктор")
                 .setLastName("Бочков")
                 .setMiddleName("Иванович")

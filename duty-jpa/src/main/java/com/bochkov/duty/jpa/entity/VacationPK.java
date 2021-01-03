@@ -22,5 +22,5 @@ public class VacationPK implements Serializable {
     Integer year;
 
     @Column(name = "ID_EMPLOYEE")
-    String IdEmployeer;
+    Integer idEmployeer;
 }

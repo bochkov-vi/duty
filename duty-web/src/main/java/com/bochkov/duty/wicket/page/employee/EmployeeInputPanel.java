@@ -28,7 +28,7 @@ public class EmployeeInputPanel extends GenericPanel<Employee> {
     protected void onInitialize() {
         super.onInitialize();
         //((CompoundPropertyModel<Employee>)getModel()).bind();
-        add(new TextField<>("id"));
+        add(new TextField<>("id").setRequired(true));
         add(new RequiredTextField<>("firstName"));
         add(new RequiredTextField<>("middleName"));
         add(new RequiredTextField<>("lastName"));
