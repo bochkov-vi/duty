@@ -19,21 +19,6 @@ import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 public class WicketDutyApplication extends WicketBootStandardWebApplication {
 
     @Autowired
-    ShiftTypeRepository shiftTypeRepository;
-
-    @Autowired
-    RangRepository rangRepository;
-
-    @Autowired
-    EmployeeGroupRepository employeeGroupRepository;
-
-    @Autowired
-    EmployeeRepository employeeRepository;
-
-    @Autowired
-    DayRepository dayRepository;
-
-    @Autowired
     IConverterLocator springConverterLocator;
 
     @Override

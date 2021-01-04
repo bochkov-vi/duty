@@ -4,8 +4,10 @@ package com.bochkov.duty.jpa.entity;/*
  */
 
 
+import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
@@ -24,6 +26,7 @@ import java.util.stream.Stream;
 @Accessors(chain = true)
 @Entity
 @Table(name = "ROSTER")
+@ToString
 public class Roster extends AbstractAuditableEntity<Integer> {
 
     @Id
@@ -48,29 +51,6 @@ public class Roster extends AbstractAuditableEntity<Integer> {
 
     @Column(name = "DATE_TO", nullable = false)
     LocalDate dateTo;
-
-    @ManyToOne
-    @JoinColumn(name = "CHIEF", nullable = false)
-    Employee chief;
-
-    @ManyToOne
-    @JoinColumn(name = "EXECUTOR", nullable = false)
-    Employee executor;
-
-    @Column(name = "ROSTER_TITLE", nullable = false)
-    String title;
-
-    @Column(name = "DATE_TITLE", nullable = false)
-    String dateTitle;
-
-    @Column(name = "GENITIVE_DEPARTMENT_NAME", nullable = false)
-    String genitiveDepartment;
-
-    @Override
-    public String toString() {
-        return title;
-    }
-
 
     public List<LocalDate> createDateList() {
         List<LocalDate> dateList = Stream.iterate(dateFrom, date -> date.plusDays(1))

@@ -4,9 +4,9 @@ import com.bochkov.duty.jpa.entity.Employee;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmployeeConverter extends AbstractWicketJpaConverter<Employee, String> {
+public class EmployeeConverter extends AbstractWicketJpaConverter<Employee, Integer> {
 
     public EmployeeConverter() {
-        super(Employee.class, String.class);
+        super(Employee.class, Integer.class);
     }
 }

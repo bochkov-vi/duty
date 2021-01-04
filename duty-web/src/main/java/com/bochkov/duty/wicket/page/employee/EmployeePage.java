@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @MountPath("employee")
-public class EmployeePage extends EntityPage<Employee, String> {
+public class EmployeePage extends EntityPage<Employee, Integer> {
 
     @SpringBean
     private EmployeeRepository employeeRepository;

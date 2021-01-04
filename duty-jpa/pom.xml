@@ -17,8 +17,6 @@
 
         <profile>
             <id>h2</id>
-
-
         </profile>
     </profiles>
     <dependencies>

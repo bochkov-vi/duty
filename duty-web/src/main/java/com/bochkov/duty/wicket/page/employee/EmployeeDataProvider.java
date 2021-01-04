@@ -3,6 +3,7 @@ package com.bochkov.duty.wicket.page.employee;
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.wicket.component.select2.data.PersistableChoiceProvider;
+import com.google.common.primitives.Ints;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -10,7 +11,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import javax.inject.Inject;
 import java.util.Collection;
 
-public class EmployeeDataProvider extends PersistableChoiceProvider<Employee, String> {
+public class EmployeeDataProvider extends PersistableChoiceProvider<Employee, Integer> {
 
     @Inject
     EmployeeRepository repository;
@@ -27,11 +28,6 @@ public class EmployeeDataProvider extends PersistableChoiceProvider<Employee, St
     }
 
     @Override
-    public String idToString(String s) {
-        return s;
-    }
-
-    @Override
     public EmployeeRepository getRepository() {
         if (repository == null) {
             Injector.get().inject(this);
@@ -44,10 +40,6 @@ public class EmployeeDataProvider extends PersistableChoiceProvider<Employee, St
         return excludes.getObject();
     }
 
-    @Override
-    public String toId(String str) {
-        return str;
-    }
 
     @Override
     public void detach() {
