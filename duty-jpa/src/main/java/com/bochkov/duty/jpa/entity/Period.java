@@ -71,6 +71,10 @@ public class Period implements Serializable, Comparable<Period> {
         return result;
     }
 
+    public static boolean isIntersects(Period p1, Period p2) {
+        return p1 != null && p2 != null && p1.isIntersects(p2);
+    }
+
     public Range<LocalDateTime> range(LocalDate date) {
         LocalDateTime d1 = date.atTime(start);
         LocalDateTime d2 = d1.plus(duration);
@@ -85,5 +89,13 @@ public class Period implements Serializable, Comparable<Period> {
     @Override
     public int compareTo(Period period) {
         return start.compareTo(period.start);
+    }
+
+    public boolean isIntersects(Period p, LocalDate date) {
+        return range(date).isConnected(p.range(date));
+    }
+
+    public boolean isIntersects(Period p) {
+        return isIntersects(p, LocalDate.now());
     }
 }

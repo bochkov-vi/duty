@@ -1,5 +1,7 @@
 package com.bochkov.duty.wicket.page.vacation;
 
+import com.bochkov.duty.jpa.entity.Vacation;
+import com.bochkov.duty.jpa.entity.VacationPK;
 import com.bochkov.duty.jpa.entity.VacationPart;
 import com.bochkov.wicket.data.provider.SortedListModelDataProvider;
 import com.google.common.collect.Lists;
@@ -23,15 +25,21 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class VacationPartCollectionInputPanel extends FormComponentPanel<Set<VacationPart>> {
+
     ListModel<VacationPart> vacationPartsModel = new ListModel<>(Lists.newArrayList());
+
     Form<Void> form = new Form<>("form");
 
-    public VacationPartCollectionInputPanel(String id) {
+    IModel<Vacation> vacationModel;
+
+    public VacationPartCollectionInputPanel(String id, IModel<Vacation> vacationModel) {
         super(id);
+        this.vacationModel = vacationModel;
     }
 
-    public VacationPartCollectionInputPanel(String id, IModel<Set<VacationPart>> model) {
+    public VacationPartCollectionInputPanel(String id, IModel<Set<VacationPart>> model, IModel<Vacation> vacationModel) {
         super(id, model);
+        this.vacationModel = vacationModel;
     }
 
     @Override
@@ -78,6 +86,9 @@ public class VacationPartCollectionInputPanel extends FormComponentPanel<Set<Vac
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 VacationPart part = input.getModelObject();
+                part.setVacation(vacationModel.getObject());
+                part.getId().setIdEmployeer(vacationModel.map(Vacation::getId).map(VacationPK::getIdEmployeer).getObject());
+                part.getId().setYear(vacationModel.map(Vacation::getId).map(VacationPK::getYear).getObject());
                 Set<VacationPart> set = Sets.newTreeSet(vacationPartsModel.getObject());
                 set.add(part);
                 AtomicInteger i = new AtomicInteger(1);

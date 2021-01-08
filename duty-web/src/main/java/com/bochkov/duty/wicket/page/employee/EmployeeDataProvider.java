@@ -3,7 +3,6 @@ package com.bochkov.duty.wicket.page.employee;
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.wicket.component.select2.data.PersistableChoiceProvider;
-import com.google.common.primitives.Ints;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -37,7 +36,10 @@ public class EmployeeDataProvider extends PersistableChoiceProvider<Employee, In
 
     @Override
     public Collection<Employee> excludes() {
-        return excludes.getObject();
+        if (excludes != null) {
+            return excludes.getObject();
+        }
+        return null;
     }
 
 

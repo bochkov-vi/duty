@@ -8,8 +8,10 @@ import com.bochkov.duty.wicket.base.EntityPage;
 import com.bochkov.duty.wicket.component.FaIcon;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -20,6 +22,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
+import java.util.Optional;
 
 @MountPath("shift-type")
 public class ShiftTypePage extends EntityPage<ShiftType, Integer> {
@@ -48,6 +51,9 @@ public class ShiftTypePage extends EntityPage<ShiftType, Integer> {
                 item.add(new FaIcon(componentId, getDataModel(rowModel)));
             }
         });
+        list.add(new LambdaColumn<ShiftType, String>(new ResourceModel("shiftType.duration"), shiftType -> {
+            return Optional.ofNullable(shiftType.getTotalDuration()).map(duration -> DurationFormatUtils.formatDuration(duration.toMillis(), "HH:mm")).orElse(null);
+        }));
         return list;
     }
 

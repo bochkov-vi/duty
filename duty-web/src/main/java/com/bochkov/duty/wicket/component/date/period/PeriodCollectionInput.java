@@ -24,6 +24,7 @@ import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -32,7 +33,9 @@ public class PeriodCollectionInput extends FormComponentPanel<Collection<Period>
     IModel<List<Period>> innerModel = new ListModel<>(Lists.newArrayList());
 
     ListView<Period> listView;
+
     PeriodInputPanel period = new PeriodInputPanel("period", Model.of());
+
     WebMarkupContainer startContainer = new WebMarkupContainer("start-container");
 
     public PeriodCollectionInput(String id) {
@@ -77,6 +80,7 @@ public class PeriodCollectionInput extends FormComponentPanel<Collection<Period>
             protected void populateItem(Item<Period> item) {
                 item.add(new Label("start", item.getModel().map(Period::getStart).map(lt -> lt.format(DateTimeFormatter.ofPattern(getString("timePattern"))))));
                 item.add(new Label("duration", item.getModel().map(Period::getDuration).map(Duration::toMillis).map(m -> DurationFormatUtils.formatDuration(m, getString("timePattern")))));
+                item.add(new Label("end", item.getModel().map(p->p.getStart().atDate(LocalDate.now()).plus(p.getDuration())).map(dateTime -> dateTime.format(DateTimeFormatter.ofPattern("HH:mm")))));
                 item.add(new AjaxLink<Period>("delete", item.getModel()) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
@@ -91,11 +95,16 @@ public class PeriodCollectionInput extends FormComponentPanel<Collection<Period>
             @Override
             public void validate(IValidatable<Collection<Period>> validatable) {
                 if (validatable != null) {
-                    Set<Period> set = Sets.newTreeSet();
-                    boolean duplicates = validatable.getValue().stream().allMatch(period -> !set.add(period));
-                    if (duplicates) {
-                        IValidationError error = new ValidationError("Периоды пересекаются");
-                        validatable.error(error);
+                    boolean duplicates = false;
+                    Collection<Period> collection = validatable.getValue();
+                    if (collection != null) {
+                        Set<Period> periods1 = Sets.newHashSet(collection);
+                        Set<Period> periods2 = Sets.newHashSet(collection);
+                        duplicates = periods2.stream().anyMatch(p2 -> periods1.stream().anyMatch(p1 -> !Objects.equals(p1, p2) && p1.isIntersects(p2)));
+                        if (duplicates) {
+                            IValidationError error = new ValidationError("Периоды пересекаются");
+                            validatable.error(error);
+                        }
                     }
                 }
             }

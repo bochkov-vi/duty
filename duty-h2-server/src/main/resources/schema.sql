@@ -208,7 +208,7 @@ create table IF NOT EXISTS VACATION_PART (
     constraint VACATION_PART foreign key (ID_EMPLOYEE, YEAR) references VACATION(ID_EMPLOYEE, YEAR)
 );
 
-create table REPORT (
+create table if not exists REPORT (
     ID_REPORT                INTEGER      not null,
     CREATED_DATE             TIMESTAMP,
     CREATED_BY               VARCHAR(255),
@@ -227,7 +227,7 @@ create table REPORT (
     constraint CHIEF_EXECUTOR_FK foreign key (EXECUTOR) references EMPLOYEE(ID_EMPLOYEE)
 );
 
-create table REPORT_EMPLOYEE (
+create table if not exists REPORT_EMPLOYEE (
     ID_REPORT   INTEGER not null,
     ID_EMPLOYEE INTEGER not null,
     primary key (ID_REPORT, ID_EMPLOYEE),
@@ -236,7 +236,7 @@ create table REPORT_EMPLOYEE (
     constraint REPORT_EMPLOYEE_REPORT_FK foreign key (ID_REPORT) references REPORT(ID_REPORT)
 );
 
-create table REPORT_SHIFT_TYPE (
+create table if not exists REPORT_SHIFT_TYPE (
     ID_REPORT     INTEGER not null,
     ID_SHIFT_TYPE INTEGER not null,
     primary key (ID_REPORT, ID_SHIFT_TYPE),
@@ -252,8 +252,8 @@ create sequence if not exists RANG_SEQ start with 50;
 create sequence if not exists EMPLOYEE_GROUP_SEQ start with 1000;
 create sequence if not exists ROSTER_SEQ start with 100;
 create sequence if not exists SHIFT_SEQ start with 100;
-create sequence REPORT_SEQ start with 100;
-create sequence EMPLOYEE_SEQ start with 100;
+create sequence if not exists REPORT_SEQ start with 100;
+create sequence if not exists EMPLOYEE_SEQ start with 100;
 create sequence if not exists EMPLOYEE_SHIFT_TYPE_LIMIT_SEQ start with 100;
 
 

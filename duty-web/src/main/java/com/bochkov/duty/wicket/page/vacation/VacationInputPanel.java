@@ -31,7 +31,7 @@ public class VacationInputPanel extends GenericPanel<Vacation> {
         add(new EmployeeFieldSelect("employee").setRequired(true));
         add(new TextField<>("createdDate").setEnabled(false));
 
-        add(new VacationPartCollectionInputPanel("parts"));
+        add(new VacationPartCollectionInputPanel("parts",getModel()));
 
 
     }
