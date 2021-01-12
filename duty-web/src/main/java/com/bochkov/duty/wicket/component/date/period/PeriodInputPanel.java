@@ -1,8 +1,9 @@
 package com.bochkov.duty.wicket.component.date.period;
 
-import com.bochkov.durationpicker.DurationField;
 import com.bochkov.bootstrap.tempusdominus.LocalTimeField;
+import com.bochkov.component.duration.DurationPanelInput;
 import com.bochkov.duty.jpa.entity.Period;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -13,8 +14,8 @@ import java.time.LocalTime;
 
 public class PeriodInputPanel extends FormComponentPanel<Period> {
 
-    TextField<LocalTime> startField = new LocalTimeField("start", Model.of(), getString("timePattern"));
-    TextField<Duration> durationField = new DurationField("duration", Model.of());
+    TextField<LocalTime> startField = new LocalTimeField("start", Model.of(), getString("timePattern")).setStepping(15);
+    FormComponent<Duration> durationField = new DurationPanelInput("duration", Model.of());
 
     public PeriodInputPanel(String id) {
         super(id);

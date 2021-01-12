@@ -1,12 +1,10 @@
-package com.bochkov.durationpicker;
+package com.bochkov.component.durationpicker;
 
 import com.bochkov.bootstrap.BootstrapBehavior;
 import com.google.common.collect.Lists;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.*;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
@@ -68,7 +66,7 @@ public class DurationField extends TextField<Duration> {
             }
         }));
         response.render(CssHeaderItem.forReference(new PackageResourceReference(DurationField.class, "bootstrap-duration-picker.css")));
-        response.render(OnDomReadyHeaderItem.forScript(String.format("$('%s').durationPicker")));
+        response.render(OnDomReadyHeaderItem.forScript(String.format("$('#%s').durationPicker()",getMarkupId())));
 
 
     }

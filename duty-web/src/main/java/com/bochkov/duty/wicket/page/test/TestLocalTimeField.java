@@ -1,6 +1,6 @@
 package com.bochkov.duty.wicket.page.test;
 
-import com.bochkov.durationpicker.DurationField;
+import com.bochkov.component.durationpicker.DurationField;
 import com.bochkov.bootstrap.tempusdominus.LocalTimeField;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
