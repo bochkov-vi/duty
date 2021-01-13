@@ -96,9 +96,9 @@ public class VacationGridPage extends BootstrapPage<Integer> {
         for (Month m : months) {
             LocalDate date1 = LocalDate.now().withMonth(m.getValue()).with(TemporalAdjusters.firstDayOfMonth());
             LocalDate date2 = date1.with(TemporalAdjusters.lastDayOfMonth());
-            LocalDate mDate = date1.plusDays(ChronoUnit.DAYS.between(date1, date2) / 2 - 1);
+            LocalDate mDate = date1.withDayOfMonth(15);
             halfs.add(Pair.of(date1, mDate));
-            halfs.add(Pair.of(mDate.plusDays(1), date2));
+            halfs.add(Pair.of(mDate, date2));
         }
         ListView head2 = new ListView<Pair<LocalDate, LocalDate>>("head2", halfs) {
 
@@ -125,24 +125,6 @@ public class VacationGridPage extends BootstrapPage<Integer> {
                         VacationPart part = vacationRepository.findParts(date1, date2, employee).stream().findFirst().orElse(null);
                         Triple<Employee, Pair<LocalDate, LocalDate>, Boolean> value = Triple.of(employee, item.getModelObject(), exists);
                         IModel<Boolean> booleanIModel = Model.of(value.getRight());
-                        Behavior behavior = new AjaxEventBehavior("click") {
-                            @Override
-                            protected void onEvent(AjaxRequestTarget target) {
-                                form.setModelObject(part);
-                                target.add(form);
-                                target.appendJavaScript(String.format("$('#%s').modal('show')", modalWindow.getMarkupId()));
-                            }
-                        };
-                        item.add(behavior);
-                        item.add(new ClassAttributeModifier() {
-                            @Override
-                            protected Set<String> update(Set<String> oldClasses) {
-                                if (booleanIModel.getObject()) {
-                                    oldClasses.add("alert-danger");
-                                }
-                                return oldClasses;
-                            }
-                        });
                         item.add(new HiddenField<Boolean>("input", booleanIModel));
                     }
                 };

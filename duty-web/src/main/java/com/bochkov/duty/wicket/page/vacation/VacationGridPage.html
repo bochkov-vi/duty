@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:extend>
-    <div wicket:id="modal-dialog" class="modal fade"  tabindex="-1" role="dialog"   aria-hidden="true">
-        <div  class="modal-dialog">
+    <div wicket:id="modal-dialog" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
@@ -32,17 +32,26 @@
 
     <div class="container">
 
+        <style type="text/css">
+            body {
+                counter-reset: mycount;           /* Set the counter to 0 */
+            }
+            .mycount:before{
+                counter-increment: mycount;      /* Increment the counter */
+                content: counter(mycount) ". "; /* Display the counter */
+            }
+        </style>
 
         <table class="table table-sm table-striped table-bordered">
             <thead>
             <tr>
-                <th></th>
+                <th colspan="2"></th>
                 <th wicket:id="head1" class="text-center">
                     <div wicket:id="cell"></div>
                 </th>
             </tr>
             <tr>
-                <th></th>
+                <th colspan="2"></th>
                 <th wicket:id="head2" class="text-center">
                     <div wicket:id="cell"></div>
                 </th>
@@ -50,6 +59,9 @@
             </thead>
             <tbody>
             <tr wicket:id="employee">
+                <th>
+                    <span class="mycount"></span>
+                </th>
                 <th wicket:id="employee"></th>
                 <th wicket:id="cells">
 
