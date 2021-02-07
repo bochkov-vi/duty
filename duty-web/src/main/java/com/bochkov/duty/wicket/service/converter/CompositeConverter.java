@@ -2,6 +2,7 @@ package com.bochkov.duty.wicket.service.converter;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import org.apache.wicket.Application;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.util.convert.ConversionException;
@@ -9,12 +10,14 @@ import org.apache.wicket.util.convert.IConverter;
 import org.springframework.beans.BeanUtils;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 public class CompositeConverter<ID> implements IConverter<ID> {
 
@@ -25,10 +28,10 @@ public class CompositeConverter<ID> implements IConverter<ID> {
 
 
     public CompositeConverter(Class<ID> idClass) {
-        this(idClass, BeanUtils.getPropertyDescriptors(idClass));
+        this(idClass, Lists.newArrayList(idClass.getDeclaredFields()).stream().map(Field::getName).map(name -> BeanUtils.getPropertyDescriptor(idClass, name)).collect(Collectors.toList()));
     }
 
-    public CompositeConverter(Class<ID> idClass,String... properties) {
+    public CompositeConverter(Class<ID> idClass, String... properties) {
         this(idClass, Stream.of(properties).map(property -> BeanUtils.getPropertyDescriptor(idClass, property)).collect(Collectors.toList()));
     }
 
@@ -37,7 +40,7 @@ public class CompositeConverter<ID> implements IConverter<ID> {
         descriptors = propertyDescriptors;
     }
 
-    public CompositeConverter(Class<ID> idClass,  PropertyDescriptor... propertyDescriptors) {
+    public CompositeConverter(Class<ID> idClass, PropertyDescriptor... propertyDescriptors) {
         this(idClass, Stream.of(propertyDescriptors).collect(Collectors.toList()));
     }
 

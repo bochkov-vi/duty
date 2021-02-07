@@ -1,6 +1,5 @@
 package com.bochkov.duty.wicket.service.converter;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +10,17 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Optional;
 
-public abstract class AbstractWicketJpaConverter<T extends Persistable<ID>, ID extends Serializable> implements IConverter<T> {
+public class WicketJpaConverter<T extends Persistable<ID>, ID extends Serializable> implements IConverter<T> {
 
     Class<T> domainClass;
-    Class<ID> idClass;
-
+    IConverter<ID> idiConverter;
     @Autowired
     JpaRepository<T, ID> repository;
 
-    public AbstractWicketJpaConverter(Class<T> domainClass, Class<ID> idClass) {
+    public WicketJpaConverter(Class<T> domainClass, IConverter<ID> idiConverter, JpaRepository<T, ID> repository) {
         this.domainClass = domainClass;
-        this.idClass = idClass;
+        this.idiConverter = idiConverter;
+        this.repository = repository;
     }
 
     @Override
@@ -35,13 +34,11 @@ public abstract class AbstractWicketJpaConverter<T extends Persistable<ID>, ID e
     }
 
     public ID convertIdToObject(String string, Locale locale) {
-        return Application.get().getConverterLocator().getConverter(idClass).convertToObject(string, locale);
+        return idiConverter.convertToObject(string, locale);
     }
 
 
     public String convertIdToString(ID id, Locale locale) {
-        return Application.get().getConverterLocator().getConverter(idClass).convertToString(id, locale);
+        return idiConverter.convertToString(id, locale);
     }
-
-
 }
