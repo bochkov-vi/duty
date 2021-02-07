@@ -2,7 +2,6 @@ package com.bochkov.duty.wicket.service.converter;
 
 import com.giffing.wicket.spring.boot.context.extensions.ApplicationInitExtension;
 import com.giffing.wicket.spring.boot.context.extensions.WicketApplicationInitConfiguration;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -13,8 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.support.Repositories;
 
-import java.util.List;
-
 @Slf4j
 @ApplicationInitExtension
 public class WicketJpaConverterExtension implements WicketApplicationInitConfiguration {
@@ -22,7 +19,6 @@ public class WicketJpaConverterExtension implements WicketApplicationInitConfigu
     ApplicationContext context;
 
     public static void init(ConverterLocator converterLocator, ApplicationContext context) {
-        List<String> jpaRepositoryNames = Lists.newArrayList(context.getBeanNamesForType(JpaRepository.class));
         Repositories repositories = new Repositories(context);
         repositories.forEach(clazz -> {
             log.info("Class = {}", clazz.getName());
