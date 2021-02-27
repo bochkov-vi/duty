@@ -2,7 +2,7 @@ package com.bochkov.duty.wicket.page.employee;
 
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.repository.EmployeeRepository;
-import com.bochkov.wicket.component.select2.data.PersistableChoiceProvider;
+import com.bochkov.wicket.select2.data.PersistableChoiceProvider;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;

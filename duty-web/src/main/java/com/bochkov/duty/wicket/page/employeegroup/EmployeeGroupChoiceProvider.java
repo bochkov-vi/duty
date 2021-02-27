@@ -2,7 +2,7 @@ package com.bochkov.duty.wicket.page.employeegroup;
 
 import com.bochkov.duty.jpa.entity.EmployeeGroup;
 import com.bochkov.duty.jpa.repository.EmployeeGroupRepository;
-import com.bochkov.wicket.component.select2.data.PersistableChoiceProvider;
+import com.bochkov.wicket.select2.data.PersistableChoiceProvider;
 import com.google.common.primitives.Ints;
 import org.apache.wicket.injection.Injector;
 

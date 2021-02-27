@@ -26,6 +26,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bochkov</groupId>
+            <artifactId>wicket-spring-data-jpa-crud</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.giffing.wicket.spring.boot.starter</groupId>
             <artifactId>wicket-spring-boot-starter</artifactId>
             <version>2.1.9</version>

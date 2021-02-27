@@ -2,7 +2,7 @@ package com.bochkov.duty.wicket.page.rang;
 
 import com.bochkov.duty.jpa.entity.Rang;
 import com.bochkov.duty.jpa.repository.RangRepository;
-import com.bochkov.wicket.component.select2.data.MaskableChoiceProvider;
+import com.bochkov.wicket.select2.data.MaskableChoiceProvider;
 import lombok.Getter;
 import org.apache.wicket.model.IModel;
 import org.springframework.data.domain.Page;
