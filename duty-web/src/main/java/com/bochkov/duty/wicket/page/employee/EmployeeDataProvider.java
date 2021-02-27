@@ -18,7 +18,7 @@ public class EmployeeDataProvider extends PersistableChoiceProvider<Employee, In
     IModel<Collection<Employee>> excludes;
 
     public EmployeeDataProvider() {
-        super("lastName", "firstName", "id");
+        super(Employee.class,Integer.class,"lastName", "firstName", "id");
     }
 
     public EmployeeDataProvider(IModel<Collection<Employee>> excludes) {

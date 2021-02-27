@@ -15,7 +15,7 @@ public class EmployeeGroupChoiceProvider extends PersistableChoiceProvider<Emplo
     EmployeeGroupRepository repository;
 
     public EmployeeGroupChoiceProvider() {
-        super("name", "id");
+        super(EmployeeGroup.class,Integer.class,"name", "id");
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.bochkov.duty.wicket.page.shifttype;
 
 import com.bochkov.duty.jpa.entity.ShiftType;
 import com.bochkov.duty.jpa.repository.ShiftTypeRepository;
-import com.bochkov.wicket.component.select2.data.MaskableChoiceProvider;
+import com.bochkov.wicket.select2.data.MaskableChoiceProvider;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.springframework.data.domain.Page;

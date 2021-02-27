@@ -47,7 +47,7 @@ public class DayInputPanel extends GenericPanel<Day> {
 
     CheckBox weekendField = new CheckBox("weekend");
     Select2Choice<ShiftType> shiftTypeField = new Select2Choice<ShiftType>("shiftType",
-            PersistableChoiceProvider.ofIntId(() -> shiftTypeRepository, "name", "id")
+            PersistableChoiceProvider.of(ShiftType.class,Integer.class,() -> shiftTypeRepository, "name", "id")
     );
 
     public DayInputPanel(String id) {

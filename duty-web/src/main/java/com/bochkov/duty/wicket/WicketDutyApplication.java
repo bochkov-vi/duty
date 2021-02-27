@@ -1,8 +1,7 @@
 package com.bochkov.duty.wicket;
 
-import com.bochkov.duty.jpa.repository.*;
 import com.bochkov.duty.wicket.page.home.HomePage;
-import com.bochkov.wicket.component.select2.Select2ApplicationExtension;
+import com.bochkov.wicket.select2.Select2ApplicationExtension;
 import com.giffing.wicket.spring.boot.starter.app.WicketBootStandardWebApplication;
 import de.agilecoders.wicket.webjars.WicketWebjars;
 import de.agilecoders.wicket.webjars.request.resource.WebjarsJavaScriptResourceReference;
