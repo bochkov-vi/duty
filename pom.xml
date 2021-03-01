@@ -85,6 +85,36 @@
                 <artifactId>duty-planing</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>com.bochkov</groupId>
+                <artifactId>wicket-spring-data-jpa-converter</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bochkov</groupId>
+                <artifactId>wicket-spring-data-jpa-select2</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bochkov</groupId>
+                <artifactId>wicket-components</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bochkov</groupId>
+                <artifactId>wicket-components</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bochkov</groupId>
+                <artifactId>wicket-bootstrap</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bochkov</groupId>
+                <artifactId>spring-data-jpa-findbymask</artifactId>
+                <version>1.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
