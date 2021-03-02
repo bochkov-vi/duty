@@ -2,7 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-    <input type="hidden" wicket:id="start-date">
+    <wicket:container wicket:id="days">
+        <div wicket:id="cell" class="border"></div>
+    </wicket:container>
 </wicket:panel>
 </body>
 </html>

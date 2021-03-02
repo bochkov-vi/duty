@@ -23,4 +23,9 @@ public class VacationPK implements Serializable {
 
     @Column(name = "ID_EMPLOYEE")
     Integer idEmployeer;
+
+    public VacationPK(Integer year, Employee employee) {
+        this.year = year;
+        this.idEmployeer = employee.getId();
+    }
 }

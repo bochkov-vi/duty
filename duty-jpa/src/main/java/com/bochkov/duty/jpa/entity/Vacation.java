@@ -1,11 +1,13 @@
 package com.bochkov.duty.jpa.entity;
 
+import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,5 +51,13 @@ public class Vacation extends AbstractEntity<VacationPK> {
                 vp.setPartNumber(++i);
             }
         }
+    }
+
+    public Vacation add(LocalDate from, LocalDate to) {
+        if (parts == null) {
+            parts = Sets.newHashSet();
+        }
+        parts.add(VacationPart.of(this, from, to, 0));
+        return this;
     }
 }
