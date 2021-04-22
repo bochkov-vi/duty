@@ -31,7 +31,7 @@ public class ShiftTypePage extends EntityPage<ShiftType, Integer> {
     private ShiftTypeRepository shiftTypeRepository;
 
     public ShiftTypePage() {
-        super();
+        super(ShiftType.class);
     }
 
     public ShiftTypePage(ShiftType entity) {

@@ -28,6 +28,7 @@ public class EmployeePage extends EntityPage<Employee, Integer> {
     private EmployeeRepository employeeRepository;
 
     public EmployeePage() {
+        super(Employee.class);
     }
 
     public EmployeePage(Employee entity) {

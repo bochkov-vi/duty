@@ -15,6 +15,7 @@ import org.springframework.data.repository.support.Repositories;
 @Slf4j
 @ApplicationInitExtension
 public class WicketJpaConverterExtension implements WicketApplicationInitConfiguration {
+
     @Autowired
     ApplicationContext context;
 

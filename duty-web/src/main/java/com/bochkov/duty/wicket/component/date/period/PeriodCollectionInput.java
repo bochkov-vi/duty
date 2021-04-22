@@ -80,7 +80,7 @@ public class PeriodCollectionInput extends FormComponentPanel<Collection<Period>
             protected void populateItem(Item<Period> item) {
                 item.add(new Label("start", item.getModel().map(Period::getStart).map(lt -> lt.format(DateTimeFormatter.ofPattern(getString("timePattern"))))));
                 item.add(new Label("duration", item.getModel().map(Period::getDuration).map(Duration::toMillis).map(m -> DurationFormatUtils.formatDuration(m, getString("timePattern")))));
-                item.add(new Label("end", item.getModel().map(p->p.getStart().atDate(LocalDate.now()).plus(p.getDuration())).map(dateTime -> dateTime.format(DateTimeFormatter.ofPattern("HH:mm")))));
+                item.add(new Label("end", item.getModel().map(p -> p.getStart().atDate(LocalDate.now()).plus(p.getDuration())).map(dateTime -> dateTime.format(DateTimeFormatter.ofPattern("HH:mm")))));
                 item.add(new AjaxLink<Period>("delete", item.getModel()) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {

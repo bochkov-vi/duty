@@ -4,7 +4,7 @@ import com.bochkov.duty.jpa.entity.Roster;
 import com.bochkov.duty.jpa.repository.ReportRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.bochkov.duty.wicket.page.day.calendar.CalendarPanel;
-import com.bochkov.wicket.data.model.PersistableModel;
+import com.bochkov.wicket.jpa.model.PersistableModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -30,7 +30,7 @@ public class CalendarPage extends BootstrapPage<Month> {
     }
 
     public CalendarPage(PageParameters parameters) {
-        this(ReportPage.extractFromParameters(parameters, Integer.class));
+        this(RosterPage.extractFromParameters(parameters, Integer.class));
     }
 
     public CalendarPage(Integer id) {
@@ -47,7 +47,7 @@ public class CalendarPage extends BootstrapPage<Month> {
     protected void onInitialize() {
         super.onInitialize();
         if (reportModel == null || !reportModel.isPresent().getObject()) {
-            RequestCycle.get().setResponsePage(ReportPage.class);
+            RequestCycle.get().setResponsePage(RosterPage.class);
             return;
         }
         IModel<Month> monthModel = LambdaModel.of(reportModel, report -> {

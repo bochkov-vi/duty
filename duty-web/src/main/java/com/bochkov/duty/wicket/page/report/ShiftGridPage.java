@@ -11,7 +11,7 @@ import com.bochkov.duty.jpa.repository.ShiftTypeRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.bochkov.duty.wicket.page.report.grid.GridPanel;
 import com.bochkov.duty.wicket.page.report.grid.ShiftTypeEditor;
-import com.bochkov.wicket.data.model.PersistableModel;
+import com.bochkov.wicket.jpa.model.PersistableModel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -65,7 +65,7 @@ public class ShiftGridPage extends BootstrapPage<Roster> {
     protected void onInitialize() {
         super.onInitialize();
         if (!getModel().isPresent().getObject()) {
-            RequestCycle.get().setResponsePage(ReportPage.class);
+            RequestCycle.get().setResponsePage(RosterPage.class);
             return;
         }
         add(new TabsNavidgationPanel("tabs", getModel()));

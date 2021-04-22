@@ -19,10 +19,12 @@ import java.util.List;
 
 @MountPath("rang")
 public class RangPage extends EntityPage<Rang, Short> {
+
     @SpringBean
     private RangRepository rangRepository;
 
     public RangPage() {
+        super(Rang.class);
     }
 
     public RangPage(Rang entity) {

@@ -43,7 +43,7 @@ public class DayToolbar extends AbstractToolbar {
             @Override
             protected Iterator<IModel<IColumn<T, String>>> getItemModels() {
                 List<IModel<IColumn<T, String>>> list = Lists.newArrayList();
-                getTable().getColumns().stream().filter(c -> c instanceof IDayAware).forEach(iColumn -> list.add((IModel<IColumn<T, String>>) Model.of((IColumn<T, String>) iColumn)));
+                getTable().getColumns().stream().filter(c -> c instanceof IDayAware).forEach(iColumn -> list.add(Model.of((IColumn<T, String>) iColumn)));
                 return list.iterator();
             }
 
@@ -63,7 +63,7 @@ public class DayToolbar extends AbstractToolbar {
         item.add(new Label(componentId, column.getDay().map(Day::getId).map(ld -> ld.format(DateTimeFormatter.ofPattern(pattern)))));
     }
 
-    public static interface IDayAware {
+    public interface IDayAware {
 
         IModel<Day> getDay();
     }

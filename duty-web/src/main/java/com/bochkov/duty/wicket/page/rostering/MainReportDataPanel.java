@@ -15,6 +15,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 @Accessors(chain = true)
 public class MainReportDataPanel extends GenericPanel<Roster> {
+
     @SpringBean
     ReportRepository reportRepository;
 

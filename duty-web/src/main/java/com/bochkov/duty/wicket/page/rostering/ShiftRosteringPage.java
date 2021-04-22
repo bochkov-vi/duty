@@ -6,7 +6,7 @@ import com.bochkov.duty.jpa.repository.ReportRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
 import com.bochkov.duty.wicket.page.day.calendar.CalendarPanel;
 import com.bochkov.wicket.component.toast.ToastFeedbackPanel;
-import com.bochkov.wicket.data.model.PersistableModel;
+import com.bochkov.wicket.jpa.model.PersistableModel;
 import com.google.common.collect.Lists;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
@@ -30,8 +30,11 @@ public class ShiftRosteringPage extends BootstrapPage<Roster> {
 
     @SpringBean
     ReportRepository repository;
+
     ToastFeedbackPanel feedbackPanel = new ToastFeedbackPanel("feedback");
+
     IModel<Integer> selectedTab = Model.of(0);
+
     TabbedPanel tabbedPanel;
 
     public ShiftRosteringPage(PageParameters parameters) {

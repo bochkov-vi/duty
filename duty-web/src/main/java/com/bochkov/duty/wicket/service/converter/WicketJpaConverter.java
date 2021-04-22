@@ -13,7 +13,9 @@ import java.util.Optional;
 public class WicketJpaConverter<T extends Persistable<ID>, ID extends Serializable> implements IConverter<T> {
 
     Class<T> domainClass;
+
     IConverter<ID> idiConverter;
+
     @Autowired
     JpaRepository<T, ID> repository;
 

@@ -8,6 +8,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class BootstrapPage<T> extends GenericWebPage<T> implements IAjaxIndicatorAware {
+
     public BootstrapPage() {
     }
 

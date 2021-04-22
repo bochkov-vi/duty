@@ -52,11 +52,7 @@ public class FaIcon extends Label {
     protected void onConfigure() {
         super.onConfigure();
         if (hideOnModelEmpty) {
-            if (Strings.isNullOrEmpty(getDefaultModelObjectAsString())) {
-                setVisible(false);
-            } else {
-                setVisible(true);
-            }
+            setVisible(!Strings.isNullOrEmpty(getDefaultModelObjectAsString()));
         }
     }
 

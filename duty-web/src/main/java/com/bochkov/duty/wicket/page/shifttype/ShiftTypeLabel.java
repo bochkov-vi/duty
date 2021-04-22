@@ -12,7 +12,9 @@ import java.util.Set;
 
 
 public class ShiftTypeLabel extends GenericPanel<ShiftType> {
+
     Label textLabel = new Label("text");
+
     WebMarkupContainer iconLabel = new WebMarkupContainer("icon");
 
     public ShiftTypeLabel(String id) {
@@ -45,11 +47,7 @@ public class ShiftTypeLabel extends GenericPanel<ShiftType> {
     @Override
     protected void onConfigure() {
         super.onConfigure();
-        if (iconLabel.getDefaultModel().isPresent().getObject()) {
-            iconLabel.setVisible(true);
-        } else {
-            iconLabel.setVisible(false);
-        }
+        iconLabel.setVisible(iconLabel.getDefaultModel().isPresent().getObject());
         textLabel.setVisible(!iconLabel.isVisible());
     }
 }

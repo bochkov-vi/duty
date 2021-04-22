@@ -2,9 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-    <wicket:container wicket:id="days">
-        <div wicket:id="cell" class="border"></div>
-    </wicket:container>
+    <div wicket:id="container" class="d-flex p-0" >
+        <input wicket:id="pk" type="hidden">
+        <input wicket:id="start" type="hidden">
+        <input wicket:id="end" type="hidden">
+        <span data="start" class="">start</span>
+        <span data="end" class="ml-auto">end</span>
+
+    </div>
 </wicket:panel>
 </body>
 </html>

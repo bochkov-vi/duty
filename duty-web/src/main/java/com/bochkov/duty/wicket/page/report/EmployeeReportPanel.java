@@ -4,9 +4,9 @@ import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.entity.ShiftType;
 import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.duty.wicket.page.employee.EmployeeFieldSelect;
-import com.bochkov.wicket.data.model.PersistableModel;
-import com.bochkov.wicket.data.model.nonser.CollectionModel;
 import com.bochkov.wicket.data.provider.SortedListModelDataProvider;
+import com.bochkov.wicket.jpa.model.CollectionModel;
+import com.bochkov.wicket.jpa.model.PersistableModel;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.wicket.Component;
@@ -33,9 +33,13 @@ public class EmployeeReportPanel extends FormComponentPanel<Collection<Employee>
 
     @Inject
     EmployeeRepository employeeRepository;
+
     IModel<Collection<Employee>> employeeModel = CollectionModel.of(employeeRepository::findById);
+
     Component table = table("table");
+
     IModel<Employee> selectedEmployee = PersistableModel.of(employeeRepository::findById);
+
     EmployeeFieldSelect select = new EmployeeFieldSelect("employee", selectedEmployee, employeeModel);
 
     public EmployeeReportPanel(String id) {

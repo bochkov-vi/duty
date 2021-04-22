@@ -16,7 +16,9 @@ public class LabelFaIcon extends GenericPanel<String> {
     boolean hideOnModelEmpty = false;
 
     IModel<String> faIconModel;
+
     Label text = new Label("text");
+
     FaIcon icon = new FaIcon("icon");
 
     public LabelFaIcon(String id, IModel<String> faIconModel) {
@@ -55,10 +57,7 @@ public class LabelFaIcon extends GenericPanel<String> {
     protected void onConfigure() {
         super.onConfigure();
         if (hideOnModelEmpty) {
-            if (Strings.isNullOrEmpty(getDefaultModelObjectAsString()))
-                setVisible(false);
-            else
-                setVisible(true);
+            setVisible(!Strings.isNullOrEmpty(getDefaultModelObjectAsString()));
         }
     }
 }

@@ -93,8 +93,6 @@ public class TableCalendarPanel<R, V> extends GenericPanel<Collection<R>> {
         add(cellHeaders);
 
 
-
-
     }
 
     @Override

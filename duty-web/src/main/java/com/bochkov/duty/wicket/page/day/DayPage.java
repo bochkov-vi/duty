@@ -30,6 +30,7 @@ public class DayPage extends EntityPage<Day, LocalDate> {
     private DayRepository repository;
 
     public DayPage() {
+        super(Day.class);
     }
 
     public DayPage(Day entity) {

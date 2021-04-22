@@ -3,7 +3,7 @@ package com.bochkov.duty.wicket.page.report.grid;
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.repository.EmployeeRepository;
 import com.bochkov.duty.wicket.page.BootstrapPage;
-import com.bochkov.wicket.data.model.nonser.CollectionModel;
+import com.bochkov.wicket.jpa.model.CollectionModel;
 import com.google.common.collect.Table;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -20,12 +20,16 @@ import java.util.Collection;
 @MountPath("test-grid")
 @Slf4j
 public class TestGridPage<R, C, V> extends BootstrapPage<Table<R, C, V>> {
+
     @Inject
     EmployeeRepository employeeRepository;
 
     WebMarkupContainer container = new WebMarkupContainer("container");
+
     IModel<LocalDate> modelStart;
+
     IModel<Collection<Employee>> employeesModel;
+
     IModel<Integer> borderModel = Model.of(3);
 
     public TestGridPage() {

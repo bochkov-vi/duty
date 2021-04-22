@@ -1,6 +1,5 @@
 package com.bochkov.duty.jpa.entity;
 
-import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,8 +7,8 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 
 @Getter
 @Setter
@@ -17,47 +16,46 @@ import java.util.stream.Collectors;
 @Table(name = "VACATION")
 @Entity
 @NoArgsConstructor
-public class Vacation extends AbstractEntity<VacationPK> {
+public class Vacation extends AbstractEntity<Long> {
 
-    @EmbeddedId
-    VacationPK id;
+    public final static Comparator<Vacation> COMPARATOR = Comparator.comparing(Vacation::getStart).thenComparing(Vacation::getEnd);
+
+    @Id
+    @Column(name = "id_vacation")
+    @GeneratedValue(generator = "VACATION_SEQ")
+    Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE", insertable = false, updatable = false)
+    @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE")
     Employee employee;
-
-    @OneToMany(mappedBy = "vacation", orphanRemoval = true, cascade = CascadeType.ALL)
-    @OrderBy("partNumber")
-    Set<VacationPart> parts;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "VACATION_TYPE")
-    VacationType type;
+    VacationType type = VacationType.MAIN;
 
-    public Vacation(VacationPK id) {
-        this.id = id;
-    }
+    @Column(name = "START", nullable = false)
+    LocalDate start;
 
-    public static Vacation of(Integer year, Employee employee) {
-        return new Vacation().setEmployee(employee).setId(new VacationPK(year, employee.getId()));
+    @Column(name = "END", nullable = false)
+    LocalDate end;
+
+    @Column(name = "NOTE")
+    String note;
+
+    @Column(name = "DAY_COUNT")
+    Integer dayCount;
+
+    public static Vacation of(Employee employee, LocalDate start, LocalDate end) {
+        Vacation vacation = new Vacation().setEmployee(employee).setStart(start).setEnd(end);
+        vacation.preUpdate();
+        return vacation;
     }
 
     @PrePersist
     @PreUpdate
-    public void preSave() {
-        if (parts != null) {
-            int i = 0;
-            for (VacationPart vp : parts.stream().sorted(VacationPart.COMPARATOR).collect(Collectors.toList())) {
-                vp.setPartNumber(++i);
-            }
-        }
+    public void preUpdate() {
+        dayCount = (int) ChronoUnit.DAYS.between(start, end) + 1;
+
     }
 
-    public Vacation add(LocalDate from, LocalDate to) {
-        if (parts == null) {
-            parts = Sets.newHashSet();
-        }
-        parts.add(VacationPart.of(this, from, to, 0));
-        return this;
-    }
 }

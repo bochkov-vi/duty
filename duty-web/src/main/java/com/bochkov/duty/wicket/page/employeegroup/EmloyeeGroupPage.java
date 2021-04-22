@@ -24,7 +24,7 @@ public class EmloyeeGroupPage extends EntityPage<EmployeeGroup, Integer> {
     private EmployeeGroupRepository employeeGroupRepository;
 
     public EmloyeeGroupPage() {
-        super();
+        super(EmployeeGroup.class);
     }
 
     public EmloyeeGroupPage(EmployeeGroup entity) {

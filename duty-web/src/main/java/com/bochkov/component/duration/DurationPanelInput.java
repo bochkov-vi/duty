@@ -10,8 +10,11 @@ import java.time.Duration;
 import java.util.Optional;
 
 public class DurationPanelInput extends FormComponentPanel<Duration> {
+
     TextField<Integer> days = new NumberTextField<>("days", Model.of(), Integer.class).setMinimum(0).setMaximum(1);
+
     TextField<Integer> hours = new NumberTextField<>("hours", Model.of(), Integer.class).setMinimum(0).setMaximum(23);
+
     TextField<Integer> minutes = new NumberTextField<>("minutes", Model.of(), Integer.class).setMinimum(0).setMaximum(59).setStep(15);
 
     public DurationPanelInput(String id) {

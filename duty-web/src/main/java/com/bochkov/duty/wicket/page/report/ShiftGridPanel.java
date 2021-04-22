@@ -2,8 +2,8 @@ package com.bochkov.duty.wicket.page.report;
 
 import com.bochkov.duty.jpa.entity.Day;
 import com.bochkov.duty.jpa.repository.DayRepository;
-import com.bochkov.wicket.data.model.PersistableModel;
 import com.bochkov.wicket.data.provider.SortedListModelDataProvider;
+import com.bochkov.wicket.jpa.model.PersistableModel;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;

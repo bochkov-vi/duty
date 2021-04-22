@@ -66,7 +66,7 @@ public class DurationField extends TextField<Duration> {
             }
         }));
         response.render(CssHeaderItem.forReference(new PackageResourceReference(DurationField.class, "bootstrap-duration-picker.css")));
-        response.render(OnDomReadyHeaderItem.forScript(String.format("$('#%s').durationPicker()",getMarkupId())));
+        response.render(OnDomReadyHeaderItem.forScript(String.format("$('#%s').durationPicker()", getMarkupId())));
 
 
     }

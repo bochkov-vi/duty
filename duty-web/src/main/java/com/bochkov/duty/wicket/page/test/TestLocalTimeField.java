@@ -1,7 +1,7 @@
 package com.bochkov.duty.wicket.page.test;
 
-import com.bochkov.component.durationpicker.DurationField;
 import com.bochkov.bootstrap.tempusdominus.LocalTimeField;
+import com.bochkov.component.durationpicker.DurationField;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
@@ -12,6 +12,7 @@ import java.time.LocalTime;
 
 @MountPath("test-localtime")
 public class TestLocalTimeField extends WebPage {
+
     LocalTimeField localTimeField = new LocalTimeField("input", Model.of(LocalTime.of(9, 0)), "HH:mm");
 
     @Override

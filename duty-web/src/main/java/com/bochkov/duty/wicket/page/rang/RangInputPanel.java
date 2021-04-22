@@ -5,9 +5,9 @@ import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LambdaModel;
 
 public class RangInputPanel extends GenericPanel<Rang> {
+
     public RangInputPanel(String id, IModel<Rang> model) {
         super(id, model);
     }

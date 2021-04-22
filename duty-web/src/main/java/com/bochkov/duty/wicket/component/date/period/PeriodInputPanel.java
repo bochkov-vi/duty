@@ -15,6 +15,7 @@ import java.time.LocalTime;
 public class PeriodInputPanel extends FormComponentPanel<Period> {
 
     TextField<LocalTime> startField = new LocalTimeField("start", Model.of(), getString("timePattern")).setStepping(15);
+
     FormComponent<Duration> durationField = new DurationPanelInput("duration", Model.of());
 
     public PeriodInputPanel(String id) {

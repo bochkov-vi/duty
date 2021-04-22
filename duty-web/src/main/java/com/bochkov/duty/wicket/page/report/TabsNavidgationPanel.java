@@ -21,9 +21,9 @@ public class TabsNavidgationPanel extends GenericPanel<Roster> {
         add(new Link<Roster>("main-data", getModel()) {
             @Override
             public void onClick() {
-                RequestCycle.get().setResponsePage(ReportPage.class, EntityPage.pageParameters(getModel().map(Persistable::getId), Integer.class));
+                RequestCycle.get().setResponsePage(RosterPage.class, EntityPage.pageParameters(getModel().map(Persistable::getId), Integer.class));
             }
-        }.add(ActiveLinkBehavior.of(ReportPage.class)));
+        }.add(ActiveLinkBehavior.of(RosterPage.class)));
 
         add(new Link<Roster>("calendar", getModel()) {
             @Override

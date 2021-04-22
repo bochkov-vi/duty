@@ -31,13 +31,21 @@ public class ReportInputPanel extends GenericPanel<Roster> {
     EmployeeRepository employeeRepository;
 
     FormComponent<Integer> idField = new TextField<>("id");
+
     FormComponent<LocalDate> dateField = new LocalDateField("date", getString("datePattern"));
+
     FormComponent<LocalDate> dateFromField = new LocalDateField("dateFrom", getString("datePattern"));
+
     FormComponent<LocalDate> dateToField = new LocalDateField("dateTo", getString("datePattern"));
+
     FormComponent<Employee> chiefField = new EmployeeFieldSelect("chief");
+
     FormComponent<Employee> executorField = new EmployeeFieldSelect("executor");
+
     FormComponent<Integer> titleField = new TextArea<>("title");
+
     FormComponent<Integer> dateTitleField = new TextField<>("dateTitle");
+
     FormComponent<Integer> genitiveDepartmentField = new TextField<>("genitiveDepartment");
 
 

@@ -3,7 +3,7 @@ package com.bochkov.duty.wicket.page.report.grid;
 import com.bochkov.duty.jpa.entity.ShiftType;
 import com.bochkov.duty.jpa.repository.ShiftTypeRepository;
 import com.bochkov.duty.wicket.page.shifttype.ShiftTypeLabel;
-import com.bochkov.wicket.data.model.nonser.CollectionModel;
+import com.bochkov.wicket.jpa.model.CollectionModel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -13,34 +13,6 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 
@@ -48,14 +20,20 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class ShiftTypeEditor extends GenericPanel<ShiftType> {
+
     @Inject
     ShiftTypeRepository shiftTypeRepository;
 
     Form<ShiftType> form = new Form<>("form");
+
     FormComponent<ShiftType> select = new HiddenField<>("select", ShiftType.class);
+
     ShiftTypeLabel label = new ShiftTypeLabel("label");
+
     IModel<List<ShiftType>> shiftTypeListModel = CollectionModel.asList(shiftTypeRepository::findById);
+
     WebMarkupContainer dropDownMenu = new WebMarkupContainer("drop-down-menu");
+
     WebMarkupContainer dropDown = new WebMarkupContainer("dropdown");
 
     public ShiftTypeEditor(String id) {

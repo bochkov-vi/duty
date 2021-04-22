@@ -17,6 +17,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public class DayInputPanel extends GenericPanel<Day> {
+
     @SpringBean
     ShiftTypeRepository shiftTypeRepository;
 
@@ -26,12 +27,14 @@ public class DayInputPanel extends GenericPanel<Day> {
             return DayInputPanel.this.getModel().map(AbstractEntity::isNew).getObject();
         }
     };
+
     TextField<LocalDate> nextField = new LocalDateField("next", getString("datePattern")) {
         @Override
         public boolean isEnabled() {
             return DayInputPanel.this.getModel().map(AbstractEntity::isNew).getObject();
         }
     };
+
     TextField<LocalDate> prevField = new LocalDateField("prev", getString("datePattern")) {
         @Override
         public boolean isEnabled() {
@@ -40,14 +43,19 @@ public class DayInputPanel extends GenericPanel<Day> {
     };
 
     TextField<Integer> daysToWeekendField = new TextField<>("daysToWeekend", Integer.class);
+
     TextField<Integer> daysFromWeekendField = new TextField<>("daysFromWeekend", Integer.class);
+
     TextField<Integer> weekIndexField = new TextField<>("weekIndex", Integer.class);
+
     TextField<Integer> dayIndexField = new TextField<>("dayIndex", Integer.class);
+
     TextField<DayOfWeek> dayOfWeekField = new TextField<>("dayOfWeek", DayOfWeek.class);
 
     CheckBox weekendField = new CheckBox("weekend");
+
     Select2Choice<ShiftType> shiftTypeField = new Select2Choice<ShiftType>("shiftType",
-            PersistableChoiceProvider.of(ShiftType.class,Integer.class,() -> shiftTypeRepository, "name", "id")
+            PersistableChoiceProvider.of(ShiftType.class, Integer.class, () -> shiftTypeRepository, "name", "id")
     );
 
     public DayInputPanel(String id) {

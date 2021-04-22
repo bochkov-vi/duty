@@ -1,9 +1,9 @@
 package com.bochkov.duty.wicket.base;
 
+import com.bochkov.duty.wicket.WicketDutyApplication;
 import com.bochkov.duty.wicket.page.BootstrapPage;
-import com.bochkov.wicket.data.model.PersistableModel;
 import com.bochkov.wicket.data.provider.PersistableDataProvider;
-import com.google.common.collect.ImmutableList;
+import com.bochkov.wicket.jpa.model.PersistableModel;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,28 +32,44 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.springframework.beans.BeanUtils;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.core.EntityInformation;
+import org.springframework.data.repository.support.Repositories;
 
+import java.beans.FeatureDescriptor;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializable> extends BootstrapPage<T> {
 
     static String MODAL_CONTENT_ID = "modal-content";
+
     @Accessors(chain = true)
     public final String MODAL_SMALL = "modal-sm";
+
     public final String MODAL_NORMAL = "";
+
     public final String MODAL_LARGE = "modal-lg";
+
     public final String MODAL_EXTRA_LARGE = "modal-xl";
+
+    @Getter
+    private final Class<T> entityClass;
+
+    @Getter
+    private final Class<ID> idClass;
+
 
     @Getter
     @Setter
@@ -65,7 +81,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
 
     WebMarkupContainer emptyContent = new WebMarkupContainer(MODAL_CONTENT_ID);
 
-    Component feedback = new FeedbackPanel("feedback") ;
+    Component feedback = new FeedbackPanel("feedback");
 
     WebMarkupContainer modalSizer = new WebMarkupContainer("modal-size");
 
@@ -101,25 +117,32 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
 
     WebMarkupContainer table;
 
-    public EntityPage() {
-        super();
-        setModel(PersistableModel.of(id -> {
-            return getRepository().findById(id);
-        }, this::newInstance));
+
+    public EntityPage(Class<T> entityClass) {
+        this.entityClass = entityClass;
+        EntityInformation<T, ID> entityInformation = new Repositories(WicketDutyApplication.get().getApplicationContext()).getEntityInformationFor(entityClass);
+        this.idClass = entityInformation.getIdType();
+        setModel(model((T) null));
     }
 
     public EntityPage(T entity) {
-        this();
-        setModelObject(entity);
+        this((Class<T>) entity.getClass());
+        setModel(model(entity));
     }
 
-    public EntityPage(PageParameters parameters) {
+    public EntityPage(IModel<T> model, Class<T> entityClass) {
+        this(entityClass);
+        setModel(model);
+    }
+
+
+    public EntityPage(PageParameters parameters, Class<T> entityClass) {
         super(parameters);
-        ID pk = EntityPage.extractFromParameters(parameters, getIdClass());
-        PersistableModel<T, ID> model = PersistableModel.of(id -> {
-            return getRepository().findById(id);
-        }, this::newInstance);
-        model.setId(pk);
+        this.entityClass = entityClass;
+        EntityInformation<T, ID> entityInformation = new Repositories(WicketDutyApplication.get().getApplicationContext()).getEntityInformationFor(entityClass);
+        this.idClass = entityInformation.getIdType();
+        ID pk = EntityPage.extractFromParameters(parameters, entityInformation.getIdType());
+        IModel<T> model = model(pk);
         setModel(model);
         editMode = true;
     }
@@ -128,7 +151,6 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         String parameter = Optional.ofNullable(id).map(val -> Application.get().getConverterLocator().getConverter(_class).convertToString(val, Session.get().getLocale())).orElse(null);
         return new PageParameters().set(0, parameter);
     }
-
 
     public static <ID extends Serializable> PageParameters pageParameters(IModel<ID> id, Class<ID> _class) {
         return pageParameters(id.getObject(), _class);
@@ -141,10 +163,6 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         return id;
     }
 
-    public Class<ID> getIdClass() {
-        throw new UnsupportedOperationException(String.format("%s getIdClass not implements", getClass().getName()));
-    }
-
     protected void setModalContent(Component component) {
         if (!Objects.equals(component.getId(), MODAL_CONTENT_ID)) {
             throw new RuntimeException(String.format("component with id %s not eq %s", component.getId(), MODAL_CONTENT_ID));
@@ -155,7 +173,6 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
         feedback.setOutputMarkupId(true);
         //feedback.setDelay(30000L);
         add(feedback);
@@ -173,9 +190,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         });
         modal.add(modalSizer);
         modalSizer.add(modalContainer);
-
         modalContainer.add(emptyContent);
-
         formInputFragment = new Fragment(MODAL_CONTENT_ID, "form-input-fragment", getPage());
         formInputFragment.add(editForm = saveForm("form-save"));
 
@@ -362,7 +377,7 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
     }
 
     protected GenericPanel<T> createDetailsPanel(String id, IModel<T> model) {
-        return new DetailsPanel<>(id, model, ImmutableList.of("id", "name"), "");
+        return new DetailsPanel(id, model, Stream.of(BeanUtils.getPropertyDescriptors(getEntityClass())).map(FeatureDescriptor::getName).collect(Collectors.toList()), getEntityClass().getSimpleName().toLowerCase());
     }
 
     public void save(T entity) {
@@ -450,4 +465,13 @@ public abstract class EntityPage<T extends Persistable<ID>, ID extends Serializa
         //list.add(new LambdaColumn<Day, String>(new ResourceModel("day.id"), "id", Day::getId));
         return list;
     }
+
+    protected IModel<T> model(T entity) {
+        return PersistableModel.of(entity, id -> getRepository().findById(id), this::newInstance);
+    }
+
+    protected IModel<T> model(ID pk) {
+        return PersistableModel.of(pk, id -> getRepository().findById(id), this::newInstance);
+    }
+
 }

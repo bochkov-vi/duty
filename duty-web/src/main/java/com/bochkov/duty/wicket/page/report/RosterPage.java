@@ -1,5 +1,6 @@
 package com.bochkov.duty.wicket.page.report;
 
+import com.bochkov.duty.jpa.entity.Report;
 import com.bochkov.duty.jpa.entity.Roster;
 import com.bochkov.duty.jpa.repository.ReportRepository;
 import com.bochkov.duty.wicket.base.DetailsPanel;
@@ -24,28 +25,20 @@ import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
 
-@MountPath("report")
-public class ReportPage extends EntityPage<Roster, Integer> {
+@MountPath("roster")
+public class RosterPage extends EntityPage<Roster, Integer> {
 
     @SpringBean
     private ReportRepository repository;
 
-    public ReportPage() {
-        super();
+    public RosterPage() {
+        super(Roster.class);
     }
 
-    public ReportPage(Roster entity) {
+    public RosterPage(Roster entity) {
         super(entity);
     }
 
-    public ReportPage(PageParameters parameters) {
-        super(parameters);
-    }
-
-    @Override
-    public Class<Integer> getIdClass() {
-        return Integer.class;
-    }
 
     @Override
     protected void onInitialize() {
