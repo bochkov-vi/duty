@@ -15,6 +15,7 @@
         <module>duty-web</module>
         <module>duty-planning</module>
         <module>xmlcalendar-client</module>
+        <module>duty-rest</module>
     </modules>
     <groupId>com.bochkov</groupId>
     <artifactId>duty</artifactId>
