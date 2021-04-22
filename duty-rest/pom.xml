@@ -23,4 +23,7 @@
             <artifactId>duty-jpa</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <finalName>duty-rest</finalName>
+    </build>
 </project>

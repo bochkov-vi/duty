@@ -21,7 +21,7 @@ public class Vacation extends AbstractEntity<Long> {
     public final static Comparator<Vacation> COMPARATOR = Comparator.comparing(Vacation::getStart).thenComparing(Vacation::getEnd);
 
     @Id
-    @Column(name = "id_vacation")
+    @Column(name = "ID_VACATION")
     @GeneratedValue(generator = "VACATION_SEQ")
     Long id;
 
