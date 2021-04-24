@@ -13,7 +13,7 @@ const routes = [
     {
         path: '/rang',
         name: 'Rang',
-        component: () => import(/* webpackChunkName: "about" */ '../views/rang/RangPage.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../components/rang/RangPage.vue')
     },
     {
         path: '/about',
@@ -22,7 +22,7 @@ const routes = [
     }, {
         path: '/rang/:id',
         name: 'RangEdit',
-        component: () => import(/* webpackChunkName: "about" */ '../views/rang/RangEditPage.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../components/rang/RangInput')
     }
 ]
 

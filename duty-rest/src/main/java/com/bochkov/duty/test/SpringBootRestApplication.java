@@ -9,9 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @Import(DutyJpaConfig.class)
@@ -28,6 +26,6 @@ public class SpringBootRestApplication implements RepositoryRestConfigurer {
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         new Repositories(context).forEach(config::exposeIdsFor);
         //config.getCorsRegistry().addMapping("*");
-        config.getCorsRegistry().addMapping("/**");
+        config.getCorsRegistry().addMapping("/**").allowedOrigins("*").allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name());
     }
 }
