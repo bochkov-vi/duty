@@ -1,9 +1,10 @@
 <template>
   <v-container>
 
-    <RangInput v-if="Object.keys(editedItem).length" :entity="editedItem"></RangInput>
+    <RangInput v-if="Object.keys(editedItem).length" :entity="editedItem" @update="onUpdate"
+               @create="onUpdate"></RangInput>
 
-
+    <v-btn small @click="newItem()">Новая строка</v-btn>
     <v-data-table
         calculate-widths
         :headers="headers"
@@ -21,27 +22,27 @@
         <p>{{ new Date(item.createdDate).toLocaleTimeString() }}</p>
       </template>
       <template v-slot:item.edit="{ item }">
-        <v-btn
-            @click="editItem(item)"
-            color="secondary"
-            outlined
-            min-width="24px"
-            class="pa-0 mx-2"
-            small
-
-        >
-          <v-icon small>mdi-pencil</v-icon>
-        </v-btn>
-        <v-btn
-            @click="editItem(item)"
-            color="red lighten-1"
-            outlined
-            min-width="24px"
-            class="pa-0"
-            small
-        >
-          <v-icon small>mdi-trash-can-outline</v-icon>
-        </v-btn>
+        <div style="white-space: nowrap">
+          <v-btn
+              @click="editItem(item)"
+              color="secondary"
+              outlined
+              min-width="24px"
+              class="pa-0 mx-2"
+              small>
+            <v-icon small>mdi-pencil</v-icon>
+          </v-btn>
+          <v-btn
+              @click="editItem(item)"
+              color="red lighten-1"
+              outlined
+              min-width="24px"
+              class="pa-0"
+              small
+          >
+            <v-icon small>mdi-trash-can-outline</v-icon>
+          </v-btn>
+        </div>
       </template>
 
     </v-data-table>
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-const rest_url = "http://localhost:8080/duty/rest/"
+const rest_url = "http://localhost:8080/duty/rest/rangs?"
 import RangInput from "@/components/rang/RangInput";
 import axios from "axios";
 
@@ -107,26 +108,20 @@ export default {
   methods: {
     editItem(item) {
       this.editedItem = item;
+      console.log(this.editedItem)
     },
-    saveItem(item) {
-      console.log(item);
-      axios.put(item._links.rang.href, item)
-          .then(response => {
-            console.log(response);
-          })
-          .catch((e) => console.log(e));
+    onUpdate(/*item*/) {
+      this.editedItem = {};
+      this.getDataFromApi();
+    },
+    newItem() {
+      this.editedItem = {new: true};
     },
     getDataFromApi() {
       this.loading = true;
-      const {sortBy, sortDesc, page, itemsPerPage} = this.options
-      let url = rest_url + "rangs?size=" + itemsPerPage + "&page=" + (page - 1);
-      if (sortBy.length === 1 && sortDesc.length === 1) {
-        url = url + "&sort=" + sortBy[0];
-        if (sortDesc[0])
-          url = url + ",desc";
-      }
-      console.debug(url);
-      axios.get(url)
+
+      console.debug(this.url);
+      axios.get(this.url)
           .then(response => {
             let items = response.data._embedded.rangs.map(function (item) {
               //item.createdDateAsString = new Date(item.createdDate).toLocaleDateString() + " " + new Date(item.createdDate).toLocaleTimeString();
@@ -137,6 +132,18 @@ export default {
             this.rangs = items;
             this.loading = false;
           })
+    }
+  },
+  computed: {
+    url: function () {
+      const {sortBy, sortDesc, page, itemsPerPage} = this.options
+      let url = rest_url + "size=" + itemsPerPage + "&page=" + (page - 1);
+      if (sortBy.length === 1 && sortDesc.length === 1) {
+        url = url + "&sort=" + sortBy[0];
+        if (sortDesc[0])
+          url = url + ",desc";
+      }
+      return url;
     }
   },
   mounted() {
