@@ -13,7 +13,13 @@
       ></v-text-field>
       <v-card-text v-if="!entity.new">Создано:{{ formatedCreatedDate }}</v-card-text>
     </v-card>
-    <SaveButton :original="edited" @update="onUpdate" @create="onCreate"/>
+    <v-container>
+      <SaveButton class="ma-1" :original="edited" @update="onUpdate" @create="onCreate"/>
+      <v-btn small class="ma-1" @click="cancel">
+        <v-icon>mdi-cancel</v-icon>
+        <span>Отменить</span>
+      </v-btn>
+    </v-container>
   </v-container>
 </template>
 <script>
@@ -37,11 +43,15 @@ export default {
   methods: {
     onUpdate: function (item) {
       this.$emit("update", item);
-      this.item={};
+      this.item = {};
     },
     onCreate: function (item) {
       this.$emit("create", item);
-      this.item={};
+      this.item = {};
+    },
+    cancel() {
+      this.$emit("cancel");
+
     }
   },
   computed: {

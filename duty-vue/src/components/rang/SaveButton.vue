@@ -1,6 +1,7 @@
 <template>
-  <div class="pa-5">
+
     <v-btn
+        small
         class="px-2"
         @click="saveItem(original)">
       <v-icon>
@@ -9,7 +10,7 @@
       <span v-if="!original.new">Сохранить</span>
       <span v-if="original.new">Создать</span>
     </v-btn>
-  </div>
+
 </template>
 
 <script>

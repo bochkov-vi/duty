@@ -1,55 +1,59 @@
 <template>
   <v-container>
 
-    <RangInput v-if="Object.keys(editedItem).length" :entity="editedItem" @update="onUpdate"
+    <RangInput v-if="Object.keys(editedItem).length" :entity="editedItem" @update="onUpdate" @cancel="onCaancel"
                @create="onUpdate"></RangInput>
 
-    <v-btn small @click="newItem()">Новая строка</v-btn>
-    <v-data-table
-        calculate-widths
-        :headers="headers"
-        :items="rangs"
-        :options.sync="options"
-        :server-items-length="totalElements"
-        dense
-        :loading="loading"
-        loading-text="Загрузка"
-    >
-      <template v-slot:item.createdDate="{ item }">
-        <p>{{ new Date(item.createdDate).toLocaleDateString() }}</p>
-      </template>
-      <template v-slot:item.createdTime="{ item }">
-        <p>{{ new Date(item.createdDate).toLocaleTimeString() }}</p>
-      </template>
-      <template v-slot:item.edit="{ item }">
-        <div style="white-space: nowrap">
-          <v-btn
-              @click="editItem(item)"
-              color="secondary"
-              outlined
-              min-width="24px"
-              class="pa-0 mx-2"
-              small>
-            <v-icon small>mdi-pencil</v-icon>
-          </v-btn>
-          <v-btn
-              @click="editItem(item)"
-              color="red lighten-1"
-              outlined
-              min-width="24px"
-              class="pa-0"
-              small
-          >
-            <v-icon small>mdi-trash-can-outline</v-icon>
-          </v-btn>
-        </div>
-      </template>
+    <v-container v-if="!(Object.keys(editedItem).length)">
+      <v-btn small @click="newItem()">Новая строка</v-btn>
+      <v-data-table
+          calculate-widths
+          :headers="headers"
+          :items="$store.state.rangs.page._embedded.rangs"
+          :options.sync="options"
+          :server-items-length="totalElements"
+          dense
+          :loading="loading"
+          loading-text="Загрузка"
+      >
+        <template v-slot:item.createdDate="{ item }">
+          <p>{{ new Date(item.createdDate).toLocaleDateString() }}</p>
+        </template>
+        <template v-slot:item.createdTime="{ item }">
+          <p>{{ new Date(item.createdDate).toLocaleTimeString() }}</p>
+        </template>
+        <template v-slot:item.edit="{ item }">
+          <div style="white-space: nowrap">
+            <v-btn
+                @click="editItem(item)"
+                color="secondary"
+                outlined
+                min-width="24px"
+                class="pa-0 mx-2"
+                small>
+              <v-icon small>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn
+                @click="deleteItem(item)"
+                color="red lighten-1"
+                outlined
+                min-width="24px"
+                class="pa-0"
+                small
+            >
+              <v-icon small>mdi-trash-can-outline</v-icon>
+            </v-btn>
+          </div>
+        </template>
 
-    </v-data-table>
+      </v-data-table>
+    </v-container>
   </v-container>
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 const rest_url = "http://localhost:8080/duty/rest/rangs?"
 import RangInput from "@/components/rang/RangInput";
 import axios from "axios";
@@ -100,12 +104,24 @@ export default {
         }, {
           value: "delete"
         }
-      ], rangs: []
+      ]
 
 
     }
   },
   methods: {
+    ...mapActions(['pageRang','getRang']),
+    async deleteItem(item) {
+      if (item && item._links && item._links.self.href)
+        await axios.delete(item._links.self.href).then((response) => {
+              console.log(response)
+              this.editedItem = {};
+              this.getDataFromApi();
+            }
+        ).catch((e) => {
+          console.log(e)
+        })
+    },
     editItem(item) {
       this.editedItem = item;
       console.log(this.editedItem)
@@ -117,21 +133,28 @@ export default {
     newItem() {
       this.editedItem = {new: true};
     },
+    onCaancel() {
+      this.editedItem = {};
+    },
     getDataFromApi() {
       this.loading = true;
-
-      console.debug(this.url);
-      axios.get(this.url)
-          .then(response => {
-            let items = response.data._embedded.rangs.map(function (item) {
-              //item.createdDateAsString = new Date(item.createdDate).toLocaleDateString() + " " + new Date(item.createdDate).toLocaleTimeString();
-              return item;
-            });
-            const total = response.data.page.totalElements;
-            this.totalElements = total;
-            this.rangs = items;
-            this.loading = false;
-          })
+      const {sort, desc, page, size} = this.options
+      this.$store.dispatch("pageRang", {params: {page: page-1, size: size, sort: `${sort},${desc}`}})
+      this.loading=false
+      /*
+            console.debug(this.url);
+            axios.get(this.url)
+                .then(response => {
+                  let items = response.data._embedded.rangs.map(function (item) {
+                    //item.createdDateAsString = new Date(item.createdDate).toLocaleDateString() + " " + new Date(item.createdDate).toLocaleTimeString();
+                    return item;
+                  });
+                  const total = response.data.page.totalElements;
+                  this.totalElements = total;
+                  this.rangs = items;
+                  this.loading = false;
+                })
+          }*/
     }
   },
   computed: {
