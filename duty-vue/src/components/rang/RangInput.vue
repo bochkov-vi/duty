@@ -1,74 +1,50 @@
 <template>
-  <v-container fluid>
-    <v-card>
-      <v-app-bar v-if="!entity.new">Редактирование объекта '{{ entity.fullName }}' ({{ entity.id }})</v-app-bar>
-      <v-app-bar v-if="entity.new">Создание нового объекта</v-app-bar>
-      <v-text-field
-          label="Наименование"
-          v-model="edited.name"
-      ></v-text-field>
-      <v-text-field
-          label="Полное наименование"
-          v-model="edited.fullName"
-      ></v-text-field>
-      <v-card-text v-if="!entity.new">Создано:{{ formatedCreatedDate }}</v-card-text>
-    </v-card>
+  <v-card >
+    <v-card-title v-if="!(entity.new)">Редактирование объекта '{{ entity.fullName }}' ({{ entity.id }})</v-card-title>
+    <v-card-title v-if="entity.new">Создание нового объекта</v-card-title>
     <v-container>
-      <SaveButton class="ma-1" :original="edited" @update="onUpdate" @create="onCreate"/>
-      <v-btn small class="ma-1" @click="cancel">
-        <v-icon>mdi-cancel</v-icon>
-        <span>Отменить</span>
-      </v-btn>
+      <v-text-field
+          dense
+          label="Наименование"
+          v-model="entity.name"
+      ></v-text-field>
+      <v-text-field
+          dense
+          label="Полное наименование"
+          v-model="entity.fullName"
+      ></v-text-field>
     </v-container>
-  </v-container>
+    <v-card-text v-if="!entity.new">Создано:{{ formatedCreatedDate }}</v-card-text>
+  </v-card>
+
 </template>
 <script>
-import SaveButton from "@/components/rang/SaveButton";
+
 
 export default {
   name: "RangInput",
-  components: {SaveButton},
   props: {
     entity: {
       type: Object,
-      required: true
+      required: true,
+      default: () => {
+        return {name: null, fullName: null, createdDate: null, id: null, new: true}
+      }
     }
   },
   data() {
-    const {...copy} = this.entity
-    return {
-      edited: copy
-    }
-  },
-  methods: {
-    onUpdate: function (item) {
-      this.$emit("update", item);
-      this.item = {};
-    },
-    onCreate: function (item) {
-      this.$emit("create", item);
-      this.item = {};
-    },
-    cancel() {
-      this.$emit("cancel");
 
-    }
+    return {}
   },
+  methods: {},
   computed: {
     formatedCreatedDate() {
       return new Date(this.entity.createdDate).toLocaleString()
     }
   },
-  watch: {
-    entity: function (n) {
-      const {...copy} = n
-      this.edited = copy;
-      console.log(copy);
-    }
-  },
+  watch: {},
   mounted() {
-    this.name = this.entity.name;
-    this.fullName = this.entity.fullName;
+
   }
 }
 </script>

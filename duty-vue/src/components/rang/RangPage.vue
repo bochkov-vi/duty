@@ -1,20 +1,50 @@
 <template>
   <v-container>
 
-    <RangInput v-if="Object.keys(editedItem).length" :entity="editedItem" @update="onUpdate" @cancel="onCaancel"
-               @create="onUpdate"></RangInput>
 
-    <v-container v-if="!(Object.keys(editedItem).length)">
-      <v-btn small @click="newItem()">Новая строка</v-btn>
+    <v-container v-if="Object.keys(editedItem).length>0">
+
+      <v-btn
+          outlined
+          color="primary"
+          small
+          @click="save(editedItem)">
+        <v-icon v-if="!(editedItem.new)">mdi-content-save-outline</v-icon>
+        <span v-if="!(editedItem.new)" class="hidden-sm-and-down">Сохранить</span>
+        <v-icon v-if="editedItem.new">mdi-content-save-outline</v-icon>
+        <span v-if="editedItem.new" class="hidden-sm-and-down">Создать</span>
+      </v-btn>
+      <v-btn
+          outlined
+          color="warning"
+          v-if="!(editedItem.new)"
+          small
+          @click="deleteItem(editedItem)">
+        <v-icon>mdi-trash-can-outline</v-icon>
+        <span class="hidden-sm-and-down">Удалить</span>
+      </v-btn>
+
+      <RangInput class="mt-sm-3" :entity="editedItem"></RangInput>
+    </v-container>
+
+    <v-container>
+
+      <v-btn small @click="newItem()">
+        <v-icon>mdi-table-plus</v-icon>
+        Новая строка
+      </v-btn>
+
       <v-data-table
           calculate-widths
           :headers="headers"
-          :items="$store.state.rangs.page._embedded.rangs"
+          :items="page._embedded.rangs"
           :options.sync="options"
-          :server-items-length="totalElements"
+          :server-items-length="page.page.totalElements"
           dense
           :loading="loading"
           loading-text="Загрузка"
+          no-data-text="Нет данных"
+          class="mb-sm-10"
       >
         <template v-slot:item.createdDate="{ item }">
           <p>{{ new Date(item.createdDate).toLocaleDateString() }}</p>
@@ -22,60 +52,28 @@
         <template v-slot:item.createdTime="{ item }">
           <p>{{ new Date(item.createdDate).toLocaleTimeString() }}</p>
         </template>
-        <template v-slot:item.edit="{ item }">
-          <div style="white-space: nowrap">
-            <v-btn
-                @click="editItem(item)"
-                color="secondary"
-                outlined
-                min-width="24px"
-                class="pa-0 mx-2"
-                small>
-              <v-icon small>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn
-                @click="deleteItem(item)"
-                color="red lighten-1"
-                outlined
-                min-width="24px"
-                class="pa-0"
-                small
-            >
-              <v-icon small>mdi-trash-can-outline</v-icon>
-            </v-btn>
-          </div>
+        <template v-slot:item.actions="{ item }">
+          <v-icon @click="edit(item)">mdi-pencil-box-outline</v-icon>
+          <v-icon @click="deleteItem(item)">mdi-trash-can-outline</v-icon>
         </template>
-
       </v-data-table>
     </v-container>
   </v-container>
 </template>
 
 <script>
-import {mapActions} from "vuex";
 
-const rest_url = "http://localhost:8080/duty/rest/rangs?"
+
 import RangInput from "@/components/rang/RangInput";
-import axios from "axios";
 
 export default {
   name: "RangPage",
-  components: {RangInput},
-  props: {
-    items: {
-      type: Object,
-      default() {
-        return {};
-      }
-    }
-  },
+
+  props: {},
 
   data: () => {
     return {
-      loading: true,
-      totalElements: 0,
       options: {},
-      editedItem: {},
       headers: [
         {
           text: 'Код',
@@ -100,90 +98,61 @@ export default {
           text: "Время создания",
           value: "createdTime"
         }, {
-          value: "edit"
-        }, {
-          value: "delete"
+          value: "actions"
         }
       ]
-
-
     }
   },
   methods: {
-    ...mapActions(['pageRang','getRang']),
-    async deleteItem(item) {
-      if (item && item._links && item._links.self.href)
-        await axios.delete(item._links.self.href).then((response) => {
-              console.log(response)
-              this.editedItem = {};
-              this.getDataFromApi();
-            }
-        ).catch((e) => {
-          console.log(e)
-        })
+    loadPage: function () {
+      this.$store.dispatch("RANGS_LOAD_PAGE", this.options);
     },
-    editItem(item) {
-      this.editedItem = item;
-      console.log(this.editedItem)
+    edit: function (item) {
+      this.$store.dispatch('RANGS_LOAD_CURRENT', item.id)
     },
-    onUpdate(/*item*/) {
-      this.editedItem = {};
-      this.getDataFromApi();
+    save: function (item) {
+      this.$store.dispatch('RANGS_SAVE', item)
     },
-    newItem() {
-      this.editedItem = {new: true};
+    deleteItem: function (item) {
+      this.$store.dispatch('RANGS_DELETE', item.id)
     },
-    onCaancel() {
-      this.editedItem = {};
-    },
-    getDataFromApi() {
-      this.loading = true;
-      const {sort, desc, page, size} = this.options
-      this.$store.dispatch("pageRang", {params: {page: page-1, size: size, sort: `${sort},${desc}`}})
-      this.loading=false
-      /*
-            console.debug(this.url);
-            axios.get(this.url)
-                .then(response => {
-                  let items = response.data._embedded.rangs.map(function (item) {
-                    //item.createdDateAsString = new Date(item.createdDate).toLocaleDateString() + " " + new Date(item.createdDate).toLocaleTimeString();
-                    return item;
-                  });
-                  const total = response.data.page.totalElements;
-                  this.totalElements = total;
-                  this.rangs = items;
-                  this.loading = false;
-                })
-          }*/
+    newItem: function () {
+      this.$store.dispatch('RANGS_SET_CURRENT', {new: true})
     }
   },
   computed: {
-    url: function () {
-      const {sortBy, sortDesc, page, itemsPerPage} = this.options
-      let url = rest_url + "size=" + itemsPerPage + "&page=" + (page - 1);
-      if (sortBy.length === 1 && sortDesc.length === 1) {
-        url = url + "&sort=" + sortBy[0];
-        if (sortDesc[0])
-          url = url + ",desc";
-      }
-      return url;
-    }
+    page() {
+      const page = this.$store.state.RANGS.PAGE;
+      return page;
+    },
+    loading() {
+      const loading = this.$store.state.RANGS.LOADING;
+      return loading;
+    },
+    editedItem() {
+      const current = this.$store.state.RANGS.CURRENT;
+      const copy = {};
+      Object.assign(copy, current)
+      return copy;
+    },
   },
   mounted() {
-    this.getDataFromApi();
+
   },
   watch: {
     options: {
       handler() {
-        this.getDataFromApi()
+        this.loadPage()
       },
       deep: true,
     },
   },
-
+  components: {RangInput}
 }
 </script>
 
 <style scoped>
-
+tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, .05);
+}
 </style>
