@@ -59,7 +59,16 @@ export default function restStore(baseUrl, entityName) {
             console.log(e)
             context.commit(`${entityName}_SET_LOADING`, false)
         })
-
+    };
+    actions[entityName + '_LOAD'] = (context, id) => {
+        context.commit(`${entityName}_SET_LOADING`, true)
+        const result = axios.get(baseUrl + "/" + id).then(
+            (response) => response.data
+        ).catch((e) => {
+            console.log(e)
+            context.commit(`${entityName}_SET_LOADING`, false)
+        })
+        return result;
     };
     actions[entityName + '_SAVE'] = (context, item) => {
         context.commit(`${entityName}_SET_LOADING`, true)
@@ -91,7 +100,7 @@ export default function restStore(baseUrl, entityName) {
 
     actions[entityName + '_DELETE'] = (context, id) => {
         context.commit(`${entityName}_SET_LOADING`, true)
-        if (id && id>0) {
+        if (id && id > 0) {
             axios.delete(baseUrl + "/" + id).then(
                 () => {
                     context.commit(`${entityName}_SET_CURRENT`, {})

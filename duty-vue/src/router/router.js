@@ -19,10 +19,6 @@ const routes = [
         path: '/about',
         name: 'About',
         component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-    }, {
-        path: '/rang/:id',
-        name: 'RangEdit',
-        component: () => import(/* webpackChunkName: "about" */ '../components/rang/RangInput')
     }
 ]
 
