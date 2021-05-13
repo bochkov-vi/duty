@@ -34,21 +34,20 @@
                 <v-card>
                   <v-card-title>{{ editTitle }}</v-card-title>
                   <v-container>
-
-                    <validation-provider rules="required" v-slot="{ errors }">
+                    <validation-provider :rules="{required:true,uniqueName:{id:editedItem.id}}"
+                                         v-slot="{ errors }">
                       <v-text-field dense
                                     label="Наименование"
                                     :error-messages="errors"
                                     v-model="editedItem.name"/>
                     </validation-provider>
-                    <validation-provider rules="required" v-slot="{ errors }">
+                    <validation-provider :rules="{required:true ,uniqueFullName:{id:editedItem.id}}" v-slot="{ errors }">
                       <v-text-field dense
                                     label="Полное наименование"
                                     v-model="editedItem.fullName"
                                     :error-messages="errors"/>
 
                     </validation-provider>
-
                   </v-container>
                   <v-card-text v-if="!editedItem.new">Создано:{{ createdDate }}</v-card-text>
                   <v-card-actions>
@@ -139,24 +138,39 @@ extend('required', {
   ...required,
   message: 'Это поле обязательно для заполнения'
 });
-extend('unique', {
-  validate: (value) => {
-    axios.get("http://localhost:8080/duty/rest/rangs/search/findByName", {
-      params: {name: value}
+extend('uniqueName', {
+  params: ["id"],
+  validate: (value, args) => {
+    return axios.get("http://localhost:8080/duty/rest/rangs/search/findByName", {
+      params: {search: value}
     }).then(
-
+        (resp) => {
+          const valid = !(resp.data._embedded.rangs.filter(finded => finded.id !== args.id).length > 0);
+          return {valid}
+        }
+    )
+  },
+  message: 'Запись с таким полем уже есть в базе'
+})
+extend('uniqueFullName', {
+  params: ["id"],
+  validate: (value, args) => {
+    return axios.get("http://localhost:8080/duty/rest/rangs/search/findByFullName", {
+      params: {search: value}
+    }).then(
+        (resp) => {
+          const valid = !(resp.data._embedded.rangs.filter(finded => finded.id !== args.id).length > 0);
+          return {valid}
+        }
     )
   },
   message: 'Запись с таким полем уже есть в базе'
 })
 export default {
   name: "RangPage",
-
   props: {},
-
   data: () => {
     return {
-
       deletedItem: {},
       page: {
         _embedded: {},
@@ -195,6 +209,7 @@ export default {
     }
   },
   methods: {
+
     addMessage(message, type) {
       this.$store.dispatch('ADD_MESSAGE', {message: message, type: type});
     },
