@@ -1,0 +1,115 @@
+<template>
+  <v-container>
+    <v-data-table
+        calculate-widths
+        :headers="headers"
+        :items="page._embedded.items"
+        :options.sync="options"
+        :server-items-length="page.page.totalElements"
+        dense
+        :loading="loading"
+        loading-text="Загрузка"
+        no-data-text="Нет данных"
+        class="mb-sm-10">
+      <template v-slot:top>
+        <v-toolbar flat>
+          <router-link :to="{name:'EmployeeGroupEdit',params:{id:-1}}">
+            <v-btn small>
+              <v-icon>mdi-table-plus</v-icon>
+              Новая строка
+            </v-btn>
+          </router-link>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.createdDate="{ item }">
+        {{ new Date(item.createdDate).toLocaleDateString() }}
+      </template>
+      <template v-slot:item.createdTime="{ item }">
+        {{ new Date(item.createdDate).toLocaleTimeString() }}
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <router-link :to="{name:'EmployeeGroupEdit',params:{id:item.id}}">
+          <v-icon>mdi-pencil-box-outline</v-icon>
+        </router-link>
+        <v-icon @click="confirmDelete(item)">mdi-trash-can-outline</v-icon>
+      </template>
+    </v-data-table>
+  </v-container>
+</template>
+
+<script>
+import {getLoading, setLoading} from "@/store/loading";
+import restService from "@/rest_crud_operations";
+import error from "@/store/message";
+
+const service = restService("http://localhost:8080/duty/rest/employeeGroups")
+export default {
+  name: "EmployeeGroup",
+  computed: {
+    loading: {
+      get: function () {
+        return getLoading();
+      }
+    }
+  },
+  methods: {
+    loadPage: function () {
+      setLoading(true);
+      service.page(this.options).then(data => {
+        this.page = data;
+        setLoading();
+      }).catch((e) => {
+            error(e)
+            setLoading()
+          }
+      )
+    },
+  },
+  watch: {
+    options: {
+      handler() {
+        this.loadPage()
+      },
+      deep: true,
+    },
+  },
+  data() {
+    return {
+      options: {},
+      page: {
+        _embedded: {
+          items: []
+        },
+        page: {
+          totalElements: 0
+        }
+      },
+      headers: [
+        {
+          text: 'Код',
+          align: 'start',
+          sortable: true,
+          value: 'id',
+        }, {
+          text: 'Наименование',
+          align: 'start',
+          sortable: true,
+          value: 'name',
+        }, {
+          text: "Дата создания",
+          value: "createdDate"
+        }, {
+          text: "Время создания",
+          value: "createdTime"
+        }, {
+          value: "actions"
+        }
+      ]
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

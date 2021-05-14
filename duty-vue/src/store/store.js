@@ -5,7 +5,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         messageSeq: 0,
-        messages: []
+        messages: [],
+        loading: true
     },
     mutations: {
         ADD_MESSAGE: (state, msg) => {
@@ -17,17 +18,19 @@ export default new Vuex.Store({
             state.messages.unshift(msg)
 
         },
-        REMOVE_MESSAGE: (state, msg) => state.messages = state.messages.filter(el => el.id !== msg.id)
+        REMOVE_MESSAGE: (state, msg) => state.messages = state.messages.filter(el => el.id !== msg.id),
+        SET_LOADING: (state, loading) => state.loading = loading
     },
     getters: {
-        GET_MESSAGES: (state) => state.messages
+        GET_MESSAGES: (state) => state.messages,
+        GET_LOADING: (state) => state.loading
     },
     actions: {
         ADD_MESSAGE: (context, message) => {
             context.commit('ADD_MESSAGE', message)
             setTimeout(() => context.commit('REMOVE_MESSAGE', message), 10000)
         },
-        REMOVE_MESSAGE: (context, message) => context.commit('REMOVE_MESSAGE', message)
-
+        REMOVE_MESSAGE: (context, message) => context.commit('REMOVE_MESSAGE', message),
+        SET_LOADING: (ctx, loading) => ctx.commit("SET_LOADING", loading)
     }
 })

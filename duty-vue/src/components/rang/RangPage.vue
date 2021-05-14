@@ -1,22 +1,17 @@
 <template>
   <v-container>
-
-
     <v-container>
-
-
       <v-data-table
           calculate-widths
           :headers="headers"
-          :items="page._embedded.rangs"
+          :items="page._embedded.items"
           :options.sync="options"
           :server-items-length="page.page.totalElements"
           dense
           :loading="loading"
           loading-text="Загрузка"
           no-data-text="Нет данных"
-          class="mb-sm-10"
-      >
+          class="mb-sm-10">
         <template v-slot:top>
           <v-toolbar flat>
             <v-dialog v-model="dialog"
@@ -30,60 +25,63 @@
                   Новая строка
                 </v-btn>
               </template>
-              <validation-observer v-slot="{ invalid }">
-                <v-card>
-                  <v-card-title>{{ editTitle }}</v-card-title>
-                  <v-container>
+              <validation-observer v-slot="{ invalid }" ref="validator">
+                <form @submit.prevent="submit">
+                  <v-card>
+                    <v-card-title>{{ editTitle }}</v-card-title>
+                    <v-container>
+                      <validation-provider :rules="{required:true,uniqueName:{id:editedItem.id}}"
+                                           v-slot="{ errors }">
+                        <v-text-field dense
+                                      label="Наименование"
+                                      :error-messages="errors"
+                                      v-model="editedItem.name"/>
+                      </validation-provider>
+                      <validation-provider :rules="{required:true,uniqueFullName:{id:editedItem.id}}"
+                                           v-slot="{ errors }">
+                        <v-text-field dense
+                                      label="Полное наименование"
+                                      v-model="editedItem.fullName"
+                                      :error-messages="errors"/>
 
-                    <validation-provider rules="required" v-slot="{ errors }">
-                      <v-text-field dense
-                                    label="Наименование"
-                                    :error-messages="errors"
-                                    v-model="editedItem.name"/>
-                    </validation-provider>
-                    <validation-provider rules="required" v-slot="{ errors }">
-                      <v-text-field dense
-                                    label="Полное наименование"
-                                    v-model="editedItem.fullName"
-                                    :error-messages="errors"/>
+                      </validation-provider>
 
-                    </validation-provider>
-
-                  </v-container>
-                  <v-card-text v-if="!editedItem.new">Создано:{{ createdDate }}</v-card-text>
-                  <v-card-actions>
-                    <v-btn
-                        outlined
-                        color="primary"
-                        small
-                        @click="saveItem(editedItem)"
-                        :disabled="invalid">
-                      <v-icon v-if="!(editedItem.new)">mdi-content-save-outline</v-icon>
-                      <span v-if="!(editedItem.new)"
-                            class="hidden-xs-only">Сохранить</span>
-                      <v-icon v-if="editedItem.new">mdi-content-save-outline</v-icon>
-                      <span v-if="editedItem.new"
-                            class="hidden-xs-only">Создать</span>
-                    </v-btn>
-                    <v-btn
-                        outlined
-                        color="warning"
-                        v-if="!(editedItem.new)"
-                        small
-                        @click="confirmDelete(editedItem)">
-                      <v-icon>mdi-trash-can-outline</v-icon>
-                      <span class="hidden-xs-only">Удалить</span>
-                    </v-btn>
-                    <v-btn
-                        outlined
-                        color="secondary"
-                        small
-                        @click="cancel">
-                      <v-icon>mdi-cancel</v-icon>
-                      <span class="hidden-xs-only">Отменить</span>
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
+                    </v-container>
+                    <v-card-text v-if="!editedItem.new">Создано:{{ createdDate }}</v-card-text>
+                    <v-card-actions>
+                      <v-btn
+                          outlined
+                          color="primary"
+                          small
+                          type="submit"
+                          :disabled="invalid">
+                        <v-icon v-if="!(editedItem.new)">mdi-content-save-outline</v-icon>
+                        <span v-if="!(editedItem.new)"
+                              class="hidden-xs-only">Сохранить</span>
+                        <v-icon v-if="editedItem.new">mdi-content-save-outline</v-icon>
+                        <span v-if="editedItem.new"
+                              class="hidden-xs-only">Создать</span>
+                      </v-btn>
+                      <v-btn
+                          outlined
+                          color="warning"
+                          v-if="!(editedItem.new)"
+                          small
+                          @click="confirmDelete(editedItem)">
+                        <v-icon>mdi-trash-can-outline</v-icon>
+                        <span class="hidden-xs-only">Удалить</span>
+                      </v-btn>
+                      <v-btn
+                          outlined
+                          color="secondary"
+                          small
+                          @click="cancel">
+                        <v-icon>mdi-cancel</v-icon>
+                        <span class="hidden-xs-only">Отменить</span>
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </form>
               </validation-observer>
             </v-dialog>
             <v-dialog v-model="deletedDialog"
@@ -130,24 +128,58 @@
 <script>
 
 
-import createMethods from "@/rest_crud_operations";
-import {extend, ValidationObserver, ValidationProvider} from 'vee-validate';
+import * as Validator from 'vee-validate';
+import {ValidationObserver, ValidationProvider} from 'vee-validate';
 import {required} from 'vee-validate/dist/rules';
 import axios from "axios";
+import {getLoading, setLoading} from "@/store/loading";
+import restService from "@/rest_crud_operations";
 
-extend('required', {
+const service = restService("http://localhost:8080/duty/rest/rangs");
+Validator.extend('required', {
   ...required,
   message: 'Это поле обязательно для заполнения'
 });
-extend('unique', {
-  validate: (value) => {
-    axios.get("http://localhost:8080/duty/rest/rangs/search/findByName", {
-      params: {name: value}
-    }).then(
-
-    )
+Validator.extend('uniqueName', {
+  params: ["id"],
+  validate: (value, args) => {
+    if (value) {
+      const currentID = args.id;
+      const result = axios.get("http://localhost:8080/duty/rest/rangs/search/findByName", {
+        params: {search: value}
+      }).then((resp) => {
+            const valid = !(resp.data._embedded.items.filter((item) => item.id !== currentID).length > 0);
+            const result = {valid: valid}
+            return result;
+          }
+      )
+      return result;
+    }
   },
-  message: 'Запись с таким полем уже есть в базе'
+  message: function () {
+    return 'Запись с таким полем уже есть в базе'
+  }
+})
+
+Validator.extend('uniqueFullName', {
+  params: ["id"],
+  validate: (value, args) => {
+    if (value) {
+      const currentID = args.id;
+      const result = axios.get("http://localhost:8080/duty/rest/rangs/search/findByFullName", {
+        params: {search: value}
+      }).then((resp) => {
+            const valid = !(resp.data._embedded.rangs.filter((item) => item.id !== currentID).length > 0);
+            const result = {valid: valid}
+            return result;
+          }
+      )
+      return result;
+    }
+  },
+  message: function () {
+    return 'Запись с таким полем уже есть в базе'
+  }
 })
 export default {
   name: "RangPage",
@@ -156,13 +188,12 @@ export default {
 
   data: () => {
     return {
-
       deletedItem: {},
       page: {
         _embedded: {},
         page: {}
       },
-      loading: false,
+
       editedItem: {},
       options: {},
       headers: [
@@ -198,12 +229,16 @@ export default {
     addMessage(message, type) {
       this.$store.dispatch('ADD_MESSAGE', {message: message, type: type});
     },
-    ...createMethods("http://localhost:8080/duty/rest/rangs"),
+
     loadPage: function () {
-      this.restPage(this.options).then(data => this.page = data)
+      setLoading(true);
+      service.page(this.options).then(data => {
+        this.page = data;
+        setLoading();
+      }).catch(() => setLoading())
     },
     editItem: function (item) {
-      this.restGet(item.id).then((entity) => {
+      service.get(item.id).then((entity) => {
         this.editedItem = entity
       })
     },
@@ -217,13 +252,16 @@ export default {
       this.deletedItem = item
     },
     deleteItem: function () {
-      this.restDelete(this.deletedItem).then(() => this.loadPage());
+      service.remove(this.deletedItem).then(() => this.loadPage());
       this.deletedItem = {};
       this.editedItem = {};
     },
-
+    submit: function () {
+      this.saveItem(this.editedItem)
+    },
     saveItem: function (item) {
-      this.restSave(item).then(entity => {
+      this.$refs.validator.validate();
+      service.save(item).then(entity => {
         this.editedItem = entity;
         let index = -1;
         this.page._embedded.rangs.find((el, i) => {
@@ -251,6 +289,14 @@ export default {
 
   },
   computed: {
+    loading: {
+      get: function () {
+        return getLoading()
+      },
+      set: function (v) {
+        setLoading(v)
+      }
+    },
     dialog: {
       get: function () {
         return Object.keys(this.editedItem).length > 0
@@ -289,6 +335,12 @@ export default {
         this.loadPage()
       },
       deep: true,
+    },
+    editedItem: {
+      handler() {
+        if (this.$refs.validator)
+          this.$refs.validator.reset()
+      }
     }
   },
   components: {ValidationProvider, ValidationObserver}

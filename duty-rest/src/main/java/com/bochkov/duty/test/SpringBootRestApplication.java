@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
+import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.server.core.DefaultLinkRelationProvider;
 import org.springframework.http.HttpMethod;
 
 @Configuration
@@ -27,5 +29,18 @@ public class SpringBootRestApplication implements RepositoryRestConfigurer {
         new Repositories(context).forEach(config::exposeIdsFor);
         //config.getCorsRegistry().addMapping("*");
         config.getCorsRegistry().addMapping("/**").allowedOrigins("*").allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name());
+        config.setRelProvider(new DefaultLinkRelationProvider() {
+
+
+            @Override
+            public LinkRelation getCollectionResourceRelFor(Class<?> type) {
+                return LinkRelation.of("items");
+            }
+
+            @Override
+            public LinkRelation getItemResourceRelFor(Class<?> type) {
+                return LinkRelation.of("item");
+            }
+        });
     }
 }

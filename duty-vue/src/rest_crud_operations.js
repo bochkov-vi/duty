@@ -1,30 +1,31 @@
 import axios from "axios";
 
-export default function createMethods(url) {
-    function restGet(id) {
+
+export default function restService(url) {
+    function get(id) {
         return axios.get(url + "/" + id).then((response) => response.data)
     }
 
-    function restEdit(entity) {
+    function edit(entity) {
         return axios.put(url + "/" + entity.id, entity).then(response => response.data)
     }
 
-    function restCreate(entity) {
+    function create(entity) {
         return axios.post(url, entity).then(response => response.data)
     }
 
-    function restSave(entity) {
+    function save(entity) {
         if (entity.new)
-            return restCreate(entity)
+            return create(entity)
         else
-            return restEdit(entity)
+            return edit(entity)
     }
 
-    function restDelete(entity) {
+    function remove(entity) {
         return axios.delete(url + '/' + entity.id).then(response => response.data)
     }
 
-    function restPage(options) {
+    function page(options) {
         const sorts = options.sortBy.map(function (srt, index) {
             let result = srt;
             if (options.sortDesc[index])
@@ -56,5 +57,5 @@ export default function createMethods(url) {
             .catch((error) => console.log(error))
     }
 
-    return {restGet, restEdit, restCreate, restSave, restPage, restDelete};
+    return {get: get, edit: edit, create: create, save: save, page: page, remove: remove};
 }
