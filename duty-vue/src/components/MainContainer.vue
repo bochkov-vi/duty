@@ -27,17 +27,19 @@
     </v-snackbar>
     <v-app-bar>
       <v-btn>
-        <router-link to="/">Home</router-link>
+        <router-link to="/">{{ $t('home') }}</router-link>
       </v-btn>
       <v-btn>
-        <router-link to="/rang">Rang</router-link>
+        <router-link to="/rang">{{ $t('rang.title') }}</router-link>
       </v-btn>
       <v-btn>
-        <router-link to="/group">EmployeeGroups</router-link>
+        <router-link to="/group">{{ $t('employeeGroups.title') }}</router-link>
       </v-btn>
       <v-btn @click="toggleLoading">
         <v-icon>mdi-cog-outline</v-icon>
       </v-btn>
+      <v-spacer/>
+      <LangSwitcher/>
       <v-progress-linear
           :active="loading"
           :indeterminate="loading"
@@ -59,10 +61,11 @@
 <script>
 
 import {getLoading, setLoading} from "@/store/loading";
-
+import LangSwitcher from "@/components/LangSwitcher";
 
 export default {
   name: "MainContainer",
+  components: {LangSwitcher},
   data() {
     return {
       messageId: 1,
