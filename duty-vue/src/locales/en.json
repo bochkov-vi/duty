@@ -1,0 +1,31 @@
+{
+  "lang": "English",
+  "home": "Home",
+  "rangs": "Rangs",
+  "groups": "Groups",
+  "label": {
+    "new-item": "New row",
+    "loading": "Loading",
+    "cancel": "Cancel",
+    "edit": "Edit row",
+    "save": "Save",
+    "delete": "Delete",
+    "create": "Create",
+    "confirmDelete": "Confirm Delete",
+    "fieldIsRequired": "This field is required",
+    "fieldIsDuplicate": "This field is duplicate"
+  },
+  "group": {
+    "id": "Group ID",
+    "name": "Group Name",
+    "createdDate": "Date of creation",
+    "createdTime": "Time of creation"
+  },
+  "rang": {
+    "id": "Rang ID",
+    "name": "Name",
+    "fullName": "Full name",
+    "createdDate": "Date of creation",
+    "createdTime": "Time of creation"
+  }
+}

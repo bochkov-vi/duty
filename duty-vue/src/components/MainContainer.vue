@@ -27,13 +27,13 @@
     </v-snackbar>
     <v-app-bar>
       <v-btn>
-        <router-link to="/">Home</router-link>
+        <router-link :to="$i18nRoute({name:'home'})">{{ $t('home') }}</router-link>
       </v-btn>
       <v-btn>
-        <router-link to="/rang">Rang</router-link>
+        <router-link :to="$i18nRoute({name:'rangs'})">{{ $t('rangs') }}</router-link>
       </v-btn>
       <v-btn>
-        <router-link to="/group">EmployeeGroups</router-link>
+        <router-link :to="$i18nRoute({name:'groups'})">{{ $t('groups') }}</router-link>
       </v-btn>
       <v-btn @click="toggleLoading">
         <v-icon>mdi-cog-outline</v-icon>
@@ -58,7 +58,7 @@
 
 <script>
 
-import {getLoading, setLoading} from "@/store/loading";
+import {getLoading, setLoading} from "@/store/store";
 
 
 export default {

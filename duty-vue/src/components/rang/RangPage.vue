@@ -22,7 +22,7 @@
                        v-bind="attrs"
                        v-on="on">
                   <v-icon>mdi-table-plus</v-icon>
-                  Новая строка
+                  {{$t('label.new-item')}}
                 </v-btn>
               </template>
               <validation-observer v-slot="{ invalid }" ref="validator">
@@ -33,14 +33,14 @@
                       <validation-provider :rules="{required:true,uniqueName:{id:editedItem.id}}"
                                            v-slot="{ errors }">
                         <v-text-field dense
-                                      label="Наименование"
+                                      :label="$t('rang.name')"
                                       :error-messages="errors"
                                       v-model="editedItem.name"/>
                       </validation-provider>
                       <validation-provider :rules="{required:true,uniqueFullName:{id:editedItem.id}}"
                                            v-slot="{ errors }">
                         <v-text-field dense
-                                      label="Полное наименование"
+                                      :label="$t('rang.fullName')"
                                       v-model="editedItem.fullName"
                                       :error-messages="errors"/>
 
@@ -57,10 +57,10 @@
                           :disabled="invalid">
                         <v-icon v-if="!(editedItem.new)">mdi-content-save-outline</v-icon>
                         <span v-if="!(editedItem.new)"
-                              class="hidden-xs-only">Сохранить</span>
+                              class="hidden-xs-only">{{$t('label.save')}}</span>
                         <v-icon v-if="editedItem.new">mdi-content-save-outline</v-icon>
                         <span v-if="editedItem.new"
-                              class="hidden-xs-only">Создать</span>
+                              class="hidden-xs-only">{{$t('label.create')}}</span>
                       </v-btn>
                       <v-btn
                           outlined
@@ -69,7 +69,7 @@
                           small
                           @click="confirmDelete(editedItem)">
                         <v-icon>mdi-trash-can-outline</v-icon>
-                        <span class="hidden-xs-only">Удалить</span>
+                        <span class="hidden-xs-only">{{$t('label.delete')}}</span>
                       </v-btn>
                       <v-btn
                           outlined
@@ -77,7 +77,7 @@
                           small
                           @click="cancel">
                         <v-icon>mdi-cancel</v-icon>
-                        <span class="hidden-xs-only">Отменить</span>
+                        <span class="hidden-xs-only">{{$t('label.cancel')}}</span>
                       </v-btn>
                     </v-card-actions>
                   </v-card>
@@ -87,7 +87,7 @@
             <v-dialog v-model="deletedDialog"
                       max-width="600px">
               <v-card>
-                <v-card-title class="headline">Подтвердите удаление объекта?</v-card-title>
+                <v-card-title class="headline">{{$t('label.confirmDelete')}}</v-card-title>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn outlined
@@ -102,7 +102,7 @@
                          @click="deleteItem"
                          small>
                     <v-icon>mdi-trash-can-outline</v-icon>
-                    <span class="hidden-xs-only">Подтвердить удаление</span>
+                    <span class="hidden-xs-only">{{$t('label.delete')}}</span>
                   </v-btn>
                   <v-spacer></v-spacer>
                 </v-card-actions>
@@ -132,13 +132,14 @@ import * as Validator from 'vee-validate';
 import {ValidationObserver, ValidationProvider} from 'vee-validate';
 import {required} from 'vee-validate/dist/rules';
 import axios from "axios";
-import {getLoading, setLoading} from "@/store/loading";
+import {getLoading, setLoading} from "@/store/store";
 import restService from "@/rest_crud_operations";
+import i18n from "@/i18n";
 
 const service = restService("http://localhost:8080/duty/rest/rangs");
 Validator.extend('required', {
   ...required,
-  message: 'Это поле обязательно для заполнения'
+  message: i18n.t('label.fieldIsRequired')
 });
 Validator.extend('uniqueName', {
   params: ["id"],
@@ -157,7 +158,7 @@ Validator.extend('uniqueName', {
     }
   },
   message: function () {
-    return 'Запись с таким полем уже есть в базе'
+    return i18n.t('label.fieldIsDuplicate')
   }
 })
 
@@ -178,7 +179,7 @@ Validator.extend('uniqueFullName', {
     }
   },
   message: function () {
-    return 'Запись с таким полем уже есть в базе'
+    return i18n.t('label.fieldIsDuplicate')
   }
 })
 export default {
@@ -198,26 +199,26 @@ export default {
       options: {},
       headers: [
         {
-          text: 'Код',
+          text: i18n.t('rang.id'),
           align: 'start',
           sortable: true,
           value: 'id',
         }, {
-          text: 'Наименование',
+          text: i18n.t('rang.name'),
           align: 'start',
           sortable: true,
           value: 'name',
         }, {
-          text: 'Полное наименование',
+          text: i18n.t('rang.fullName'),
           align: 'start',
           sortable: true,
           value: 'fullName',
         },
         {
-          text: "Дата создания",
+          text: i18n.t('rang.createdDate'),
           value: "createdDate"
         }, {
-          text: "Время создания",
+          text: i18n.t('rang.createdTime'),
           value: "createdTime"
         }, {
           value: "actions"
@@ -231,11 +232,9 @@ export default {
     },
 
     loadPage: function () {
-      setLoading(true);
       service.page(this.options).then(data => {
         this.page = data;
-        setLoading();
-      }).catch(() => setLoading())
+      })
     },
     editItem: function (item) {
       service.get(item.id).then((entity) => {

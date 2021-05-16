@@ -1,17 +1,29 @@
 import axios from "axios";
+import {setLoading,error} from "@/store/store";
 
 
 export default function restService(url) {
     function get(id) {
-        return axios.get(url + "/" + id).then((response) => response.data)
+        setLoading(true);
+        return axios.get(url + "/" + id).then((response) => {
+            setLoading();
+            return response.data
+        }).catch(e => error(e))
     }
 
     function edit(entity) {
-        return axios.put(url + "/" + entity.id, entity).then(response => response.data)
+        setLoading(true);
+        return axios.put(url + "/" + entity.id, entity).then(response => {
+            setLoading();
+            return response.data
+        }).catch(e => error(e))
     }
 
     function create(entity) {
-        return axios.post(url, entity).then(response => response.data)
+        return axios.post(url, entity).then(response => {
+            setLoading();
+            return response.data
+        }).catch(e => error(e))
     }
 
     function save(entity) {
@@ -22,7 +34,10 @@ export default function restService(url) {
     }
 
     function remove(entity) {
-        return axios.delete(url + '/' + entity.id).then(response => response.data)
+        return axios.delete(url + '/' + entity.id).then(response => {
+            setLoading();
+            return response.data
+        }).catch(e => error(e))
     }
 
     function page(options) {
@@ -37,6 +52,7 @@ export default function restService(url) {
             size: options.itemsPerPage,
             sort: sorts
         };
+        setLoading(true)
         return axios.get(url, {
             paramsSerializer(params) {
                 const searchParams = new URLSearchParams();
@@ -53,8 +69,10 @@ export default function restService(url) {
                 return searchParams.toString();
             },
             params: queryParams
-        }).then((response) => response.data)
-            .catch((error) => console.log(error))
+        }).then(response => {
+            setLoading();
+            return response.data
+        }).catch(e => error(e))
     }
 
     return {get: get, edit: edit, create: create, save: save, page: page, remove: remove};

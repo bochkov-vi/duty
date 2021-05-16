@@ -7,7 +7,7 @@
           <validation-provider :rules="{required:true,uniqueName:{id:entity.id}}"
                                v-slot="{ errors }">
             <v-text-field dense
-                          label="Наименование"
+                          :label="$t('group.name')"
                           :error-messages="errors"
                           v-model="entity.name"/>
           </validation-provider>
@@ -21,10 +21,10 @@
               :disabled="invalid">
             <v-icon v-if="!(entity.new)">mdi-content-save-outline</v-icon>
             <span v-if="!(entity.new)"
-                  class="hidden-xs-only">Сохранить</span>
+                  class="hidden-xs-only">{{$t('label.save')}}</span>
             <v-icon v-if="entity.new">mdi-content-save-outline</v-icon>
             <span v-if="entity.new"
-                  class="hidden-xs-only">Создать</span>
+                  class="hidden-xs-only">{{$t('label.create')}}</span>
           </v-btn>
           <v-btn
               outlined
@@ -33,15 +33,15 @@
               small
               @click="confirmDelete(entity)">
             <v-icon>mdi-trash-can-outline</v-icon>
-            <span class="hidden-xs-only">Удалить</span>
+            <span class="hidden-xs-only">{{$t('label.delete')}}</span>
           </v-btn>
-          <router-link to="..">
+          <router-link :to="$i18nRoute({path:'.'})">
             <v-btn
                 outlined
                 color="secondary"
                 small>
               <v-icon>mdi-cancel</v-icon>
-              <span class="hidden-xs-only">Отменить</span>
+              <span class="hidden-xs-only">{{ $t('label.cancel') }}</span>
             </v-btn>
           </router-link>
         </v-card-actions>
@@ -52,8 +52,7 @@
 
 <script>
 import restService from "@/rest_crud_operations";
-import {setLoading} from "@/store/loading";
-import error from "@/store/message";
+import {error, setLoading} from "@/store/store";
 import * as Validator from "vee-validate";
 import {ValidationObserver, ValidationProvider} from "vee-validate";
 import axios from "axios";
@@ -101,7 +100,7 @@ export default {
       this.$refs.validator.validate();
       service.save(this.entity).then(saved => {
         this.entity = saved;
-        this.$router.push({name:"EmployeeGroups"})
+        this.$router.push({name: "EmployeeGroups"})
       }).catch(e => {
         console.log(e);
         this.addMessage(e, "error")
@@ -124,11 +123,11 @@ export default {
       }
     }
   },
-  computed:{
-    title(){
-      if(this.entity.new){
+  computed: {
+    title() {
+      if (this.entity.new) {
         return "Создание новой записи"
-      }else {
+      } else {
         return `Редактирование объекта '${this.entity.name}' (${this.entity.id})`
       }
     }

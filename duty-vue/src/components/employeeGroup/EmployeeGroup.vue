@@ -13,7 +13,7 @@
         class="mb-sm-10">
       <template v-slot:top>
         <v-toolbar flat>
-          <router-link :to="{name:'EmployeeGroupEdit',params:{id:-1}}">
+          <router-link :to="$i18nRoute({name:'EmployeeGroupEdit',params:{id:-1}})">
             <v-btn small>
               <v-icon>mdi-table-plus</v-icon>
               Новая строка
@@ -28,7 +28,7 @@
         {{ new Date(item.createdDate).toLocaleTimeString() }}
       </template>
       <template v-slot:item.actions="{ item }">
-        <router-link :to="{name:'EmployeeGroupEdit',params:{id:item.id}}">
+        <router-link :to="$i18nRoute({name:'EmployeeGroupEdit',params:{id:item.id}})">
           <v-icon>mdi-pencil-box-outline</v-icon>
         </router-link>
         <v-icon @click="confirmDelete(item)">mdi-trash-can-outline</v-icon>
@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import {getLoading, setLoading} from "@/store/loading";
+import {error, getLoading, setLoading} from "@/store/store";
 import restService from "@/rest_crud_operations";
-import error from "@/store/message";
+import i18n from "@/i18n";
 
 const service = restService("http://localhost:8080/duty/rest/employeeGroups")
 export default {
@@ -86,20 +86,20 @@ export default {
       },
       headers: [
         {
-          text: 'Код',
+          text: i18n.t('group.id'),
           align: 'start',
           sortable: true,
           value: 'id',
         }, {
-          text: 'Наименование',
+          text: i18n.t('group.name'),
           align: 'start',
           sortable: true,
           value: 'name',
         }, {
-          text: "Дата создания",
+          text: i18n.t('group.createdDate'),
           value: "createdDate"
         }, {
-          text: "Время создания",
+          text: i18n.t('group.createdTime'),
           value: "createdTime"
         }, {
           value: "actions"
