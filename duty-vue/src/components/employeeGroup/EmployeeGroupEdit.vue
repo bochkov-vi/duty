@@ -21,10 +21,10 @@
               :disabled="invalid">
             <v-icon v-if="!(entity.new)">mdi-content-save-outline</v-icon>
             <span v-if="!(entity.new)"
-                  class="hidden-xs-only">{{$t('label.save')}}</span>
+                  class="hidden-xs-only">{{ $t('label.save') }}</span>
             <v-icon v-if="entity.new">mdi-content-save-outline</v-icon>
             <span v-if="entity.new"
-                  class="hidden-xs-only">{{$t('label.create')}}</span>
+                  class="hidden-xs-only">{{ $t('label.create') }}</span>
           </v-btn>
           <v-btn
               outlined
@@ -33,7 +33,7 @@
               small
               @click="confirmDelete(entity)">
             <v-icon>mdi-trash-can-outline</v-icon>
-            <span class="hidden-xs-only">{{$t('label.delete')}}</span>
+            <span class="hidden-xs-only">{{ $t('label.delete') }}</span>
           </v-btn>
           <router-link :to="$i18nRoute({path:'.'})">
             <v-btn
@@ -57,6 +57,7 @@ import * as Validator from "vee-validate";
 import {ValidationObserver, ValidationProvider} from "vee-validate";
 import axios from "axios";
 import {required} from "vee-validate/dist/rules";
+import {Trans} from "@/plugins/Translation";
 
 Validator.extend('uniqueName', {
   params: ["id"],
@@ -100,10 +101,9 @@ export default {
       this.$refs.validator.validate();
       service.save(this.entity).then(saved => {
         this.entity = saved;
-        this.$router.push({name: "EmployeeGroups"})
+        this.$router.push(Trans.i18nRoute({path: "."}))
       }).catch(e => {
-        console.log(e);
-        this.addMessage(e, "error")
+        error(e)
       })
 
     },

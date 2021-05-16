@@ -1,5 +1,5 @@
 import axios from "axios";
-import {setLoading,error} from "@/store/store";
+import {error, setLoading} from "@/store/store";
 
 
 export default function restService(url) {
@@ -40,6 +40,7 @@ export default function restService(url) {
         }).catch(e => error(e))
     }
 
+
     function page(options) {
         const sorts = options.sortBy.map(function (srt, index) {
             let result = srt;
@@ -75,5 +76,5 @@ export default function restService(url) {
         }).catch(e => error(e))
     }
 
-    return {get: get, edit: edit, create: create, save: save, page: page, remove: remove};
+    return {get: get, edit: edit, create: create, save: save, page: page, remove: remove, restRemove: remove};
 }

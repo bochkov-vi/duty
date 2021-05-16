@@ -1,5 +1,12 @@
 <template>
   <v-container>
+    <DeleteDialog
+        :item="selected"
+        i18n_prefix="rang"
+        @delete="remove(selected)"
+        @close="selected={}"
+        :fields="headers.map(h=>h.value).filter(e=>e)"
+    />
     <v-data-table
         calculate-widths
         :headers="headers"
@@ -31,7 +38,7 @@
         <router-link :to="$i18nRoute({name:'EmployeeGroupEdit',params:{id:item.id}})">
           <v-icon>mdi-pencil-box-outline</v-icon>
         </router-link>
-        <v-icon @click="confirmDelete(item)">mdi-trash-can-outline</v-icon>
+        <v-icon @click="selected=item">mdi-trash-can-outline</v-icon>
       </template>
     </v-data-table>
   </v-container>
@@ -41,10 +48,12 @@
 import {error, getLoading, setLoading} from "@/store/store";
 import restService from "@/rest_crud_operations";
 import i18n from "@/i18n";
+import DeleteDialog from "@/components/employeeGroup/DeleteDialog";
 
 const service = restService("http://localhost:8080/duty/rest/employeeGroups")
 export default {
   name: "EmployeeGroup",
+  components: {DeleteDialog},
   computed: {
     loading: {
       get: function () {
@@ -53,6 +62,12 @@ export default {
     }
   },
   methods: {
+    remove(item) {
+      service.remove(item).then(() => {
+        this.loadPage()
+        this.selected = null;
+      })
+    },
     loadPage: function () {
       setLoading(true);
       service.page(this.options).then(data => {
@@ -63,7 +78,7 @@ export default {
             setLoading()
           }
       )
-    },
+    }
   },
   watch: {
     options: {
@@ -75,6 +90,7 @@ export default {
   },
   data() {
     return {
+      selected: {},
       options: {},
       page: {
         _embedded: {
