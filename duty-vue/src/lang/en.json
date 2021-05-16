@@ -1,0 +1,15 @@
+{
+  "home": "Home",
+  "rang": {
+    "title": "Rangs",
+    "id": "Id",
+    "name": "Name",
+    "fullName": "Full Name"
+  },
+  "employeeGroup": {
+    "title": "Employee Groups",
+    "id": "Id",
+    "name": "Name"
+  }
+}
+
