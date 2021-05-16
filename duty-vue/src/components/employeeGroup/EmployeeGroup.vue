@@ -5,7 +5,7 @@
         i18n_prefix="rang"
         @delete="remove(selected)"
         @close="selected={}"
-        :fields="headers.map(h=>h.value).filter(e=>e)"
+        :fields="headers.map(h=>h.value).filter((e)=>e!==undefined)"
     />
     <v-data-table
         calculate-widths

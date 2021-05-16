@@ -1,5 +1,12 @@
 <template>
   <validation-observer v-slot="{ invalid }" ref="validator">
+    <DeleteDialog
+        :item="deleted"
+        i18n_prefix="group"
+        @delete="remove(deleted)"
+        @close="deleted={}"
+        :fields="['id','name','createdDate']"
+    />
     <form @submit.prevent="submit">
       <v-card>
         <v-card-title>{{ title }}</v-card-title>
@@ -58,6 +65,7 @@ import {ValidationObserver, ValidationProvider} from "vee-validate";
 import axios from "axios";
 import {required} from "vee-validate/dist/rules";
 import {Trans} from "@/plugins/Translation";
+import DeleteDialog from "@/components/employeeGroup/DeleteDialog";
 
 Validator.extend('uniqueName', {
   params: ["id"],
@@ -93,7 +101,8 @@ export default {
   },
   data() {
     return {
-      entity: {}
+      entity: {},
+      deleted:{}
     }
   },
   methods: {
@@ -121,6 +130,8 @@ export default {
           error(e)
         })
       }
+    },remove(item){
+      service.remove(item).then(()=> this.$router.push(Trans.i18nRoute({path: "."})))
     }
   },
   computed: {
@@ -135,7 +146,7 @@ export default {
   mounted() {
     this.load()
   }, components: {
-    ValidationProvider, ValidationObserver
+    ValidationProvider, ValidationObserver,DeleteDialog
   }
 }
 </script>

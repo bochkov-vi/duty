@@ -8,7 +8,7 @@
         <v-list v-if="Object.keys(item).length>1">
           <v-list-item v-for="k in fields" :key="k">
             <v-list-item-content>
-              {{ $t(`${i18n_prefix}.${k}`) }} : {{ item[k] }} : {{ k }}
+              {{ $t(`${i18n_prefix}.${k}`) }} : {{ item[k] }}
             </v-list-item-content>
           </v-list-item>
         </v-list>
