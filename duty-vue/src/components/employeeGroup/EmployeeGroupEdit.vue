@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import restService from "@/rest_crud_operations";
+import {restService} from "@/rest_crud_operations";
 import {error, setLoading} from "@/store/store";
 import * as Validator from "vee-validate";
 import {ValidationObserver, ValidationProvider} from "vee-validate";

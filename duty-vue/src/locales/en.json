@@ -3,6 +3,7 @@
   "home": "Home",
   "rangs": "Rangs",
   "groups": "Groups",
+  "title": "Time tracking and duty scheduling",
   "label": {
     "new-item": "New row",
     "loading": "Loading",
@@ -19,7 +20,8 @@
     "id": "Group ID",
     "name": "Group Name",
     "createdDate": "Date of creation",
-    "createdTime": "Time of creation"
+    "createdTime": "Time of creation",
+    "editing": "Group editing"
   },
   "rang": {
     "id": "Rang ID",

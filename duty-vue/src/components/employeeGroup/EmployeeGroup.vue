@@ -46,7 +46,7 @@
 
 <script>
 import {error, getLoading, setLoading} from "@/store/store";
-import restService from "@/rest_crud_operations";
+import {restService} from "@/rest_crud_operations";
 import i18n from "@/i18n";
 import DeleteDialog from "@/components/employeeGroup/DeleteDialog";
 

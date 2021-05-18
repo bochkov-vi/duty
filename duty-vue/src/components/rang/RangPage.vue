@@ -133,7 +133,7 @@ import {ValidationObserver, ValidationProvider} from 'vee-validate';
 import {required} from 'vee-validate/dist/rules';
 import axios from "axios";
 import {getLoading, setLoading} from "@/store/store";
-import restService from "@/rest_crud_operations";
+import {restService} from "@/rest_crud_operations";
 import i18n from "@/i18n";
 
 const service = restService("http://localhost:8080/duty/rest/rangs");

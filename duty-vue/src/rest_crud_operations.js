@@ -1,8 +1,13 @@
 import axios from "axios";
 import {error, setLoading} from "@/store/store";
 
+export const REST_BASE_URL = process.env.REST_BASE_URL || "http://localhost:8080/duty/rest"
 
-export default function restService(url) {
+export function restServiceForEntity(name) {
+    return restService(`${REST_BASE_URL}/${name}`)
+}
+
+export function restService(url) {
     function get(id) {
         setLoading(true);
         return axios.get(url + "/" + id).then((response) => {
@@ -77,4 +82,20 @@ export default function restService(url) {
     }
 
     return {get: get, edit: edit, create: create, save: save, page: page, remove: remove, restRemove: remove};
+}
+
+export function restAllServices() {
+    axios.get(REST_BASE_URL).then(response => {
+        const services = {};
+        response.data._links.items.forEach((href => {
+            const item = lastItem(href)
+            const rest = restService(href);
+            services[item] = rest;
+        }))
+        return services;
+    })
+}
+
+function lastItem(path) {
+    return path.replace(/.*\/(\w).*/g, "$1")
 }
