@@ -1,16 +1,14 @@
-import axios from "axios";
-import {error, setLoading} from "@/store/store";
+import axios from "@/http_client";
+import {error, info, setLoading} from "@/store/store";
+import I18N from "@/i18n";
 
-export const REST_BASE_URL = process.env.REST_BASE_URL || "http://localhost:8080/duty/rest"
 
-export function restServiceForEntity(name) {
-    return restService(`${REST_BASE_URL}/${name}`)
-}
+export function restService(entityUri) {
+    const i18n = I18N;
 
-export function restService(url) {
     function get(id) {
         setLoading(true);
-        return axios.get(url + "/" + id).then((response) => {
+        return axios.get(entityUri + "/" + id).then((response) => {
             setLoading();
             return response.data
         }).catch(e => error(e))
@@ -18,29 +16,38 @@ export function restService(url) {
 
     function edit(entity) {
         setLoading(true);
-        return axios.put(url + "/" + entity.id, entity).then(response => {
+        return axios.put(entityUri + "/" + entity.id, entity).then(response => {
             setLoading();
             return response.data
         }).catch(e => error(e))
     }
 
     function create(entity) {
-        return axios.post(url, entity).then(response => {
+        return axios.post(entityUri, entity).then(response => {
             setLoading();
             return response.data
         }).catch(e => error(e))
     }
 
     function save(entity) {
+        let result;
         if (entity.new)
-            return create(entity)
+            result = create(entity)
         else
-            return edit(entity)
+            result = edit(entity)
+
+        result.then(function (data) {
+            const msg = i18n.t("crud.saved.success");
+            info(msg)
+            return data;
+        })
+        return result;
     }
 
     function remove(entity) {
-        return axios.delete(url + '/' + entity.id).then(response => {
+        return axios.delete(entityUri + '/' + entity.id).then(response => {
             setLoading();
+            info(i18n.t("crud.deleted.success"))
             return response.data
         }).catch(e => error(e))
     }
@@ -59,7 +66,7 @@ export function restService(url) {
             sort: sorts
         };
         setLoading(true)
-        return axios.get(url, {
+        return axios.get(entityUri, {
             paramsSerializer(params) {
                 const searchParams = new URLSearchParams();
                 for (const key of Object.keys(params)) {
@@ -85,11 +92,11 @@ export function restService(url) {
 }
 
 export function restAllServices() {
-    axios.get(REST_BASE_URL).then(response => {
+    axios.get("").then(response => {
         const services = {};
         response.data._links.items.forEach((href => {
             const item = lastItem(href)
-            const rest = restService(href);
+            const rest = restService(item);
             services[item] = rest;
         }))
         return services;

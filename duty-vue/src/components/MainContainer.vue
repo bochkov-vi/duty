@@ -1,14 +1,15 @@
 <template>
   <div>
+    {{ $store.state.messages }}
     <v-snackbar
-        v-model="msg.type"
+        v-model="messages.length"
         multi-line
         outlined
-        color="error"
+        :color="msg.type"
         top
         right
         vertical
-        v-for="msg in this.$store.state.messages"
+        v-for="msg in messages"
         :key="msg.id"
         timeout="-1"
     >
@@ -59,23 +60,18 @@
 <script>
 
 import {getLoading, setLoading} from "@/store/store";
+import messages_mixin from "@/mixins/messages_mixin";
 
 
 export default {
+  mixins: [messages_mixin],
   name: "MainContainer",
   data() {
-    return {
-      messageId: 1,
-      messages: [{message: "Какая то ошибка", type: "error", id: 0}],
-    }
+    return {}
   },
   methods: {
-    removeMessage(msg) {
-      this.$store.dispatch('REMOVE_MESSAGE', msg)
-    },
     toggleLoading() {
-      const value = !this.loading;
-      this.loading = value
+      this.error("test")
     }
   },
   computed: {

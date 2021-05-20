@@ -4,7 +4,6 @@
         :item="deleted"
         i18n_prefix="group"
         @delete="remove(deleted)"
-        @close="deleted={}"
         :fields="['id','name','createdDate']"
     />
     <form @submit.prevent="submit">
@@ -38,7 +37,7 @@
               color="warning"
               v-if="!(entity.new)"
               small
-              @click="confirmDelete(entity)">
+              @click="deleted=entity">
             <v-icon>mdi-trash-can-outline</v-icon>
             <span class="hidden-xs-only">{{ $t('label.delete') }}</span>
           </v-btn>
@@ -102,7 +101,7 @@ export default {
   data() {
     return {
       entity: {},
-      deleted:{}
+      deleted: {}
     }
   },
   methods: {
@@ -130,8 +129,8 @@ export default {
           error(e)
         })
       }
-    },remove(item){
-      service.remove(item).then(()=> this.$router.push(Trans.i18nRoute({path: "."})))
+    }, remove(item) {
+      service.remove(item).then(() => this.$router.push(Trans.i18nRoute({path: "."})))
     }
   },
   computed: {
@@ -146,7 +145,7 @@ export default {
   mounted() {
     this.load()
   }, components: {
-    ValidationProvider, ValidationObserver,DeleteDialog
+    ValidationProvider, ValidationObserver, DeleteDialog
   }
 }
 </script>

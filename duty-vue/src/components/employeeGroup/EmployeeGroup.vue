@@ -5,8 +5,8 @@
         i18n_prefix="rang"
         @delete="remove(selected)"
         @close="selected={}"
-        :fields="headers.map(h=>h.value).filter((e)=>e!==undefined)"
-    />
+        :fields="headers.map(h=>h.value).filter((e)=>e!==undefined && selected[e]!==undefined)">
+    </DeleteDialog>
     <v-data-table
         calculate-widths
         :headers="headers"
@@ -65,7 +65,7 @@ export default {
     remove(item) {
       service.remove(item).then(() => {
         this.loadPage()
-        this.selected = null;
+        this.selected = {};
       })
     },
     loadPage: function () {

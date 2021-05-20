@@ -16,7 +16,7 @@ const routes = [{
             path: '',
             name: 'home',
             component: () => import(/* webpackChunkName: "about" */ '../components/HomePage.vue'),
-            meta:{
+            meta: {
                 title: "title"
             }
 
@@ -25,14 +25,14 @@ const routes = [{
             path: 'rang',
             name: 'rangs',
             component: () => import(/* webpackChunkName: "about" */ '../components/rang/RangPage.vue'),
-            meta:{
-               title:"rangs"
+            meta: {
+                title: "rangs"
             }
         }, {
             path: 'group',
             name: 'groups',
             component: () => import(/* webpackChunkName: "about" */ '../components/employeeGroup/EmployeeGroup.vue'),
-            meta:{
+            meta: {
                 title: "groups"
             }
         },
@@ -41,7 +41,7 @@ const routes = [{
             props: true,
             name: 'EmployeeGroupEdit',
             component: () => import(/* webpackChunkName: "about" */ '../components/employeeGroup/EmployeeGroupEdit.vue'),
-            meta:{
+            meta: {
                 title: "group.editing"
             }
         }
@@ -59,6 +59,13 @@ const router = new VueRouter({
     routes
 })
 router.beforeEach((to, from, next) => {
+
+    if (to.params.locale && to.params.locale !== i18n.locale) {
+        console.log("Cahnge locale")
+        Trans.changeLocale(to.params.locale)
+    }
+    console.log(to)
+    console.log(i18n)
     document.title = i18n.t(to.meta.title)
     next()
 });

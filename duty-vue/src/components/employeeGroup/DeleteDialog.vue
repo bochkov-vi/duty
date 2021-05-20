@@ -3,15 +3,16 @@
             max-width="600px">
     <v-card>
       <v-card-title class="headline">{{ $t('label.confirmDelete') }}</v-card-title>
-      <v-card-text>{{ item }}</v-card-text>
       <v-container>
-        <v-list v-if="Object.keys(item).length>1">
-          <v-list-item v-for="k in fields" :key="k">
-            <v-list-item-content>
-              {{ $t(`${i18n_prefix}.${k}`) }} : {{ item[k] }}
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+        <slot>
+          <v-list v-if="Object.keys(item).length>1">
+            <v-list-item v-for="k in fields" :key="k">
+              <v-list-item-content>
+                {{ $t(`${i18n_prefix}.${k}`) }} : {{ item[k] }}
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </slot>
       </v-container>
       <v-card-actions>
         <v-spacer></v-spacer>

@@ -16,6 +16,16 @@
     "fieldIsRequired": "This field is required",
     "fieldIsDuplicate": "This field is duplicate"
   },
+  "crud": {
+    "saved": {
+      "success": "Entity successfully saved",
+      "error": "Entity save error"
+    },
+    "deleted": {
+      "success": "Entity successfully deleted",
+      "error": "Entity delete error"
+    }
+  },
   "group": {
     "id": "Group ID",
     "name": "Group Name",

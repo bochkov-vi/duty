@@ -20,8 +20,14 @@ export function getLoading() {
     return loading;
 }
 
-export  function error(msg) {
+export function error(msg) {
     const message = {message: msg, type: 'error'};
     console.error(message)
+    store.dispatch("ADD_MESSAGE", message)
+}
+
+export function info(msg) {
+    const message = {message: msg, type: 'info'};
+    console.info(message)
     store.dispatch("ADD_MESSAGE", message)
 }
