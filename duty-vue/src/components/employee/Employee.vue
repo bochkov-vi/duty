@@ -3,8 +3,9 @@
     <crud-page locale-prefix="employee"
                entity-uri="employee"
                :headers="headers"
-               uri="employees"
-               :id="id"></crud-page>
+               uri="employees">
+        <template v-slot:default></template>
+    </crud-page>
   </v-container>
 </template>
 
@@ -30,9 +31,6 @@ export default {
         }
       ],
     }
-  },
-  props: {
-    id:null
   },
   name: "Employee"
 }

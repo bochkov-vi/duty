@@ -1,7 +1,10 @@
 <template>
   <v-container>
+    <slot>
+
+    </slot>
     <v-data-table
-        :v-model="!editMode"
+        v-if="!(editMode)"
         calculate-widths
         :headers="translatedHeaders"
         :items="items._embedded.items"
@@ -41,11 +44,12 @@ export default {
       items: {_embedded: {}, page: {}},
       options: {},
       service: {},
+      id: null,
       editMode: false
     }
   },
   props: {
-    id: null,
+
     uri: {
       required: true
     },
@@ -90,7 +94,12 @@ export default {
     },
     loadItem(id) {
       if (id)
-        this.service.get(id).then((loaded) => this.item = loaded)
+        if (id > 0)
+          this.service.get(id).then((loaded) => this.item = loaded)
+        else
+          this.item = {}
+      else
+        this.item = null;
     },
     refreshItem() {
       this.id = this.item.id
@@ -98,29 +107,29 @@ export default {
     },
     loadPage() {
       this.service.page(this.options).then(data => this.page = data)
+    },
+    calculateEditMode() {
+      if (this.item) {
+        this.editMode = true;
+      } else {
+        this.editMode = false;
+      }
     }
   }, mounted() {
     this.service = restService(this.uri)
+    this.calculateEditMode()
   }, watch: {
+    item: function () {
+      this.calculateEditMode()
+    },
     options: {
       handler() {
         this.loadPage()
       },
       deep: true,
     },
-    id: () => {
-      if (this.id !== undefined) {
-        if (this.id > 0) {
-          this.loadItem(this.id)
-          this.editMode = true
-        } else if (this.id < -1) {
-          this.item = {}
-          this.editMode = true
-        }
-      } else {
-        this.editMode = false;
-        this.item = {}
-      }
+    '$route.params.id': function (id) {
+      this.loadItem(id)
     }
   }
 }
