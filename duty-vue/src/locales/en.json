@@ -2,9 +2,12 @@
   "lang": "English",
   "home": "Home",
   "rangs": "Rangs",
+  "employees": "Employees",
   "groups": "Groups",
   "title": "Time tracking and duty scheduling",
   "label": {
+    "loading": "Loading",
+    "no-data": "Data Not Found",
     "new-item": "New row",
     "loading": "Loading",
     "cancel": "Cancel",
@@ -25,6 +28,16 @@
       "success": "Entity successfully deleted",
       "error": "Entity delete error"
     }
+  },
+  "employee": {
+    "id": "Employee ID",
+    "name": "Name",
+    "rang": "Rang",
+    "middleName": "middleName",
+    "lastName": "lastName",
+    "createdDate": "Date of creation",
+    "createdTime": "Time of creation",
+    "editing": "Group editing"
   },
   "group": {
     "id": "Group ID",

@@ -44,6 +44,24 @@ const routes = [{
             meta: {
                 title: "group.editing"
             }
+        },
+        {
+            path: 'employee/:id',
+            props: true,
+            name: 'employee.edit',
+            component: () => import(/* webpackChunkName: "about" */ '../components/employee/Employee.vue'),
+            meta: {
+                title: "employee.editing"
+            }
+        },
+        {
+            path: 'employee',
+            name: 'employee',
+            props: true,
+            component: () => import(/* webpackChunkName: "about" */ '../components/employee/Employee.vue'),
+            meta: {
+                title: "employees"
+            }
         }
     ]
 }, {
@@ -59,13 +77,6 @@ const router = new VueRouter({
     routes
 })
 router.beforeEach((to, from, next) => {
-
-    if (to.params.locale && to.params.locale !== i18n.locale) {
-        console.log("Cahnge locale")
-        Trans.changeLocale(to.params.locale)
-    }
-    console.log(to)
-    console.log(i18n)
     document.title = i18n.t(to.meta.title)
     next()
 });

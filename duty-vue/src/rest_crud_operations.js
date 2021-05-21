@@ -67,20 +67,6 @@ export function restService(entityUri) {
         };
         setLoading(true)
         return axios.get(entityUri, {
-            paramsSerializer(params) {
-                const searchParams = new URLSearchParams();
-                for (const key of Object.keys(params)) {
-                    const param = params[key];
-                    if (Array.isArray(param)) {
-                        for (const p of param) {
-                            searchParams.append(key, p);
-                        }
-                    } else {
-                        searchParams.append(key, param);
-                    }
-                }
-                return searchParams.toString();
-            },
             params: queryParams
         }).then(response => {
             setLoading();
@@ -88,7 +74,7 @@ export function restService(entityUri) {
         }).catch(e => error(e))
     }
 
-    return {get: get, edit: edit, create: create, save: save, page: page, remove: remove, restRemove: remove};
+    return {get, edit, create, save, page, remove};
 }
 
 export function restAllServices() {
