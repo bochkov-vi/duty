@@ -6,7 +6,6 @@
   "groups": "Groups",
   "title": "Time tracking and duty scheduling",
   "label": {
-    "loading": "Loading",
     "no-data": "Data Not Found",
     "new-item": "New row",
     "loading": "Loading",
@@ -31,10 +30,15 @@
   },
   "employee": {
     "id": "Employee ID",
-    "name": "Name",
     "rang": "Rang",
-    "middleName": "middleName",
-    "lastName": "lastName",
+    "login": "Login",
+    "post": "Post",
+    "firstName": "Name",
+    "employeeGroup": "Employee Group",
+    "shiftTypes": "Available ShiftTypes",
+    "roadToHomeTime": "Road To Home Time",
+    "middleName": "Middle Name",
+    "lastName": "Last Name",
     "createdDate": "Date of creation",
     "createdTime": "Time of creation",
     "editing": "Group editing"

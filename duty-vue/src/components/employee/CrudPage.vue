@@ -1,8 +1,27 @@
 <template>
   <v-container>
-    <slot>
-
-    </slot>
+    <ValidationObserver v-if="item.new"
+                        v-slot="{ invalid }"
+                        ref="validator">
+      <v-form>
+        <v-card>
+          <v-container>
+            <slot name="inputs" v-bind:item="item"></slot>
+          </v-container>
+          <v-card-actions>
+            <v-btn type="submit"
+                   :disabled="invalid"
+                   small>
+              <v-icon>mdi-content-save</v-icon>
+              <span v-if="!(item.new)"
+                    class="hidden-xs-only">{{ $i18n.t('label.save') }}</span>
+              <span v-if="item.new"
+                    class="hidden-xs-only">{{ $i18n.t('label.create') }}</span>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </ValidationObserver>
     <v-data-table
         v-if="!(editMode)"
         calculate-widths
@@ -36,6 +55,7 @@
 
 <script>
 import {restService} from "@/rest_crud_operations";
+import {ValidationObserver} from "vee-validate";
 
 export default {
   data() {
@@ -44,7 +64,6 @@ export default {
       items: {_embedded: {}, page: {}},
       options: {},
       service: {},
-      id: null,
       editMode: false
     }
   },
@@ -93,13 +112,13 @@ export default {
       this.service.remove(this.item).then(() => this.resetItem())
     },
     loadItem(id) {
-      if (id)
-        if (id > 0)
-          this.service.get(id).then((loaded) => this.item = loaded)
-        else
-          this.item = {}
+      console.log(`Item load by id=${id}`)
+      if (id > 0)
+        this.service.get(id).then((loaded) => this.item = loaded)
+      else if (id < 0)
+        this.item = {id:-1,new: true}
       else
-        this.item = null;
+        this.item = {};
     },
     refreshItem() {
       this.id = this.item.id
@@ -109,7 +128,7 @@ export default {
       this.service.page(this.options).then(data => this.page = data)
     },
     calculateEditMode() {
-      if (this.item) {
+      if (Object.keys(this.item).length > 0) {
         this.editMode = true;
       } else {
         this.editMode = false;
@@ -117,7 +136,7 @@ export default {
     }
   }, mounted() {
     this.service = restService(this.uri)
-    this.calculateEditMode()
+    this.loadItem(this.$route.params.id)
   }, watch: {
     item: function () {
       this.calculateEditMode()
@@ -131,7 +150,8 @@ export default {
     '$route.params.id': function (id) {
       this.loadItem(id)
     }
-  }
+  },
+  components: {ValidationObserver}
 }
 </script>
 

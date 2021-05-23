@@ -1,8 +1,10 @@
-package com.bochkov.duty.test;
+package com.bochkov.duty.rest;
 
 import com.bochkov.duty.jpa.DutyJpaConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -15,7 +17,9 @@ import org.springframework.http.HttpMethod;
 
 @Configuration
 @Import(DutyJpaConfig.class)
-public class SpringBootRestApplication implements RepositoryRestConfigurer {
+
+@SpringBootApplication
+public class SpringBootRestApplication extends SpringBootServletInitializer implements RepositoryRestConfigurer {
 
     @Autowired
     ApplicationContext context;
@@ -42,5 +46,6 @@ public class SpringBootRestApplication implements RepositoryRestConfigurer {
                 return LinkRelation.of("item");
             }
         });
+
     }
 }

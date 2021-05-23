@@ -26,10 +26,10 @@
   },
   "employee": {
     "id": "Код",
-    "name": "Имя",
+    "firstName": "Имя",
     "rang": "Звание",
     "middleName": "Отчество",
-    "lastName": "Фамилич",
+    "lastName": "Фамилия",
     "createdDate": "Дата создания",
     "createdTime": "Время создания",
     "editing": "Редактирование сотрудника"
