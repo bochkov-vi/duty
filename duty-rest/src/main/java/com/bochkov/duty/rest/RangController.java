@@ -22,7 +22,7 @@ public class RangController {
 
     @GetMapping(value = "findByLike", produces = {"application/json"})
     public PagedModel<EntityModel<Rang>> findByLike(@RequestParam(value = "search",defaultValue = "") String search, @RequestParam(value = "page", defaultValue = "0", required = false) Integer page, @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
-        Page<Rang> resultPage = rangRepository.findByLike(search, PageRequest.of(page, size), "name", "fullName");
+        Page<Rang> resultPage = rangRepository.findByLike(search, PageRequest.of(page, size), "id","name", "fullName");
         PagedModel<EntityModel<Rang>> model = resourcesAssembler.toModel(resultPage);
         return model;
     }

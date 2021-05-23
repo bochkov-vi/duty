@@ -3,7 +3,10 @@
                   @input="$emit('input', $event)"
                   :error-messages="errors"
                   :search-input.sync="search"
-                  :items="items">
+                  :items="items"
+                  :label="label"
+                  no-filter
+                  clearable>
     <template v-slot:selection="data">
       <span>{{ data.item.fullName }}</span>
     </template>
@@ -17,7 +20,7 @@
 import axios from "axios";
 
 export default {
-  props: ['value', 'errors'],
+  props: ['value', 'errors', 'label'],
   data() {
     return {
       items: [],

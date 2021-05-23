@@ -5,8 +5,8 @@
                :headers="headers"
                uri="employees">
       <template #inputs="{item}">
-        <validation-provider :rules="{required:true}">
-          <rang-autocomplete v-model="item.rang"/>
+        <validation-provider :rules="{required:true}" v-slot="{errors}">
+          <rang-autocomplete v-model="item.rang" :errors="errors" :label="$i18n.t('employee.rang')"/>
         </validation-provider>
         <validation-provider :rules="{required:true}"
                              v-slot="{errors}">
