@@ -17,6 +17,7 @@ public class RangController {
     @Autowired
     RangRepository rangRepository;
 
+
     @Autowired
     PagedResourcesAssembler<Rang> resourcesAssembler;
 

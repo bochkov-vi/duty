@@ -31,6 +31,7 @@ export function restService(entityUri) {
 
     function save(entity) {
         let result;
+        info(entity)
         if (entity.new)
             result = create(entity)
         else

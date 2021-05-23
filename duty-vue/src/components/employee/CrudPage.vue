@@ -3,7 +3,7 @@
     <ValidationObserver v-if="item.new"
                         v-slot="{ invalid }"
                         ref="validator">
-      <v-form>
+      <v-form @submit.prevent="submit">
         <v-card>
           <v-container>
             <slot name="inputs" v-bind:item="item"></slot>
@@ -96,6 +96,12 @@ export default {
       })
     }
   }, methods: {
+    submit() {
+      const valid = this.$refs.validator.validate();
+      if (valid) {
+        this.saveItem()
+      }
+    },
     resetItem() {
       this.item = {}
     },
@@ -116,7 +122,7 @@ export default {
       if (id > 0)
         this.service.get(id).then((loaded) => this.item = loaded)
       else if (id < 0)
-        this.item = {id:-1,new: true}
+        this.item = {id: null, new: true}
       else
         this.item = {};
     },

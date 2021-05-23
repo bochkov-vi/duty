@@ -6,7 +6,8 @@
                   :items="items"
                   :label="label"
                   no-filter
-                  clearable>
+                  clearable
+                  :loading="loading">
     <template v-slot:selection="data">
       <span>{{ data.item.fullName }}</span>
     </template>
@@ -23,24 +24,38 @@ export default {
   props: ['value', 'errors', 'label'],
   data() {
     return {
+      loading: false,
       items: [],
-      search: null
+      search: null,
+      page: 0
     }
   },
   methods: {
-    load(txt) {
-      axios.get("http://localhost:8080/duty/rangs/findByLike", {
+    findByLike() {
+      this.loading = true;
+      return axios.get("http://localhost:8080/duty/rangs/findByLike", {
         params: {
-          search: txt
+          search: this.search,
+          page: this.page,
+          size: 50
         }
       }).then((r) => {
-        if (r.data._embedded)
-          this.items = r.data._embedded.items
+        return r.data
+      }).finally(() => this.loading = false)
+    },
+    load() {
+      this.findByLike().then((d) => {
+        if (d._embedded) {
+          this.items = d._embedded.items;
+        }
       })
     }
   },
   watch: {
     search(txt) {
+      this.load(txt)
+    },
+    page(txt) {
       this.load(txt)
     }
   },

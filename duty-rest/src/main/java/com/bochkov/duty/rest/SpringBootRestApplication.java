@@ -1,6 +1,7 @@
 package com.bochkov.duty.rest;
 
 import com.bochkov.duty.jpa.DutyJpaConfig;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,13 +30,17 @@ public class SpringBootRestApplication extends SpringBootServletInitializer impl
     }
 
     @Override
+    public void configureJacksonObjectMapper(ObjectMapper mapper) {
+
+    }
+
+    @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         new Repositories(context).forEach(config::exposeIdsFor);
         //config.getCorsRegistry().addMapping("*");
+
         config.getCorsRegistry().addMapping("/**").allowedOrigins("*").allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name());
         config.setRelProvider(new DefaultLinkRelationProvider() {
-
-
             @Override
             public LinkRelation getCollectionResourceRelFor(Class<?> type) {
                 return LinkRelation.of("items");
