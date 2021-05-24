@@ -38,7 +38,6 @@ public class SpringBootRestApplication extends SpringBootServletInitializer impl
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         new Repositories(context).forEach(config::exposeIdsFor);
         //config.getCorsRegistry().addMapping("*");
-
         config.getCorsRegistry().addMapping("/**").allowedOrigins("*").allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name());
         config.setRelProvider(new DefaultLinkRelationProvider() {
             @Override

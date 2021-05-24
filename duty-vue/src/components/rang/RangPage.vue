@@ -170,7 +170,7 @@ Validator.extend('uniqueFullName', {
       const result = axios.get("http://localhost:8080/duty/rest/rangs/search/findByFullName", {
         params: {search: value}
       }).then((resp) => {
-            const valid = !(resp.data._embedded.rangs.filter((item) => item.id !== currentID).length > 0);
+            const valid = !(resp.data._embedded.items.filter((item) => item.id !== currentID).length > 0);
             const result = {valid: valid}
             return result;
           }
@@ -263,18 +263,18 @@ export default {
       service.save(item).then(entity => {
         this.editedItem = entity;
         let index = -1;
-        this.page._embedded.rangs.find((el, i) => {
+        this.page._embedded.items.find((el, i) => {
           if (el.id === entity.id) {
             index = i;
             return true;
           }
         });
         if (index < 0) {
-          this.page._embedded.rangs.unshift(entity);
+          this.page._embedded.items.unshift(entity);
         } else {
-          const array = this.page._embedded.rangs;
+          const array = this.page._embedded.items;
           array[index] = entity;
-          this.page._embedded.rangs = array;
+          this.page._embedded.items = array;
         }
         this.editedItem = {};
       }).catch(e => {

@@ -3,7 +3,8 @@
     <crud-page locale-prefix="employee"
                entity-uri="employee"
                :headers="headers"
-               uri="employees">
+               uri="employees"
+               :request-params="{projection:'full-data'}">
       <template #inputs="{item}">
         <validation-provider :rules="{required:true}" v-slot="{errors}">
           <rang-autocomplete v-model="item.rang" :errors="errors" :label="$i18n.t('employee.rang')"/>
@@ -56,10 +57,20 @@ export default {
           sortable: true,
           value: 'id',
         }, {
-          text: 'name',
+          text: 'rang',
           align: 'start',
           sortable: true,
-          value: 'name',
+          value: 'rang.name',
+        }, {
+          text: 'firstName',
+          align: 'start',
+          sortable: true,
+          value: 'firstName',
+        }, {
+          text: 'lastName',
+          align: 'start',
+          sortable: true,
+          value: 'lastName'
         }
       ],
     }

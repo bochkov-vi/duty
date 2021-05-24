@@ -3,30 +3,30 @@ import {error, info, setLoading} from "@/store/store";
 import I18N from "@/i18n";
 
 
-export function restService(entityUri) {
+export function restService(entityUri, params) {
     const i18n = I18N;
+    const addparams = params ? params : {};
 
     function get(id) {
         setLoading(true);
-        return axios.get(entityUri + "/" + id).then((response) => {
-            setLoading();
+        return axios.get(entityUri + "/" + id, {params: addparams}).then((response) => {
             return response.data
-        }).catch(e => error(e))
+        })
+            .catch(e => error(e))
+            .finally(() => setLoading())
     }
 
     function edit(entity) {
         setLoading(true);
-        return axios.put(entityUri + "/" + entity.id, entity).then(response => {
-            setLoading();
+        return axios.put(entityUri + "/" + entity.id, entity,{params: addparams}).then(response => {
             return response.data
-        }).catch(e => error(e))
+        }).catch(e => error(e)).finally(() => setLoading())
     }
 
     function create(entity) {
-        return axios.post(entityUri, entity).then(response => {
-            setLoading();
+        return axios.post(entityUri, entity,{params: addparams}).then(response => {
             return response.data
-        }).catch(e => error(e))
+        }).catch(e => error(e)).finally(() => setLoading())
     }
 
     function save(entity) {
@@ -37,20 +37,19 @@ export function restService(entityUri) {
         else
             result = edit(entity)
 
-        result.then(function (data) {
+        result.then(() => (data) => {
             const msg = i18n.t("crud.saved.success");
             info(msg)
             return data;
-        })
+        }).finally(() => setLoading())
         return result;
     }
 
     function remove(entity) {
-        return axios.delete(entityUri + '/' + entity.id).then(response => {
-            setLoading();
+        return axios.delete(entityUri + '/' + entity.id,{params: addparams}).then(response => {
             info(i18n.t("crud.deleted.success"))
             return response.data
-        }).catch(e => error(e))
+        }).catch(e => error(e)).finally(() => setLoading())
     }
 
 
@@ -64,15 +63,15 @@ export function restService(entityUri) {
         const queryParams = {
             page: options.page - 1,
             size: options.itemsPerPage,
-            sort: sorts
+            sort: sorts,
+            ...addparams
         };
         setLoading(true)
         return axios.get(entityUri, {
             params: queryParams
         }).then(response => {
-            setLoading();
             return response.data
-        }).catch(e => error(e))
+        }).catch(e => error(e)).finally(() => setLoading())
     }
 
     return {get, edit, create, save, page, remove};

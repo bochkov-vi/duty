@@ -1,6 +1,6 @@
 <template>
   <v-autocomplete :value="value"
-                  @input="$emit('input', $event)"
+                  @input="input"
                   :error-messages="errors"
                   :search-input.sync="search"
                   :items="items"
@@ -31,6 +31,10 @@ export default {
     }
   },
   methods: {
+    input(event) {
+      event.href=event._links.item.href;
+      this.$emit('input', event)
+    },
     findByLike() {
       this.loading = true;
       return axios.get("http://localhost:8080/duty/rangs/findByLike", {

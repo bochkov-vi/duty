@@ -56,6 +56,7 @@
 <script>
 import {restService} from "@/rest_crud_operations";
 import {ValidationObserver} from "vee-validate";
+import {error} from "@/store/store";
 
 export default {
   data() {
@@ -68,7 +69,6 @@ export default {
     }
   },
   props: {
-
     uri: {
       required: true
     },
@@ -78,7 +78,7 @@ export default {
     headers: {
       required: true,
       type: Array
-    }
+    }, requestParams: null
   },
   name: "CrudPage",
   computed: {
@@ -109,7 +109,12 @@ export default {
       this.item = item
     },
     saveItem() {
-      this.service.save(this.item).then((saved) => this.item = saved)
+      this.service.save(this.item)
+          .then((saved) => {
+            if (saved)
+              this.item = saved
+          })
+          .catch((e) => error(e))
     },
     deleteItem() {
       this.service.remove(this.item).then(() => this.resetItem())
@@ -131,17 +136,17 @@ export default {
       this.loadItem()
     },
     loadPage() {
-      this.service.page(this.options).then(data => this.page = data)
+      this.service.page(this.options).then(data => this.items = data)
     },
     calculateEditMode() {
-      if (Object.keys(this.item).length > 0) {
+      if (this.item && Object.keys(this.item).length > 0) {
         this.editMode = true;
       } else {
         this.editMode = false;
       }
     }
   }, mounted() {
-    this.service = restService(this.uri)
+    this.service = restService(this.uri,this.requestParams)
     this.loadItem(this.$route.params.id)
   }, watch: {
     item: function () {
