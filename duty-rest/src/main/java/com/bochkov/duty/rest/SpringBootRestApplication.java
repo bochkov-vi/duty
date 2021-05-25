@@ -13,8 +13,16 @@ import org.springframework.data.repository.support.Repositories;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.core.DefaultLinkRelationProvider;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 @Configuration
 @Import(DutyJpaConfig.class)
@@ -32,6 +40,14 @@ public class SpringBootRestApplication extends SpringBootServletInitializer impl
     @Override
     public void configureJacksonObjectMapper(ObjectMapper mapper) {
 
+    }
+
+    @Override
+    public void configureHttpMessageConverters(List<HttpMessageConverter<?>> messageConverters) {
+        ((MappingJackson2HttpMessageConverter) messageConverters.get(0))
+                .setSupportedMediaTypes(asList(MediaTypes.HAL_JSON));
+        ((MappingJackson2HttpMessageConverter) messageConverters.get(2))
+                .setSupportedMediaTypes(asList(MediaType.APPLICATION_JSON));
     }
 
     @Override

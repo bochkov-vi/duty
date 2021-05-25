@@ -12,6 +12,8 @@ const mixin = {
         },
         info(msg) {
             info(msg)
+        }, removeMessage(msg) {
+            this.$store.dispatch('REMOVE_MESSAGE', msg)
         }
     }
 }

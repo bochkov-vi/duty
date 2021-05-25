@@ -7,13 +7,10 @@
                   :label="label"
                   no-filter
                   clearable
+                  item-value="id"
+                  item-text="fullName"
+                  return-object
                   :loading="loading">
-    <template v-slot:selection="data">
-      <span>{{ data.item.fullName }}</span>
-    </template>
-    <template v-slot:item="data">
-      <v-list-item-content v-text="data.item.fullName"></v-list-item-content>
-    </template>
   </v-autocomplete>
 </template>
 
@@ -32,7 +29,6 @@ export default {
   },
   methods: {
     input(event) {
-      event.href=event._links.item.href;
       this.$emit('input', event)
     },
     findByLike() {

@@ -1,0 +1,26 @@
+GET http://localhost:8080/duty/rest/employees/150
+
+
+###
+PUT http://localhost:8080/duty/rest/employees/150
+Content-Type: application/json
+
+{
+  "roadToHomeTime": null,
+  "login": null,
+  "rang": {
+    "createdDate": "2018-11-18T06:32:09.727Z",
+    "id": 11,
+    "name": "м-н",
+    "fullName": "Мичман",
+    "new": false
+  },
+  "post": null,
+  "firstName": "Василий",
+  "middleName": "Иванович",
+  "lastName": "Чапаев",
+  "employeeGroup": null,
+  "shiftTypes": [],
+  "id": 150
+}
+

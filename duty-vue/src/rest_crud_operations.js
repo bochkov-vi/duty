@@ -22,11 +22,16 @@ export function restService(entityUri, params) {
         return obj
     }
 
+    function extractLink(obj) {
+        return toLink(obj);
+    }
+
+
     function copyWithLinks(obj) {
         const data = {};
-        for (const key of Object.keys(obj)) {
-            const val = toLink(obj[key]);
-            if (val!==null)
+        for (const key of Object.keys(obj).filter((el) => "_links" !== el)) {
+            const val = extractLink(obj[key]);
+            if (val !== null)
                 data[key] = val
         }
         return data;
@@ -43,14 +48,16 @@ export function restService(entityUri, params) {
     }
 
     function edit(entity) {
+        const data = copyWithLinks(entity)
         setLoading(true);
-        return axios.put(entityUri + "/" + entity.id, entity, {params: addparams}).then(response => {
+        return axios.put(entityUri + "/" + entity.id, data, {params: addparams}).then(response => {
             return response.data
         }).catch(e => error(e)).finally(() => setLoading())
     }
 
     function create(entity) {
         const data = copyWithLinks(entity)
+        setLoading(true)
         return axios.post(entityUri, data, {params: addparams}).then(response => {
             return response.data
         }).catch(e => error(e)).finally(() => setLoading())

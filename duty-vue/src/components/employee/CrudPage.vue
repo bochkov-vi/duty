@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <ValidationObserver v-if="item.new"
+    <ValidationObserver v-if="item.id"
                         v-slot="{ invalid }"
                         ref="validator">
       <v-form @submit.prevent="submit">
@@ -25,7 +25,7 @@
     <v-data-table
         v-if="!(editMode)"
         calculate-widths
-        :headers="translatedHeaders"
+        :headers="[...translatedHeaders,{value:'actions'}]"
         :items="items._embedded.items"
         :options.sync="options"
         :server-items-length="items.page.totalElements"
@@ -43,8 +43,8 @@
           </router-link>
         </v-toolbar>
       </template>
-      <template v-slot:item.actions="{ row }">
-        <router-link :to="$i18nRoute({name:editRouteName,params:{id:row.id}})">
+      <template v-slot:item.actions="{ item }">
+        <router-link :to="$i18nRoute({name:editRouteName,params:{id:item.id}})">
           <v-icon>mdi-pencil-box-outline</v-icon>
         </router-link>
         <v-icon @click="item=row">mdi-trash-can-outline</v-icon>
