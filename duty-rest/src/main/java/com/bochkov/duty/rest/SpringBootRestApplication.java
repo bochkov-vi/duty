@@ -1,12 +1,14 @@
 package com.bochkov.duty.rest;
 
 import com.bochkov.duty.jpa.DutyJpaConfig;
+import com.bochkov.duty.jpa.entity.projection.EmployeeFullDataProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.repository.support.Repositories;
@@ -67,5 +69,10 @@ public class SpringBootRestApplication extends SpringBootServletInitializer impl
             }
         });
 
+    }
+
+    @Bean
+    EmployeeFullDataProcessor employeeFullDataProcessor() {
+        return new EmployeeFullDataProcessor();
     }
 }

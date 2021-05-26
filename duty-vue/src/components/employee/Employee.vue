@@ -3,8 +3,14 @@
     <crud-page locale-prefix="employee"
                entity-uri="employee"
                :headers="headers"
-               uri="employees"
+               url="http://localhost:8080/duty/rest/employees"
                :request-params="{projection:'full-data'}">
+
+
+        <template #item.fullName="{item}">
+          {{ item.lastName }} {{item.firstName.substr(0,1)}}.{{item.middleName.substr(0,1) }}.
+        </template>
+
       <template #inputs="{item}">
         <validation-provider :rules="{required:true}" v-slot="{errors}">
           <rang-autocomplete v-model="item.rang" :errors="errors" :label="$i18n.t('employee.rang')"/>
@@ -29,6 +35,12 @@
                         :label="$i18n.t('employee.lastName')"
           ></v-text-field>
         </validation-provider>
+        <validation-provider :rules="{required:true}" v-slot="{errors}">
+          <ShiftTypeAutocomplete v-model="item.shiftTypes"
+                                 :error-messages="errors"
+                                 :label="$i18n.t('employee.shiftTypes')"
+          ></ShiftTypeAutocomplete>
+        </validation-provider>
       </template>
     </crud-page>
   </v-container>
@@ -41,13 +53,14 @@ import * as Validator from "vee-validate";
 import {ValidationProvider} from "vee-validate";
 import {required} from "vee-validate/dist/rules";
 import RangAutocomplete from "@/components/rang/RangAutocomplete";
+import ShiftTypeAutocomplete from "@/components/shiftType/ShiftTypeAutocomplete";
 
 Validator.extend('required', {
   ...required,
   message: 'Это поле обязательно для заполнения'
 })
 export default {
-  components: {RangAutocomplete, CrudPage, ValidationProvider},
+  components: {ShiftTypeAutocomplete, RangAutocomplete, CrudPage, ValidationProvider},
   data() {
     return {
       headers: [
@@ -66,6 +79,11 @@ export default {
           align: 'start',
           sortable: true,
           value: 'firstName',
+        }, {
+          text: 'fullName',
+          align: 'start',
+          sortable: true,
+          value: 'fullName',
         }, {
           text: 'lastName',
           align: 'start',

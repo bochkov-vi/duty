@@ -1,41 +1,29 @@
 <template>
   <v-autocomplete :value="value"
-                  @input="input"
+                  @input="$emit('input',$event)"
+                  :items="page._embedded.items"
                   :error-messages="errors"
                   :search-input.sync="search"
-                  :items="items"
                   :label="label"
                   no-filter
                   clearable
                   item-value="_links.item.href"
-                  item-text="fullName"
-                  :loading="loading">
-  </v-autocomplete>
+                  item-text="name"
+                  :loading="loading"
+                  multiple></v-autocomplete>
 </template>
 
 <script>
 import axios from "axios";
 
 export default {
-  props: ['value', 'errors', 'label'],
-  data() {
-    return {
-      loading: false,
-      items: [],
-      search: null,
-      page: 0
-    }
-  },
   methods: {
-    input(event) {
-      this.$emit('input', event)
-    },
     findByLike() {
       this.loading = true;
-      return axios.get("http://localhost:8080/duty/rangs/findByLike", {
+      return axios.get("http://localhost:8080/duty/shiftTypes/findByLike", {
         params: {
           search: this.search,
-          page: this.page,
+          page: this.pageNumber,
           size: 50
         }
       }).then((r) => {
@@ -43,9 +31,9 @@ export default {
       }).finally(() => this.loading = false)
     },
     load() {
-      this.findByLike().then((d) => {
-        if (d._embedded) {
-          this.items = d._embedded.items;
+      this.findByLike().then((page) => {
+        if (page) {
+          this.page = page
         }
       })
     }
@@ -54,14 +42,24 @@ export default {
     search(txt) {
       this.load(txt)
     },
-    page() {
+    pageNumber() {
       this.load(this.search)
     }
   },
   mounted() {
     this.load(this.search)
   },
-  name: "RangAutocomplete"
+  props: ["value", "label"],
+  data() {
+    return {
+      search: null,
+      errors: [],
+      loading: false,
+      page: {_embedded: {items: []}},
+      pageNumber:0
+    }
+  },
+  name: "ShiftTypeAutocomplete"
 }
 </script>
 

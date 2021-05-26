@@ -39,6 +39,7 @@
     "roadToHomeTime": "Road To Home Time",
     "middleName": "Middle Name",
     "lastName": "Last Name",
+    "fullName": "Full Name",
     "createdDate": "Date of creation",
     "createdTime": "Time of creation",
     "editing": "Group editing"

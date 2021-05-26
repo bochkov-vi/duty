@@ -15,6 +15,8 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.SimpleRepresentationModelAssembler;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController()
 @RequestMapping("rangs")
 @CrossOrigin(origins = "*")
@@ -30,23 +32,27 @@ public class RangController {
     @Autowired
     RepositoryEntityLinks links;
 
-    RepresentationModelAssembler<Rang,EntityModel<Rang>> assembler = new SimpleRepresentationModelAssembler<Rang>() {
+    RepresentationModelAssembler<Rang, EntityModel<Rang>> assembler = new SimpleRepresentationModelAssembler<Rang>() {
         @Override
         public void addLinks(EntityModel<Rang> resource) {
-            log.debug("Add entity model links to {}",resource);
-            resource.add(links.linkToItemResource(Rang.class,resource.getContent().getId()));
+            log.debug("Add entity model links to {}", resource);
+            Optional.ofNullable(resource).map(EntityModel::getContent).map(Rang::getId).ifPresent((id) -> {
+                resource.add(links.linkToItemResource(Rang.class, id));
+                resource.add(links.linkForItemResource(Rang.class, id).withRel("self"));
+            });
+
         }
 
         @Override
         public void addLinks(CollectionModel<EntityModel<Rang>> resources) {
-            log.debug("Add collection model links to {}",resources);
+            log.debug("Add collection model links to {}", resources);
         }
     };
 
     @GetMapping(value = "findByLike", produces = {"application/json"})
     public PagedModel<EntityModel<Rang>> findByLike(@RequestParam(value = "search", defaultValue = "") String search, @RequestParam(value = "page", defaultValue = "0", required = false) Integer page, @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
         Page<Rang> resultPage = rangRepository.findByLike(search, PageRequest.of(page, size), "id", "name", "fullName");
-        PagedModel<EntityModel<Rang>> model = resourcesAssembler.toModel(resultPage,assembler);
+        PagedModel<EntityModel<Rang>> model = resourcesAssembler.toModel(resultPage, assembler);
         return model;
     }
 }
