@@ -4,6 +4,7 @@ import com.bochkov.duty.jpa.entity.converter.DurationConverter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.time.Duration;
@@ -28,6 +29,7 @@ public class Employee extends AbstractEntity<Integer> implements Comparable<Empl
 
     @ManyToOne
     @JoinColumn(name = "ID_RANG", nullable = false)
+    @RestResource(exported = false)
     Rang rang;
 
     @Column(name = "POST")
@@ -44,16 +46,19 @@ public class Employee extends AbstractEntity<Integer> implements Comparable<Empl
 
     @ManyToOne
     @JoinColumn(name = "ID_EMPLOYEE_GROUP", foreignKey = @ForeignKey(name = "EMPLOYEE_EMPLOYEE_GROUP_FK"))
+    @RestResource(exported = false)
     EmployeeGroup employeeGroup;
 
     @JoinTable(name = "EMPLOYEE_SHIFT_TYPE", joinColumns =
     @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE", foreignKey = @ForeignKey(name = "EMPLOYEE_SHIFT_TYPE_EMPLOYEE_FK")),
             inverseJoinColumns = @JoinColumn(name = "ID_SHIFT_TYPE", referencedColumnName = "ID_SHIFT_TYPE", foreignKey = @ForeignKey(name = "EMPLOYEE_SHIFT_TYPE_SHIFT_TYPE_FK")))
     @ManyToMany
+    @RestResource(exported = false)
     Set<ShiftType> shiftTypes;
 
     @Column(name = "ROAD_TO_HOME_TIME")
     @Convert(converter = DurationConverter.class)
+    @RestResource(exported = false)
     Duration roadToHomeTime;
 
     @Override

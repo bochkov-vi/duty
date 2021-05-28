@@ -37666,3 +37666,43 @@ Wrong user name or password [28000-200]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:461)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
 	... 9 more
+2021-05-28 12:39:58 database: flush
+org.h2.message.DbException: Внутренняя ошибка: "java.lang.IllegalStateException: The file is locked: nio:/development/maven/duty/dutystore.mv.db [1.4.200/7]"
+General error: "java.lang.IllegalStateException: The file is locked: nio:/development/maven/duty/dutystore.mv.db [1.4.200/7]" [50000-200]
+	at org.h2.message.DbException.get(DbException.java:194)
+	at org.h2.message.DbException.convert(DbException.java:347)
+	at org.h2.mvstore.db.MVTableEngine$1.uncaughtException(MVTableEngine.java:93)
+	at org.h2.mvstore.MVStore.handleException(MVStore.java:2877)
+	at org.h2.mvstore.MVStore.panic(MVStore.java:481)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:402)
+	at org.h2.mvstore.MVStore$Builder.open(MVStore.java:3579)
+	at org.h2.mvstore.db.MVTableEngine$Store.open(MVTableEngine.java:170)
+	at org.h2.mvstore.db.MVTableEngine.init(MVTableEngine.java:103)
+	at org.h2.engine.Database.getPageStore(Database.java:2659)
+	at org.h2.engine.Database.open(Database.java:675)
+	at org.h2.engine.Database.openDatabase(Database.java:307)
+	at org.h2.engine.Database.<init>(Database.java:301)
+	at org.h2.engine.Engine.openSession(Engine.java:74)
+	at org.h2.engine.Engine.openSession(Engine.java:192)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:171)
+	at org.h2.engine.Engine.createSession(Engine.java:166)
+	at org.h2.server.TcpServerThread.run(TcpServerThread.java:168)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientException: Внутренняя ошибка: "java.lang.IllegalStateException: The file is locked: nio:/development/maven/duty/dutystore.mv.db [1.4.200/7]"
+General error: "java.lang.IllegalStateException: The file is locked: nio:/development/maven/duty/dutystore.mv.db [1.4.200/7]" [50000-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:505)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	... 19 more
+Caused by: java.lang.IllegalStateException: The file is locked: nio:/development/maven/duty/dutystore.mv.db [1.4.200/7]
+	at org.h2.mvstore.DataUtils.newIllegalStateException(DataUtils.java:950)
+	at org.h2.mvstore.FileStore.open(FileStore.java:166)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:381)
+	... 13 more
+Caused by: java.nio.channels.OverlappingFileLockException
+	at sun.nio.ch.SharedFileLockTable.checkList(FileLockTable.java:255)
+	at sun.nio.ch.SharedFileLockTable.add(FileLockTable.java:152)
+	at sun.nio.ch.FileChannelImpl.tryLock(FileChannelImpl.java:1107)
+	at org.h2.store.fs.FileNio.tryLock(FilePathNio.java:121)
+	at java.nio.channels.FileChannel.tryLock(FileChannel.java:1155)
+	at org.h2.mvstore.FileStore.open(FileStore.java:163)
+	... 14 more

@@ -31,21 +31,18 @@
         </v-card>
       </v-form>
     </ValidationObserver>
-    <v-data-table
-        v-if="!(item)"
-        calculate-widths
-        :headers="[...translatedHeaders,{value:'actions'}]"
-        :items="page._embedded.items"
-        :options.sync="options"
-        :server-items-length="page.page.totalElements"
-        dense
-        :loading-text="$i18n.t('label.loading')"
-        :no-data-text="$i18n.t('label.no-data')"
-        class="mb-sm-10">
-      <template
-          v-for="header in headers"
-          v-slot:[`item.${header.value}`]="{ item }"
-      >
+    <v-data-table v-if="!(item)"
+                  calculate-widths
+                  :headers="[...translatedHeaders,{value:'actions'}]"
+                  :items="page._embedded.items"
+                  :options.sync="options"
+                  :server-items-length="page.page.totalElements"
+                  dense
+                  :loading-text="$i18n.t('label.loading')"
+                  :no-data-text="$i18n.t('label.no-data')"
+                  class="mb-sm-10">
+      <template v-for="header in headers"
+                v-slot:[`item.${header.value}`]="{ item }">
         <slot :name="[`item.${header.value}`]" :item="item">
           {{ getVal(item, header.value) }}
         </slot>
@@ -73,12 +70,8 @@
 
 <script>
 import {ValidationObserver} from "vee-validate";
-import {error} from "@/store/store";
-import axios from "axios";
-import traverson from "traverson";
-import JsonHalAdapter from "traverson-hal";
+import {restService} from "@/rest_crud_operations";
 
-traverson.registerMediaType(JsonHalAdapter.mediaType, JsonHalAdapter);
 
 export default {
   methods: {
@@ -95,21 +88,7 @@ export default {
       }
     },
     save(item) {
-      if (item) {
-        if (item.new)
-          this.rest.post(item)
-              .then((saved) => {
-                if (saved)
-                  this.item = saved
-              })
-              .catch((e) => error(e))
-        else
-          this.rest.put(item._links.self.href, item)
-              .then(() => {
-                this.$router.push({path: this.basePath})
-              })
-              .catch((e) => error(e))
-      }
+     this.rest.save(item)
     },
     remove(item) {
       this.rest.delete(item).then(() => this.$router.push({path: this.basePath}))
@@ -117,22 +96,7 @@ export default {
     loadItemById(id) {
       if (id > 0)
         this.rest.get(id).then((resp) => {
-          const data = resp.data;
-          for (const prop in data._links) {
-            if ("self" === prop || "item" === prop)
-              continue
-            const link = data._links[prop].href;
-            data[prop] = null
-            this.rest.get(link).then((resp) => {
-              if (resp.data._embedded && resp.data._embedded.items) {
-                data[prop] = resp.data._embedded.items.map((item) => item._links.self.href)
-              } else {
-                data[prop] = resp.data._links.self.href
-              }
-            }).catch(() => {
-            })
-          }
-          this.item = data
+          this.item = resp
         })
       else if (id < 0)
         this.item = {new: true}
@@ -140,44 +104,14 @@ export default {
         this.item = null;
     },
     loadPage() {
-      const sort = this.options.sortBy.map(function (srt, index) {
-        let result = srt;
-        if (this.options.sortDesc[index])
-          result = result + ",desc";
-        return result;
-      });
-      const params = {
-        size: this.options.itemsPerPage,
-        page: this.options.page - 1,
-        sort: sort,
-        projection: 'full-data'
-      }
-      this.rest.get("", {params: params}).then(resp => this.page = resp.data)
-    },
-    calculateEditMode() {
-      return this.item
+      this.rest.page(this.options).then(data=>this.page=data)
     },
     refreshItem() {
       this.loadItemById(this.$route.params.id)
     }
-  }, created() {
-    this.rest = axios.create({
-      baseURL: this.url,
-      paramsSerializer(params) {
-        const searchParams = new URLSearchParams();
-        for (const key of Object.keys(params)) {
-          const param = params[key];
-          if (Array.isArray(param)) {
-            for (const p of param) {
-              searchParams.append(key, p);
-            }
-          } else {
-            searchParams.append(key, param);
-          }
-        }
-        return searchParams.toString();
-      }
-    });
+  },
+  created() {
+    this.rest = restService(this.entityUri);
     this.basePath = this.$route.path.replace(/\/\d+/g, '')
   }, mounted() {
     this.refreshItem()
@@ -199,16 +133,17 @@ export default {
     }
   },
   props: {
-    url: {
-      required: true
-    },
     localePrefix: {
       required: true
     },
     headers: {
       required: true,
       type: Array
-    }, requestParams: null
+    },
+    entityUri: {
+      required: true,
+      type: String
+    }
   },
   name: "CrudPage",
   computed: {
@@ -224,9 +159,6 @@ export default {
     }
   },
   watch: {
-    item: function () {
-      this.calculateEditMode()
-    },
     options: {
       handler() {
         this.loadPage()
