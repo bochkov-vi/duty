@@ -1,9 +1,8 @@
 <template>
   <v-container>
     <crud-page locale-prefix="employee"
-               entity-uri="employee"
+               entity-uri="employees"
                :headers="headers"
-               url="http://localhost:8080/duty/rest/employees"
                :request-params="{projection:'full-data'}">
 
 

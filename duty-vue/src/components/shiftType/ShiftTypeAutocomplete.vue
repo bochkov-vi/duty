@@ -7,10 +7,11 @@
                   :label="label"
                   no-filter
                   clearable
-                  item-value="_links.item.href"
+                  item-value="id"
                   item-text="name"
                   :loading="loading"
-                  multiple></v-autocomplete>
+                  multiple
+                  return-object></v-autocomplete>
 </template>
 
 <script>
@@ -56,7 +57,7 @@ export default {
       errors: [],
       loading: false,
       page: {_embedded: {items: []}},
-      pageNumber:0
+      pageNumber: 0
     }
   },
   name: "ShiftTypeAutocomplete"

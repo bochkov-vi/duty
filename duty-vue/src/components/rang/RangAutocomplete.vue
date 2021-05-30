@@ -7,8 +7,9 @@
                   :label="label"
                   no-filter
                   clearable
-                  item-value="_links.item.href"
+                  item-value="id"
                   item-text="fullName"
+                  return-object
                   :loading="loading">
   </v-autocomplete>
 </template>
