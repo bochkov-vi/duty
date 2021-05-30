@@ -8,36 +8,6 @@ export function restService(entityUri, params) {
     const addparams = params ? params : {};
 
 
-    function toLink(obj) {
-        if (obj !== null && typeof obj === "object")
-            if (obj.href) {
-                return obj.href
-            } else {
-                for (const key in obj) {
-                    const href = toLink(obj[key])
-                    if (href)
-                        return href
-                }
-            }
-        return obj
-    }
-
-    function extractLink(obj) {
-        return toLink(obj);
-    }
-
-
-    function copyWithLinks(obj) {
-        const data = {};
-        for (const key of Object.keys(obj).filter((el) => "_links" !== el)) {
-            const val = extractLink(obj[key]);
-            if (val !== null)
-                data[key] = val
-        }
-        return data;
-    }
-
-
     function get(id) {
         setLoading(true);
         return axios.get(entityUri + "/" + id, {params: addparams}).then((response) => {
@@ -48,17 +18,15 @@ export function restService(entityUri, params) {
     }
 
     function edit(entity) {
-        const data = copyWithLinks(entity)
         setLoading(true);
-        return axios.put(entityUri + "/" + entity.id, data, {params: addparams}).then(response => {
+        return axios.put(entityUri + "/" + entity.id, entity, {params: addparams}).then(response => {
             return response.data
         }).catch(e => error(e)).finally(() => setLoading())
     }
 
     function create(entity) {
-        const data = copyWithLinks(entity)
         setLoading(true)
-        return axios.post(entityUri, data, {params: addparams}).then(response => {
+        return axios.post(entityUri, entity, {params: addparams}).then(response => {
             return response.data
         }).catch(e => error(e)).finally(() => setLoading())
     }

@@ -96,19 +96,22 @@ export default {
     },
     save(item) {
       if (item) {
+        let save ;
         if (item.new)
-          this.rest.post(item)
+          save = this.rest.post(item)
               .then((saved) => {
                 if (saved)
                   this.item = saved
+                return saved;
               })
               .catch((e) => error(e))
         else
-          this.rest.put(item._links.self.href, item)
-              .then(() => {
-                this.$router.push({path: this.basePath})
+          save = this.rest.put(item._links.self.href, item)
+              .then((saved) => {
+                return saved
               })
               .catch((e) => error(e))
+                
       }
     },
     remove(item) {
