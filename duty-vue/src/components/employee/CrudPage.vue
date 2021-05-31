@@ -43,7 +43,8 @@
                   class="mb-sm-10">
       <template v-for="header in headers"
                 v-slot:[`item.${header.value}`]="{ item }">
-        <slot :name="[`item.${header.value}`]" :item="item">
+        <slot :name="[`item.${header.value}`]"
+              :item="item">
           {{ getVal(item, header.value) }}
         </slot>
       </template>
@@ -58,10 +59,16 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <router-link :to="$i18nRoute({path:`${basePath}/${item.id}`})">
+        <v-btn small
+               min-width="36"
+               class="mr-1"
+               @click="$router.push($i18nRoute({path:`${basePath}/${item.id}`}))">
           <v-icon>mdi-pencil-box-outline</v-icon>
-        </router-link>
-        <v-icon @click="item=row">mdi-trash-can-outline</v-icon>
+        </v-btn>
+        <v-btn small
+               min-width="36">
+          <v-icon @click="item=row">mdi-trash-can-outline</v-icon>
+        </v-btn>
       </template>
 
     </v-data-table>
@@ -88,7 +95,7 @@ export default {
       }
     },
     save(item) {
-     this.rest.save(item)
+      this.rest.save(item)
     },
     remove(item) {
       this.rest.delete(item).then(() => this.$router.push({path: this.basePath}))
@@ -104,14 +111,14 @@ export default {
         this.item = null;
     },
     loadPage() {
-      this.rest.page(this.options).then(data=>this.page=data)
+      this.rest.page(this.options).then(data => this.page = data)
     },
     refreshItem() {
       this.loadItemById(this.$route.params.id)
     }
   },
   created() {
-    this.rest = restService(this.entityUri);
+    this.rest = restService(this.entityUri, {projection: "full-data"});
     this.basePath = this.$route.path.replace(/\/\d+/g, '')
   }, mounted() {
     this.refreshItem()

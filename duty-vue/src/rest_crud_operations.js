@@ -1,27 +1,60 @@
 import AXIOS from "@/http_client";
 import {error, info, setLoading} from "@/store/store";
 import I18N from "@/i18n";
+import axios from "axios";
 
 
 export function restService(entityUri, params) {
     const i18n = I18N;
     const addparams = params ? params : {};
 
-
-
     function get(id) {
         setLoading(true);
-        return AXIOS.get(entityUri + "/" + id, {params: addparams}).then((response) => {
-            return response.data
+        return getByUrl(entityUri + "/" + id, {params: addparams})
+    }
+
+    function getByUrl(url) {
+        setLoading(true);
+        return AXIOS.get(url, {params: addparams}).then(async (response) => {
+            const data = response.data
+            for (const link in data._links) {
+                if (link === "item" || link === "self") {
+                    continue
+                }
+                await axios.get(response.data._links[link].href).then((resp) => {
+                    if (resp.data._embedded) {
+                        data[link] = resp.data._embedded.items.map((item) => item._links.item.href)
+                    } else {
+                        data[link] = resp.data._links.item.href;
+                    }
+                }).catch(() => {
+                })
+            }
+            return data
         })
             .catch(e => error(e))
             .finally(() => setLoading())
     }
 
-    function edit(entity) {
+    async function edit(entity) {
         setLoading(true);
-        return AXIOS.put(entity._links.self.href, entity, {params: addparams}).then(response => {
-            return response.data
+        const associations = {};
+        for (const link in entity._links) {
+            const target = entity._links[link].href;
+            if (entity[target]) {
+                if (entity[target])
+                    associations[target] = [...entity[target]]
+                else
+                    associations[target] = []
+            }
+        }
+        return await axios.put(entity._links.self.href, entity).then(async () => {
+            for (const href in associations) {
+                await axios.put(href, associations[href].join('\n'), {headers: {'Content-Type': 'text/url-list'}})
+            }
+            const data = await getByUrl(entity._links.self).then((resp) => resp)
+            return data;
+
         }).catch(e => error(e)).finally(() => setLoading())
     }
 

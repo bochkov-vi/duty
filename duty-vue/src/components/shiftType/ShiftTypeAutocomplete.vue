@@ -7,11 +7,10 @@
                   :label="label"
                   no-filter
                   clearable
-                  item-value="id"
+                  item-value="_links.item.href"
                   item-text="name"
                   :loading="loading"
-                  multiple
-                  return-object></v-autocomplete>
+                  multiple></v-autocomplete>
 </template>
 
 <script>
