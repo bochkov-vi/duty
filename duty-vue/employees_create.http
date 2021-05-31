@@ -1,0 +1,37 @@
+
+###
+POST http://localhost:8080/duty/rest/employees
+Accept: application/json; charset=utf-8
+Content-Type: application/json; charset=utf-8
+
+{
+  "login": "pupkin3",
+  "post": "Техник",
+  "firstName": "Иван",
+  "middleName": "Петрович",
+  "lastName": "Калиткин",
+  "roadToHomeTime": null,
+  "new": true,
+  "rang": "http://localhost:8080/duty/rest/rangs/21",
+  "shiftTypes": ["http://localhost:8080/duty/rest/shiftTypes/0","http://localhost:8080/duty/rest/shiftTypes/1"]
+}
+
+###
+GET http://localhost:8080/duty/rest/employees/156
+Accept: application/json; charset=utf-8
+
+
+###
+PUT http://localhost:8080/duty/rest/employees/156/rang
+Content-Type: text/uri-list
+
+http://localhost:8080/duty/rest/rangs/12
+
+
+###
+GET http://localhost:8080/duty/rest/employees/156/rang
+Accept: application/hal+json; charset=utf-8
+
+###
+GET http://localhost:8080/duty/rest/employees/157/shiftTypes
+Accept: application/hal+json; charset=utf-8

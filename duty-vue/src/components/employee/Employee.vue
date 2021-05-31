@@ -6,9 +6,12 @@
                :request-params="{projection:'full-data'}">
 
 
-        <template #item.fullName="{item}">
-          {{ item.lastName }} {{item.firstName.substr(0,1)}}.{{item.middleName.substr(0,1) }}.
-        </template>
+      <template #item.fullName="{item}">
+        {{ item.lastName }} {{ item.firstName.substr(0, 1) }}.{{ item.middleName.substr(0, 1) }}.
+      </template>
+      <template #item.shiftTypes="{item}">
+        {{ item.shiftTypes.map((i) => i.name).join(', ') }}
+      </template>
 
       <template #inputs="{item}">
         <validation-provider :rules="{required:true}" v-slot="{errors}">
@@ -74,20 +77,15 @@ export default {
           sortable: true,
           value: 'rang.name',
         }, {
-          text: 'firstName',
-          align: 'start',
-          sortable: true,
-          value: 'firstName',
-        }, {
           text: 'fullName',
           align: 'start',
           sortable: true,
           value: 'fullName',
         }, {
-          text: 'lastName',
+          text: 'shiftTypes',
           align: 'start',
           sortable: true,
-          value: 'lastName'
+          value: 'shiftTypes'
         }
       ],
     }

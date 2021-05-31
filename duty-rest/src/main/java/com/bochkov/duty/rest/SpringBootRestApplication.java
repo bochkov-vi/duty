@@ -46,10 +46,7 @@ public class SpringBootRestApplication extends SpringBootServletInitializer impl
 
     @Override
     public void configureHttpMessageConverters(List<HttpMessageConverter<?>> messageConverters) {
-        ((MappingJackson2HttpMessageConverter) messageConverters.get(0))
-                .setSupportedMediaTypes(asList(MediaTypes.HAL_JSON));
-        ((MappingJackson2HttpMessageConverter) messageConverters.get(2))
-                .setSupportedMediaTypes(asList(MediaType.APPLICATION_JSON));
+
     }
 
     @Override

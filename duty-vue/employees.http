@@ -1,0 +1,38 @@
+###
+GET http://localhost:8080/duty/rest
+Accept: application/hal+json; charset=utf-8
+
+
+
+###
+PUT http://localhost:8080/duty/rest/employees/1
+Accept: application/json; charset=utf-8
+Content-Type: application/json; charset=utf-8
+
+{
+  "createdDate": "2021-05-24T21:28:06.624",
+  "login": "pupkin",
+  "post": "Техник",
+  "firstName": "Василий",
+  "middleName": "Степанович",
+  "lastName": "Пупкин",
+  "roadToHomeTime": null,
+  "new": false
+}
+
+####
+GET http://localhost:8080/duty/rest/profile/employees
+Accept: application/json; charset=utf-8
+Content-Type: application/json; charset=utf-8
+
+###
+PUT http://localhost:8080/duty/rest/employees/1/rang
+Content-Type: text/uri-list
+
+http://localhost:8080/duty/rest/rangs/14
+
+
+###
+GET http://localhost:8080/duty/rest/employees/1
+Accept: application/hal+json; charset=utf-8
+
