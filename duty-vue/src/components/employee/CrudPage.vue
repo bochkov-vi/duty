@@ -1,7 +1,6 @@
 <template>
   <v-container>
-    <ValidationObserver v-if="item"
-                        v-slot="{ invalid }"
+    <ValidationObserver v-slot="{ invalid }"
                         ref="validator">
       <v-form @submit.prevent="submit">
         <v-card>
@@ -31,47 +30,11 @@
         </v-card>
       </v-form>
     </ValidationObserver>
-    <v-data-table v-if="!(item)"
-                  calculate-widths
-                  :headers="[...translatedHeaders,{value:'actions'}]"
-                  :items="page._embedded.items"
-                  :options.sync="options"
-                  :server-items-length="page.page.totalElements"
-                  dense
-                  :loading-text="$i18n.t('label.loading')"
-                  :no-data-text="$i18n.t('label.no-data')"
-                  class="mb-sm-10">
-      <template v-for="header in headers"
-                v-slot:[`item.${header.value}`]="{ item }">
-        <slot :name="[`item.${header.value}`]"
-              :item="item">
-          {{ getVal(item, header.value) }}
-        </slot>
-      </template>
-      <template v-slot:top>
-        <v-toolbar flat>
-          <router-link :to="$i18nRoute({path:basePath+'-1'})">
-            <v-btn small>
-              <v-icon>mdi-table-plus</v-icon>
-              {{ $i18n.t('label.new-item') }}
-            </v-btn>
-          </router-link>
-        </v-toolbar>
-      </template>
-      <template v-slot:item.actions="{ item }">
-        <v-btn small
-               min-width="36"
-               class="mr-1"
-               @click="$router.push($i18nRoute({path:`${basePath}/${item.id}`}))">
-          <v-icon>mdi-pencil-box-outline</v-icon>
-        </v-btn>
-        <v-btn small
-               min-width="36">
-          <v-icon @click="item=row">mdi-trash-can-outline</v-icon>
-        </v-btn>
-      </template>
-
-    </v-data-table>
+    <v-dialog v-model="showDelete">
+      <v-card>
+        <p v-for="header in headers" :key="header.value">{{ header.value }}:{{ getVal(item, header.value) }}</p>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -82,11 +45,18 @@ import {restService} from "@/rest_crud_operations";
 
 export default {
   methods: {
+
     getVal(item, path) {
-      return path.split(".").reduce((res, prop) => res[prop], item);
+      if (item)
+        return path.split(".").reduce((res, prop) => {
+          if (res)
+            return res[prop]
+          return null
+        }, item);
+      else return null
     },
     cancel() {
-      this.$router.push({path: this.basePath})
+      this.$router.push({name: this.tableRouteName})
     },
     submit() {
       const valid = this.$refs.validator.validate();
@@ -94,21 +64,27 @@ export default {
         this.save(this.item)
       }
     },
-    save(item) {
-      this.rest.save(item)
+    async save(item) {
+      const routeId = this.$route.params.id
+      const saved = await this.rest.save(item)
+      if (saved.id !== routeId) {
+        await this.$router.push({path: this.basePath, id: saved.id})
+      }
     },
-    remove(item) {
-      this.rest.delete(item).then(() => this.$router.push({path: this.basePath}))
+    deleteItem(item) {
+      this.item = item
+      this.showDelete = true
+    },
+    del(item) {
+      this.rest.del(item).then(() => this.$router.push({path: this.basePath}))
     },
     loadItemById(id) {
-      if (id > 0)
+      if (id && id > 0)
         this.rest.get(id).then((resp) => {
           this.item = resp
         })
-      else if (id < 0)
-        this.item = {new: true}
       else
-        this.item = null;
+        this.item = {new: true}
     },
     loadPage() {
       this.rest.page(this.options).then(data => this.page = data)
@@ -119,24 +95,15 @@ export default {
   },
   created() {
     this.rest = restService(this.entityUri, {projection: "full-data"});
-    this.basePath = this.$route.path.replace(/\/\d+/g, '')
   }, mounted() {
     this.refreshItem()
   },
   data() {
     return {
-      item: null,
-      page: {
-        _embedded: {
-          items: []
-        },
-        page: {}
-      },
-      options: null,
-      editMode: false,
+      item: {new :true},
       rest: null,
       loading: false,
-      basePath: null
+      showDelete: false
     }
   },
   props: {
@@ -154,6 +121,9 @@ export default {
   },
   name: "CrudPage",
   computed: {
+    tableRouteName() {
+      return this.$route.name.split(".")[0]
+    },
     translatedHeaders() {
       return this.headers.map((h) => {
         return {
@@ -166,6 +136,9 @@ export default {
     }
   },
   watch: {
+    showDelete(val) {
+      if (!val) this.cancel()
+    },
     options: {
       handler() {
         this.loadPage()

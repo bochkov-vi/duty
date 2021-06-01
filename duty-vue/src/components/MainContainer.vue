@@ -37,7 +37,7 @@
         <router-link :to="$i18nRoute({name:'groups'})">{{ $t('groups') }}</router-link>
       </v-btn>
       <v-btn>
-        <router-link :to="$i18nRoute({name:'employee'})">{{ $t('employees') }}</router-link>
+        <router-link :to="$i18nRoute({name:'employees'})">{{ $t('employees') }}</router-link>
       </v-btn>
       <v-btn @click="toggleLoading">
         <v-icon>mdi-cog-outline</v-icon>

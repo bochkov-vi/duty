@@ -46,19 +46,19 @@ const routes = [{
             }
         },
         {
-            path: 'employee/:id',
+            path: 'employees/:id',
             props: true,
-            name: 'employee.edit',
-            component: () => import(/* webpackChunkName: "about" */ '../components/employee/Employee.vue'),
+            name: 'employees.edit',
+            component: () => import(/* webpackChunkName: "about" */ '../components/employee/EmployeePage.vue'),
             meta: {
                 title: "employee.editing"
             }
         },
         {
-            path: 'employee',
-            name: 'employee',
+            path: 'employees',
+            name: 'employees',
             props: true,
-            component: () => import(/* webpackChunkName: "about" */ '../components/employee/Employee.vue'),
+            component: () => import(/* webpackChunkName: "about" */ '../components/employee/EmployeeTable.vue'),
             meta: {
                 title: "employees"
             }

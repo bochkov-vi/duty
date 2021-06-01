@@ -1,7 +1,7 @@
 <template>
   <v-autocomplete :value="value"
                   @input="$emit('input',$event)"
-                  :items="page._embedded.items"
+                  :items="items"
                   :error-messages="errors"
                   :search-input.sync="search"
                   :label="label"
@@ -34,6 +34,13 @@ export default {
       this.findByLike().then((page) => {
         if (page) {
           this.page = page
+          if(page._embedded){
+            this.items=page._embedded.items
+          }else {
+            this.items=[]
+          }
+        }else {
+          this.items=[]
         }
       })
     }
@@ -56,7 +63,8 @@ export default {
       errors: [],
       loading: false,
       page: {_embedded: {items: []}},
-      pageNumber: 0
+      pageNumber: 0,
+      items:[]
     }
   },
   name: "ShiftTypeAutocomplete"
