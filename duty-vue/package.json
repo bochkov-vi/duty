@@ -8,12 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "traverson": "^7.0.1",
-    "traverson-promise": "^0.0.9",
-    "traverson-hal": "^7.0.2",
     "@mdi/font": "^5.9.55",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "traverson": "^7.0.1",
+    "traverson-hal": "^7.0.2",
+    "traverson-promise": "^0.0.9",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",
     "vue-i18n": "^8.24.4",
