@@ -45,14 +45,12 @@ const result = traverson.from(rootUri).getResource().resultWithTraversal().then(
             } else
                 result[link] = d._links.self.href
 
-        }).catch(e => {
         })
     }
     return result
 })
 
-result.then(r =>
-    console.log(r))
+result.then(r => console.log(r))
 
 
 
