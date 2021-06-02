@@ -1,4 +1,4 @@
-const traverson = require('traverson')
+const traverson = require('traverson-promise')
 const JsonHalAdapter = require('traverson-hal');
 traverson.registerMediaType(JsonHalAdapter.mediaType, JsonHalAdapter);
 
@@ -30,31 +30,30 @@ let payload = {
 }
 
 // traverson.registerMediaType('text/uri-list',)
-traverson.from(rootUri).get((error, document, tr) => {
-    if (error) {
-        console.log(error)
-        return done(error)
-    } else {
-        console.log(document.body)
-    }
-    tr.continue().follow("rang","self").getUrl((e, d, t) => {
-        if (e)
-            console.log(e)
-        else
-            console.log(d)
-    })
-    tr.continue().follow("rang").withRequestOptions({
-        headers: {
-            'Content-Type': 'text/uri-list'
-        }
-    }).sendRawPayload(true).put("http://localhost:8080/duty/rest/rangs/11",(e,d,t)=>{
-        if (e)
-            console.log(e)
-        else
-            console.log(d.body)
-    })
 
+
+const result = traverson.from(rootUri).getResource().resultWithTraversal().then(async ({result, traversal}) => {
+    for (const link in result._links) {
+        if (link === "item" || link === "self") {
+            continue
+        }
+        await traversal.continue().follow(link, "self").getResource().result.then((d) => {
+            if (d._embedded) {
+                result[link] = d._embedded.items.map((item) => {
+                    return item._links.self.href
+                })
+            } else
+                result[link] = d._links.self.href
+
+        }).catch(e => {
+        })
+    }
+    return result
 })
+
+result.then(r =>
+    console.log(r))
+
 
 
 
