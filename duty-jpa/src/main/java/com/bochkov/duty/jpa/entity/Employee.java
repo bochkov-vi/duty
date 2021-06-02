@@ -4,7 +4,6 @@ import com.bochkov.duty.jpa.entity.converter.DurationConverter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.time.Duration;

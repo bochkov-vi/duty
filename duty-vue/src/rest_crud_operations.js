@@ -1,57 +1,93 @@
-import axios from "@/http_client";
-import {error, info, setLoading} from "@/store/store";
-import I18N from "@/i18n";
+import AXIOS from "@/http_client";
+import {setLoading} from "@/store/store";
+import axios from "axios";
 
 
 export function restService(entityUri, params) {
-    const i18n = I18N;
     const addparams = params ? params : {};
-
 
     function get(id) {
         setLoading(true);
-        return axios.get(entityUri + "/" + id, {params: addparams}).then((response) => {
-            return response.data
-        })
-            .catch(e => error(e))
-            .finally(() => setLoading())
+        return getByUrl(entityUri + "/" + id, {params: addparams})
     }
 
-    function edit(entity) {
+    async function loadLinks(data) {
+        for (const link in data._links) {
+            if (link === "item" || link === "self") {
+                continue
+            }
+            await axios.get(data._links[link].href).then((resp) => {
+                if (resp.data._embedded) {
+                    data[link] = resp.data._embedded.items.map((item) => item._links.item.href)
+                } else {
+                    data[link] = resp.data._links.item.href;
+                }
+            }).catch(() => {
+            })
+        }
+    }
+
+    function getByUrl(url) {
         setLoading(true);
-        return axios.put(entityUri + "/" + entity.id, entity, {params: addparams}).then(response => {
-            return response.data
-        }).catch(e => error(e)).finally(() => setLoading())
+        return AXIOS.get(url).then(async (response) => {
+            const data = response.data
+            await loadLinks(data)
+            return data
+        }).finally(() => setLoading())
     }
 
-    function create(entity) {
+    async function put(entity) {
+        setLoading(true);
+        return await axios.put(entity._links.self.href, entity).then(async (resp) => {
+            await putLinks(entity)
+            const data = resp.data
+            await loadLinks(data)
+            return data
+        }).finally(() => setLoading())
+    }
+
+    async function putLinks(entity) {
+        const associations = {};
+        for (const propName in entity._links) {
+            if (entity[propName]) {
+                const target = entity._links[propName].href;
+                if (Array.isArray(entity[propName]))
+                    associations[target] = entity[propName]
+                else
+                    associations[target] = [entity[propName]]
+            }
+        }
+        for (const href in associations) {
+            await axios.put(href, associations[href].join('\n'), {headers: {'Content-Type': 'text/uri-list'}})
+        }
+    }
+
+    async function create(entity) {
         setLoading(true)
-        return axios.post(entityUri, entity, {params: addparams}).then(response => {
-            return response.data
-        }).catch(e => error(e)).finally(() => setLoading())
+        return await AXIOS.post(entityUri, entity).then(async resp => {
+            const data = resp.data;
+            await loadLinks(data)
+            return data
+        }).finally(() => setLoading())
     }
 
-    function save(entity) {
-        let result;
-        info(entity)
+    async function save(entity) {
+        let action;
         if (entity.new)
-            result = create(entity)
+            action = create(entity)
         else
-            result = edit(entity)
-
-        result.then(() => (data) => {
-            const msg = i18n.t("crud.saved.success");
-            info(msg)
+            action = put(entity)
+        setLoading(true)
+        const data = await action.then((data) => {
             return data;
         }).finally(() => setLoading())
-        return result;
+        return data;
     }
 
     function remove(entity) {
-        return axios.delete(entityUri + '/' + entity.id, {params: addparams}).then(response => {
-            info(i18n.t("crud.deleted.success"))
+        return AXIOS.delete(entityUri + '/' + entity.id, {params: addparams}).then(response => {
             return response.data
-        }).catch(e => error(e)).finally(() => setLoading())
+        }).finally(() => setLoading())
     }
 
 
@@ -69,18 +105,18 @@ export function restService(entityUri, params) {
             ...addparams
         };
         setLoading(true)
-        return axios.get(entityUri, {
+        return AXIOS.get(entityUri, {
             params: queryParams
         }).then(response => {
             return response.data
-        }).catch(e => error(e)).finally(() => setLoading())
+        }).finally(() => setLoading())
     }
 
-    return {get, edit, create, save, page, remove};
+    return {get, save, page, del: remove};
 }
 
 export function restAllServices() {
-    axios.get("").then(response => {
+    AXIOS.get("").then(response => {
         const services = {};
         response.data._links.items.forEach((href => {
             const item = lastItem(href)

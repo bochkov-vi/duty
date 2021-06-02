@@ -2,10 +2,9 @@
   <v-container>
     <crud-page locale-prefix="employee"
                entity-uri="employees"
+               base-path="employee"
                :headers="headers"
                :request-params="{projection:'full-data'}">
-
-
       <template #item.fullName="{item}">
         {{ item.lastName }} {{ item.firstName.substr(0, 1) }}.{{ item.middleName.substr(0, 1) }}.
       </template>
