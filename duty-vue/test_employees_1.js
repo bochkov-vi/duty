@@ -68,7 +68,6 @@ async function save(data) {
 
 }
 
-
 function get() {
     return  tpromise.from(rootUri).getResource().resultWithTraversal().then(async ({result, traversal}) => {
         for (const link in result._links) {
