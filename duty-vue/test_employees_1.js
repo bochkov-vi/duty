@@ -1,5 +1,3 @@
-const minilog = require('./node_modules/minilog/lib/index.js').pipe(process.stdout);
-
 const traverson = require('traverson')
 const JsonHalAdapter = require('traverson-hal');
 traverson.registerMediaType(JsonHalAdapter.mediaType, JsonHalAdapter);
@@ -31,31 +29,31 @@ let payload = {
     }
 }
 
-traverson.from(rootUri).get((error, document, traversal) => {
+// traverson.registerMediaType('text/uri-list',)
+traverson.from(rootUri).get((error, document, tr) => {
     if (error) {
         console.log(error)
         return done(error)
     } else {
         console.log(document.body)
     }
-    traversal.continue().follow("rang").get((error, document) => {
-        if (error) {
-            console.log(error)
-        } else {
-            console.log("get Rang")
-            console.log(document.body)
-        }
+    tr.continue().follow("rang","self").getUrl((e, d, t) => {
+        if (e)
+            console.log(e)
+        else
+            console.log(d)
     })
-    traversal.continue().follow("rang")
-        .withRequestOptions({
-            headers: {'Content-Type': 'text/uri-list'}
-        })
-        .put({body:"http://localhost:8080/duty/rest/rangs/12"}, (error, document) => {
-            if (error)
-                console.log(error)
-            else
-                console.log(document.body)
-        })
+    tr.continue().follow("rang").withRequestOptions({
+        headers: {
+            'Content-Type': 'text/uri-list'
+        }
+    }).sendRawPayload(true).put("http://localhost:8080/duty/rest/rangs/11",(e,d,t)=>{
+        if (e)
+            console.log(e)
+        else
+            console.log(d.body)
+    })
+
 })
 
 
