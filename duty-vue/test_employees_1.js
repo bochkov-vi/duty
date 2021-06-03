@@ -7,7 +7,7 @@ tpromise.registerMediaType(JsonHalAdapter.mediaType, JsonHalAdapter);
 
 console.log("run script test_edit_employee")
 
-let rootUri = 'http://localhost:8080/duty/rest/employees/1'
+let rootUri = 'http://localhost:8080/duty/rest/employees'
 
 let payload = {
     createdDate: null,
@@ -20,7 +20,6 @@ let payload = {
     roadToHomeTime: null,
     new: true,
     _links: {
-        self: {href: 'http://localhost:8080/duty/rest/employees/1'},
         item: {
             href: 'http://localhost:8080/duty/rest/employees/1{?projection}',
             templated: true
@@ -34,42 +33,46 @@ let payload = {
     employeeGroup: 'http://localhost:8080/duty/rest/employeeGroups/2',
     shiftTypes: [
         'http://localhost:8080/duty/rest/shiftTypes/1',
-        'http://localhost:8080/duty/rest/shiftTypes/2',
-        'http://localhost:8080/duty/rest/shiftTypes/3',
-        'http://localhost:8080/duty/rest/shiftTypes/4',
-        'http://localhost:8080/duty/rest/shiftTypes/0'
+        'http://localhost:8080/duty/rest/shiftTypes/2'
     ],
-    rang: 'http://localhost:8080/duty/rest/rangs/14'
+    rang: 'http://localhost:8080/duty/rest/rangs/22'
 }
 
 
 // traverson.registerMediaType('text/uri-list',)
 
-async function save(data) {
-    traverson.from(data._links.self.href).put(data, (error, response, traversal) => {
-        if (error) {
-            return done(error)
-        }
-        for (const link in data._links) {
-            if (data[link]) {
-                const associationUrl = data._links[link].href
-                const associationValue = data[link]
-                traverson.from(associationUrl).sendRawPayload(true).withRequestOptions({
-                    headers: {'Content-Type': 'text/uri-list'}
-                }).put(associationValue, (error, response) => {
-                    if (error) {
-                        console.error(error)
+async function save(data, url) {
+    if (data._links && data._links.self) {
+        traverson.from(data._links.self.href).put(data, (error, response, traversal) => {
+                if (error) {
+                    return error
+                } else {
+                    for (const link in data._links) {
+                        if (data[link]) {
+                            const associationUrl = data._links[link].href
+                            const associationValue = data[link]
+                            traverson.from(associationUrl).sendRawPayload(true).withRequestOptions({
+                                headers: {'Content-Type': 'text/uri-list'}
+                            }).put(associationValue, (error, response) => {
+                                if (error) {
+                                    console.error(error)
+                                }
+                            })
+                        }
                     }
-                })
+                }
             }
-        }
-    })
-    return get()
-
+        )
+        return get(data._links.self.href)
+    } else {
+        return tpromise.from(url).post(data).resultWithTraversal().then(async ({result, traversal}) => {
+            console.log(result.body)
+        })
+    }
 }
 
-function get() {
-    return  tpromise.from(rootUri).getResource().resultWithTraversal().then(async ({result, traversal}) => {
+function get(url) {
+    return tpromise.from(url).getResource().resultWithTraversal().then(async ({result, traversal}) => {
         for (const link in result._links) {
             if (link === "item" || link === "self") {
                 continue
@@ -87,9 +90,10 @@ function get() {
         return result
     })
 }
+
 //get()
-save(payload).then(
-    (data)=>console.log(data))
+save(payload,rootUri).then(
+    (data) => console.log(data))
 
 
 
