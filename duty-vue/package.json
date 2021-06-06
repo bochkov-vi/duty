@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 9090",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test-traverson": "jest"
   },
   "dependencies": {
     "@mdi/font": "^5.9.55",
@@ -20,8 +21,10 @@
     "vue-router": "^3.2.0",
     "vuetify": "^2.4.0",
     "vuex": "^3.4.0"
+
   },
   "devDependencies": {
+    "jest": "^27.0.4",
     "@kazupon/vue-i18n-loader": "^0.5.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",

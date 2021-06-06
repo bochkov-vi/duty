@@ -1,0 +1,270 @@
+{
+  "alps": {
+    "version": "1.0",
+    "descriptor": [
+      {
+        "id": "employee-representation",
+        "href": "http://localhost:8080/duty/rest/profile/employees",
+        "descriptor": [
+          {
+            "name": "id",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "login",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "post",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "firstName",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "middleName",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "lastName",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "roadToHomeTime",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "createdDate",
+            "type": "SEMANTIC"
+          },
+          {
+            "name": "rang",
+            "type": "SAFE",
+            "rt": "http://localhost:8080/duty/rest/profile/rangs#rang-representation"
+          },
+          {
+            "name": "employeeGroup",
+            "type": "SAFE",
+            "rt": "http://localhost:8080/duty/rest/profile/employeeGroups#employeeGroup-representation"
+          },
+          {
+            "name": "shiftTypes",
+            "type": "SAFE",
+            "rt": "http://localhost:8080/duty/rest/profile/shiftTypes#shiftType-representation"
+          }
+        ]
+      },
+      {
+        "id": "get-employees",
+        "name": "employees",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "page",
+            "type": "SEMANTIC",
+            "doc": {
+              "format": "TEXT",
+              "value": "The page to return."
+            }
+          },
+          {
+            "name": "size",
+            "type": "SEMANTIC",
+            "doc": {
+              "format": "TEXT",
+              "value": "The size of the page to return."
+            }
+          },
+          {
+            "name": "sort",
+            "type": "SEMANTIC",
+            "doc": {
+              "format": "TEXT",
+              "value": "The sorting criteria to use to calculate the content of the page."
+            }
+          },
+          {
+            "name": "projection",
+            "type": "SEMANTIC",
+            "doc": {
+              "format": "TEXT",
+              "value": "The projection that shall be applied when rendering the response. Acceptable values available in nested descriptors."
+            },
+            "descriptor": [
+              {
+                "name": "full-data",
+                "type": "SEMANTIC",
+                "descriptor": [
+                  {
+                    "name": "roadToHomeTime",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "login",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "post",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "firstName",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "middleName",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "lastName",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "employeeGroup",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "shiftTypes",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "rang",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "id",
+                    "type": "SEMANTIC"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rt": "#employee-representation"
+      },
+      {
+        "id": "create-employees",
+        "name": "employees",
+        "type": "UNSAFE",
+        "descriptor": [],
+        "rt": "#employee-representation"
+      },
+      {
+        "id": "update-employee",
+        "name": "employee",
+        "type": "IDEMPOTENT",
+        "descriptor": [],
+        "rt": "#employee-representation"
+      },
+      {
+        "id": "patch-employee",
+        "name": "employee",
+        "type": "UNSAFE",
+        "descriptor": [],
+        "rt": "#employee-representation"
+      },
+      {
+        "id": "delete-employee",
+        "name": "employee",
+        "type": "IDEMPOTENT",
+        "descriptor": [],
+        "rt": "#employee-representation"
+      },
+      {
+        "id": "get-employee",
+        "name": "employee",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "projection",
+            "type": "SEMANTIC",
+            "doc": {
+              "format": "TEXT",
+              "value": "The projection that shall be applied when rendering the response. Acceptable values available in nested descriptors."
+            },
+            "descriptor": [
+              {
+                "name": "full-data",
+                "type": "SEMANTIC",
+                "descriptor": [
+                  {
+                    "name": "roadToHomeTime",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "login",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "post",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "firstName",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "middleName",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "lastName",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "employeeGroup",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "shiftTypes",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "rang",
+                    "type": "SEMANTIC"
+                  },
+                  {
+                    "name": "id",
+                    "type": "SEMANTIC"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rt": "#employee-representation"
+      },
+      {
+        "name": "findByShiftTypesIn",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "shiftType",
+            "type": "SEMANTIC"
+          }
+        ]
+      },
+      {
+        "name": "findByShiftTypesContaining",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "shiftType",
+            "type": "SEMANTIC"
+          }
+        ]
+      },
+      {
+        "name": "findByLogin",
+        "type": "SAFE",
+        "descriptor": [
+          {
+            "name": "login",
+            "type": "SEMANTIC"
+          }
+        ]
+      }
+    ]
+  }
+}

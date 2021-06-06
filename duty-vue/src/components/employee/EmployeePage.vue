@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <crud-page locale-prefix="employee"
-               entity-uri="employees"
-               base-path="employee"
-               :headers="headers"
-               :request-params="{projection:'full-data'}">
+               item-name="employee"
+               resource="employees"
+               base-url="http://localhost:8080/duty/rest"
+               :headers="headers">
       <template #item.fullName="{item}">
         {{ item.lastName }} {{ item.firstName.substr(0, 1) }}.{{ item.middleName.substr(0, 1) }}.
       </template>
@@ -38,18 +38,19 @@
         </validation-provider>
         <validation-provider :rules="{required:true}" v-slot="{errors}">
           <ShiftTypeAutocomplete v-model="item.shiftTypes"
-                                 :error-messages="errors"
+                                 :errors="errors"
                                  :label="$i18n.t('employee.shiftTypes')"
           ></ShiftTypeAutocomplete>
         </validation-provider>
       </template>
+
     </crud-page>
   </v-container>
 </template>
 
 <script>
 
-import CrudPage from "@/components/employee/CrudPage.vue";
+import CrudPage from "@/components/CrudPage.vue";
 import * as Validator from "vee-validate";
 import {ValidationProvider} from "vee-validate";
 import {required} from "vee-validate/dist/rules";
@@ -90,14 +91,7 @@ export default {
     }
   },
   name: "Employee",
-  watch: {
-    item: {
-      handler() {
-        console.log("slot change item:" + this.item)
-      },
-      deep: true
-    }
-  }
+  watch: {}
 }
 </script>
 

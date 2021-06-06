@@ -46,19 +46,10 @@ const routes = [{
             }
         },
         {
-            path: 'employees/:id',
-            props: true,
-            name: 'employees.edit',
-            component: () => import(/* webpackChunkName: "about" */ '../components/employee/EmployeePage.vue'),
-            meta: {
-                title: "employee.editing"
-            }
-        },
-        {
             path: 'employees',
             name: 'employees',
             props: true,
-            component: () => import(/* webpackChunkName: "about" */ '../components/employee/EmployeeTable.vue'),
+            component: () => import(/* webpackChunkName: "about" */ '../components/employee/EmployeePage.vue'),
             meta: {
                 title: "employees"
             }

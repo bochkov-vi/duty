@@ -7,7 +7,7 @@
                   :label="label"
                   no-filter
                   clearable
-                  item-value="_links.item.href"
+                  item-value="_links.self.href"
                   item-text="name"
                   :loading="loading"
                   multiple></v-autocomplete>
@@ -34,13 +34,13 @@ export default {
       this.findByLike().then((page) => {
         if (page) {
           this.page = page
-          if(page._embedded){
-            this.items=page._embedded.items
-          }else {
-            this.items=[]
+          if (page._embedded) {
+            this.items = page._embedded.shiftTypes
+          } else {
+            this.items = []
           }
-        }else {
-          this.items=[]
+        } else {
+          this.items = []
         }
       })
     }
@@ -56,15 +56,18 @@ export default {
   mounted() {
     this.load(this.search)
   },
-  props: ["value", "label"],
+  props: {
+    "value": null, "label": null, "errors": {
+      type: Array
+    }
+  },
   data() {
     return {
       search: null,
-      errors: [],
       loading: false,
       page: {_embedded: {items: []}},
       pageNumber: 0,
-      items:[]
+      items: []
     }
   },
   name: "ShiftTypeAutocomplete"

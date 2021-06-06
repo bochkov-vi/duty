@@ -1,51 +1,97 @@
-import traverson from "traverson";
+const traverson = require('traverson')
+const JsonHalAdapter = require('traverson-hal');
+traverson.registerMediaType(JsonHalAdapter.mediaType, JsonHalAdapter);
 
-export function restService(baseUrl, resource) {
+export default function restService(baseUrl, resource, item) {
     baseUrl = baseUrl ? baseUrl : process.env.REST_BASE_URL;
-    const api = traverson.from(baseUrl).follow(resource)
+
+    item = item ? item : resource
 
     function post(entity) {
         return new Promise((resolve, reject) => {
-            api.post((error, data, t) => {
+            traverson.from(baseUrl).follow(resource).convertResponseToObject().post(entity, (error, data) => {
                 if (error)
                     reject(error)
-                else
-                    resolve(data)
+                else {
+                    getItem(data._links.self.href).then((entity) => resolve(entity))
+                }
             })
         })
     }
 
+    function del(entity) {
+        return new Promise((resolve, reject) => {
+            try {
+                if (typeof entity === 'string') {
+                    resolve(delByUrl(entity))
+                } else {
+                    resolve(delByUrl(entity._links.self.href))
+                }
+            } catch (e) {
+                reject(e)
+            }
+        })
+    }
+
+
+    function delByUrl(url) {
+        return new Promise((resolve, reject) => {
+            try {
+                traverson.from(url).delete((err, resp) => {
+                    if (err)
+                        reject(err)
+                    resolve(resp)
+                })
+            } catch (e) {
+                reject(e)
+            }
+        })
+    }
 
     function put(data, url) {
-        if (!url)
-            if (data._links && data._links.self) {
-                url = data._links.self.href
-            }
-        traverson.from(url).put(data, (error, response, traversal) => {
-            if (error) {
-                reject(error)
-            } else {
-                for (const link in data._links) {
-                    if (data[link]) {
-                        const associationUrl = data._links[link].href
-                        const associationValue = data[link]
-                        traverson.from(associationUrl).sendRawPayload(true).withRequestOptions({
-                            headers: {'Content-Type': 'text/uri-list'}
-                        }).put(associationValue, (error, response) => {
-                            if (error) {
-                                reject(error)
-                            }
-                        })
-                    }
+        return new Promise((resolve, reject) => {
+            if (!url) {
+                if (data._links && data._links.self) {
+                    url = data._links.self.href
                 }
             }
+            if (url) {
+                traverson.from(url).jsonHal().put(data, (error) => {
+                    if (error) {
+                        reject(error)
+                    } else {
+                        const links = Object.keys(data._links).filter((link) => (data[link]))
+                        Promise.all(links.map(link => putLink(data._links[link].href, data[link]))).then(() => {
+                            resolve(data)
+                        }).catch(error => reject(error))
+                    }
+                })
+            }
+        })
+
+    }
+
+    function putLink(url, value) {
+        return new Promise((resolve, reject) => {
+            if (value && Array.isArray(value)) {
+                value = value.join("\n")
+            }
+            traverson.from(url).sendRawPayload(true).withRequestOptions({
+                headers: {'Content-Type': 'text/uri-list'}
+            }).put(value, (error) => {
+                if (error) {
+                    reject(error)
+                } else {
+                    resolve()
+                }
+            })
         })
     }
 
 
     function getPage(page, size, sort, projection) {
         return new Promise((resolve, reject) => {
-            api.withTemplateParameters({
+            traverson.from(baseUrl).follow(resource).withTemplateParameters({
                 page: page,
                 size: size,
                 projection: projection,
@@ -61,29 +107,44 @@ export function restService(baseUrl, resource) {
     }
 
     function getItem(url) {
-        return new Promise(function (resolve, reject) {
+        const promise = new Promise(function (resolve, reject) {
             traverson.from(url).getResource(((error, data, traversal) => {
                 if (error) {
                     reject(error)
                 }
-                for (const link in data._links) {
-                    if (link === "item" || link === "self") {
-                        continue
-                    }
-                    traversal.continue().follow(link, "self").getResource((d) => {
+                const links = Object.keys(data._links).filter((link) => !(link === item || link === "self"))
+                Promise.all(links.map(link => loadLink(data, traversal, link))).then(() => {
+                    resolve(data)
+                })
+
+            }))
+        })
+        return promise;
+    }
+
+
+    function loadLink(data, traversal, link) {
+        return new Promise((resolve, reject) => {
+            try {
+                traversal.continue().follow(link, "self").getResource((error, d) => {
+                    if (d) {
                         if (d._embedded) {
-                            data[link] = d._embedded.items.map((item) => {
+                            data[link] = d._embedded[link].map((item) => {
                                 return item._links.self.href
                             })
-                        } else
+                        } else {
                             data[link] = d._links.self.href
-                    })
-                }
-                resolve(data)
-            }))
+                        }
+                    }
+                    resolve()
+
+                })
+            } catch (e) {
+                reject(e)
+            }
         })
     }
 
-    return {getItem, getPage, post, put}
+    return {getItem, getPage, post, put, del}
 }
 

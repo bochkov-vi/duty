@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
-@Setter
 @Accessors(chain = true)
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractEntity<ID extends Serializable> implements Serializable, Persistable<ID> {

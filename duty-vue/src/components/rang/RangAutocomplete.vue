@@ -7,7 +7,7 @@
                   :label="label"
                   no-filter
                   clearable
-                  item-value="_links.item.href"
+                  item-value="_links.self.href"
                   item-text="fullName"
                   :loading="loading">
   </v-autocomplete>
@@ -45,7 +45,7 @@ export default {
     load() {
       this.findByLike().then((d) => {
         if (d._embedded) {
-          this.items = d._embedded.items;
+          this.items = d._embedded.rangs;
         }
       })
     }
