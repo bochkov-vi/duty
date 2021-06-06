@@ -10,6 +10,7 @@
               <slot name="inputs" v-bind:item="item"></slot>
             </v-container>
             <v-card-actions>
+              <v-spacer/>
               <v-btn type="submit"
                      :disabled="invalid"
                      small>
@@ -35,15 +36,36 @@
       </ValidationObserver>
     </v-dialog>
     <v-dialog v-model="deleteMode">
+
       <v-card>
-        <p v-for="header in headers" :key="header.value">{{ header.value }}:{{ getVal(itemToDelete, header.value) }}</p>
+        <v-container>
+          <slot name="details">
+            <p v-for="header in translatedHeaders" :key="header.value">
+              {{ header.text }}:{{
+                getVal(itemToDelete, header.value)
+              }}
+            </p>
+          </slot>
+        </v-container>
         <v-card-actions>
+          <v-spacer/>
           <v-btn small
-                 min-width="36">
-            <v-icon @click="deleteItem">mdi-trash-can-outline</v-icon>
+                 min-width="36"
+                 @click="deleteItem">
+            <v-icon>mdi-trash-can-outline</v-icon>
+            {{ $i18n.t('label.delete') }}
+          </v-btn>
+          <v-btn
+              outlined
+              color="secondary"
+              small
+              @click="itemToDelete=null">
+            <v-icon>mdi-cancel</v-icon>
+            <span class="hidden-xs-only">{{ $t('label.cancel') }}</span>
           </v-btn>
         </v-card-actions>
       </v-card>
+
     </v-dialog>
     <v-data-table calculate-widths
                   :headers="[...translatedHeaders,{value:'actions'}]"
