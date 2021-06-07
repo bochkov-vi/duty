@@ -27,6 +27,7 @@
   "employee": {
     "id": "Код",
     "firstName": "Имя",
+    "employeeGroup": "Группа",
     "rang": "Звание",
     "middleName": "Отчество",
     "shiftTypes": "Доступные виды дежурств",

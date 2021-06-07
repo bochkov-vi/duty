@@ -1,29 +1,70 @@
 <template>
   <v-autocomplete :value="value"
                   @input="$emit('input',$event)"
-                  :error-messages="error-messages"
+                  :error-messages="errorMessages"
                   :items="items"
+                  :label="label"
                   item-value="_links.self.href"
-                  :search-input.sync="search">
-    <template v-slot:item="{item:row}">
-      {{row.name}}
+                  :loading="loading"
+                  :search-input.sync="search"
+                  no-filter
+                  clearable>
+    <template v-slot:selection="data">
+      {{ data.item.name }}
+    </template>
+    <template v-slot:item="{item}">
+      {{ item.name }}
     </template>
   </v-autocomplete>
 </template>
 
 <script>
+import axios from "axios";
+import {error} from "@/store/store";
+
 export default {
   props: {
-    "error-messages": {
+    "errorMessages": {
       type: Array
+    }, value: null, label: null,
+    size: {
+      default() {
+        return 10
+      }
     }
   },
   data() {
     return {
       search: null,
-      value: null,
-      items: null
+      items: [], loading: false,
+      page: 0
     }
+  },
+  methods: {
+    loadItems() {
+      this.loading = true
+      axios.get("http://localhost:8080/duty/employeeGroups/findByLike", {
+        params: {
+          search: this.search,
+          page: this.page,
+          size: this.size
+        }
+      }).then(resp => {
+        if (resp.data._embedded) {
+          this.items = resp.data._embedded.employeeGroups;
+        } else {
+          this.items = []
+        }
+      }).catch(e => error(e)).finally(() => this.loading = false)
+    }
+  },
+  watch: {
+    search() {
+      this.loadItems()
+    }
+  },
+  mounted() {
+    this.loadItems()
   },
   name: "EmployeeGroupSelect"
 

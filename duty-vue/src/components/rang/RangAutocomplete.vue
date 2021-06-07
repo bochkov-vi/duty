@@ -8,8 +8,13 @@
                   no-filter
                   clearable
                   item-value="_links.self.href"
-                  item-text="fullName"
                   :loading="loading">
+    <template v-slot:selection="data">
+      {{ data.item.fullName }}
+    </template>
+    <template v-slot:item="{item}">
+      {{ item.fullName }}
+    </template>
   </v-autocomplete>
 </template>
 
@@ -17,7 +22,13 @@
 import axios from "axios";
 
 export default {
-  props: ['value', 'errors', 'label'],
+  props: {
+    'value': null, 'errors': null, 'label': null, size: {
+      default() {
+        return 10
+      }
+    }
+  },
   data() {
     return {
       loading: false,
@@ -36,7 +47,7 @@ export default {
         params: {
           search: this.search,
           page: this.page,
-          size: 50
+          size: this.size
         }
       }).then((r) => {
         return r.data

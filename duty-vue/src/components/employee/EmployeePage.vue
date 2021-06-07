@@ -20,21 +20,23 @@
                              v-slot="{errors}">
           <v-text-field v-model="item.firstName"
                         :error-messages="errors"
-                        :label="$i18n.t('employee.firstName')"
-          ></v-text-field>
+                        :label="$i18n.t('employee.firstName')"/>
         </validation-provider>
         <validation-provider :rules="{required:true}"
                              v-slot="{errors}">
           <v-text-field v-model="item.middleName"
                         :error-messages="errors"
-                        :label="$i18n.t('employee.middleName')"
-          ></v-text-field>
+                        :label="$i18n.t('employee.middleName')"/>
         </validation-provider>
         <validation-provider :rules="{required:true}" v-slot="{errors}">
           <v-text-field v-model="item.lastName"
                         :error-messages="errors"
-                        :label="$i18n.t('employee.lastName')"
-          ></v-text-field>
+                        :label="$i18n.t('employee.lastName')"/>
+        </validation-provider>
+        <validation-provider :rules="{required:false}" v-slot="{errors}">
+          <employee-group-select v-model="item.employeeGroup"
+                                 :error-messages="errors"
+                                 :label="$i18n.t('employee.employeeGroup')"/>
         </validation-provider>
         <validation-provider :rules="{required:true}" v-slot="{errors}">
           <ShiftTypeAutocomplete v-model="item.shiftTypes"
@@ -56,13 +58,14 @@ import {ValidationProvider} from "vee-validate";
 import {required} from "vee-validate/dist/rules";
 import RangAutocomplete from "@/components/rang/RangAutocomplete";
 import ShiftTypeAutocomplete from "@/components/shiftType/ShiftTypeAutocomplete";
+import EmployeeGroupSelect from "@/components/employeeGroup/EmployeeGroupSelect";
 
 Validator.extend('required', {
   ...required,
   message: 'Это поле обязательно для заполнения'
 })
 export default {
-  components: {ShiftTypeAutocomplete, RangAutocomplete, CrudPage, ValidationProvider},
+  components: {EmployeeGroupSelect, ShiftTypeAutocomplete, RangAutocomplete, CrudPage, ValidationProvider},
   data() {
     return {
       headers: [
@@ -81,6 +84,11 @@ export default {
           align: 'start',
           sortable: true,
           value: 'fullName',
+        }, {
+          text: 'employeeGroup',
+          align: 'start',
+          sortable: true,
+          value: 'employeeGroup.name',
         }, {
           text: 'shiftTypes',
           align: 'start',

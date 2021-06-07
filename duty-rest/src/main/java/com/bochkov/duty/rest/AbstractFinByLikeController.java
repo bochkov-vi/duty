@@ -1,6 +1,5 @@
 package com.bochkov.duty.rest;
 
-import com.bochkov.duty.jpa.entity.Rang;
 import com.bochkov.findbylike.FindByLikeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +41,7 @@ public class AbstractFinByLikeController<T> {
     EntityInformation<T, ?> entityInformation;
 
     String[] likeProperties;
+
 
     RepresentationModelAssembler<T, EntityModel<T>> assembler = new SimpleRepresentationModelAssembler<T>() {
         @Override
