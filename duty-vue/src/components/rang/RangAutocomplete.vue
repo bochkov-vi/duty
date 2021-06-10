@@ -69,8 +69,9 @@ export default {
       this.load(this.search)
     }
   },
-  mounted() {
-    this.load(this.search)
+  created() {
+    if (this.value)
+      axios.get(this.value).then((resp) => this.items = [resp.data])
   },
   name: "RangAutocomplete"
 }

@@ -31,7 +31,7 @@ export default {
       }).finally(() => this.loading = false)
     },
     load() {
-      this.findByLike().then((page) => {
+      this.findByLike(this.search).then((page) => {
         if (page) {
           this.page = page
           if (page._embedded) {
@@ -54,7 +54,8 @@ export default {
     }
   },
   mounted() {
-    this.load(this.search)
+    if (this.value)
+      Promise.all(this.value.map(href => axios.get(href).then((resp) => resp.data))).then(result => this.items = result)
   },
   props: {
     "value": null, "label": null, "errors": {
