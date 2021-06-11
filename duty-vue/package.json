@@ -9,6 +9,7 @@
     "test-traverson": "jest"
   },
   "dependencies": {
+    "@fontsource/roboto": "^4.4.5",
     "@mdi/font": "^5.9.55",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",

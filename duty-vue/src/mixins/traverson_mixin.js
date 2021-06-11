@@ -57,7 +57,7 @@ export const traverson_mixin = {
                 this.confirmDelete = false
                 this.item = null
                 this.loadPage()
-            }).then(() => this.$t("crud.deleted.success")).finally(() => setLoading())
+            }).then(() => this.$t("crud.deleted.success")).finally(() => setLoading()).catch((resp)=>error(resp.data.message))
         },
         editItem(item) {
             if (item && item._links && item._links.self) {
@@ -75,7 +75,7 @@ export const traverson_mixin = {
                 .del(this.itemToDelete)
                 .then(() => this.loadPage())
                 .then(() => this.loadPage())
-                .catch(e => error(e))
+                .catch(e => error(e.data))
                 .then(() => this.deleteMode = false)
                 .finally(() => setLoading())
         }

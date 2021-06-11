@@ -8,7 +8,8 @@
                   :loading="loading"
                   :search-input.sync="search"
                   no-filter
-                  clearable>
+                  clearable
+                  :dense="dense">
     <template v-slot:selection="data">
       {{ data.item.name }}
     </template>
@@ -31,6 +32,10 @@ export default {
       default() {
         return 10
       }
+    }, dense: {
+      default() {
+        return false;
+      }
     }
   },
   data() {
@@ -43,6 +48,8 @@ export default {
   methods: {
     loadItems() {
       this.loading = true
+
+
       axios.get("http://localhost:8080/duty/employeeGroups/findByLike", {
         params: {
           search: this.search,
@@ -64,7 +71,22 @@ export default {
     }
   },
   mounted() {
-    this.loadItems()
+    if (this.value)
+      axios.get(this.value).then(resp => this.items = [resp.data])
+    else
+      this.items =[]
+    axios.get("http://localhost:8080/duty/employeeGroups/findByLike", {
+      params: {
+        search: this.search,
+        page: this.page,
+        size: this.size
+      }
+    }).then(resp => {
+      if (resp.data._embedded) {
+        this.items = [...this.items,...resp.data._embedded.employeeGroups];
+      }
+    }).catch(e => error(e)).finally(() => this.loading = false)
+
   },
   name: "EmployeeGroupSelect"
 

@@ -1,14 +1,18 @@
 <template>
   <v-container>
-    <v-dialog v-model="editMode">
+    <v-dialog v-model="editMode" max-width="600">
       <ValidationObserver v-if="editMode"
                           v-slot="{ invalid }"
                           ref="validator">
         <v-form @submit.prevent="submit">
-          <v-card>
+          <v-card class="pa-5">
             <v-container>
               <slot name="inputs" v-bind:item="item"></slot>
             </v-container>
+            <div class="text-body-2 font-weight-thin d-flex flex-row justify-space-around">
+              <div>{{ $i18n.t('label.createdDate') }} {{ createdDate }}</div>
+              <div>{{ $i18n.t('label.createdTime') }} {{ createdDate }}</div>
+            </div>
             <v-card-actions>
               <v-spacer/>
               <v-btn type="submit"
@@ -36,15 +40,13 @@
       </ValidationObserver>
     </v-dialog>
     <v-dialog v-model="deleteMode">
-
       <v-card>
         <v-container>
           <slot name="details">
-            <p v-for="header in translatedHeaders" :key="header.value">
-              {{ header.text }}:{{
-                getVal(itemToDelete, header.value)
-              }}
-            </p>
+            <div class="d-flex flex-row justify-center " v-for="header in translatedHeaders" :key="header.value">
+              <v-col cols="6">{{ header.text }}</v-col>
+              <v-col cols="6">{{ getVal(itemToDelete, header.value) }}</v-col>
+            </div>
           </slot>
         </v-container>
         <v-card-actions>
@@ -92,16 +94,12 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item:row }">
-        <v-btn small
-               min-width="36"
-               class="mr-1"
-               @click="editItem(row)">
-          <v-icon>mdi-pencil-box-outline</v-icon>
-        </v-btn>
-        <v-btn small
-               min-width="36">
-          <v-icon @click="itemToDelete=row">mdi-trash-can-outline</v-icon>
-        </v-btn>
+
+        <v-icon @click="editItem(row)">mdi-pencil-box-outline</v-icon>
+
+
+        <v-icon @click="itemToDelete=row">mdi-trash-can-outline</v-icon>
+
       </template>
     </v-data-table>
 
@@ -158,6 +156,10 @@ export default {
           sortable: h.sortable
         }
       })
+    }, createdDate() {
+      return new Date(this.item.createdDate).toLocaleDateString()
+    }, createdTime() {
+      return new Date(this.item.createdDate).toLocaleTimeString()
     }
   },
   watch: {},

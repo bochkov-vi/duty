@@ -31,18 +31,9 @@ const routes = [{
         }, {
             path: 'group',
             name: 'groups',
-            component: () => import(/* webpackChunkName: "about" */ '../components/employeeGroup/EmployeeGroup.vue'),
+            component: () => import(/* webpackChunkName: "about" */ '../components/employeeGroup/EmployeeGroupPage.vue'),
             meta: {
                 title: "groups"
-            }
-        },
-        {
-            path: 'group/:id',
-            props: true,
-            name: 'EmployeeGroupEdit',
-            component: () => import(/* webpackChunkName: "about" */ '../components/employeeGroup/EmployeeGroupEdit.vue'),
-            meta: {
-                title: "group.editing"
             }
         },
         {

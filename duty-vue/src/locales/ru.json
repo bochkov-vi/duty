@@ -16,7 +16,9 @@
     "create": "Содать",
     "confirmDelete": "Подевердите удаление",
     "fieldIsRequired": "Это поле обязательно для заполнение",
-    "fieldIsDuplicate": "Такая запись уже существует"
+    "fieldIsDuplicate": "Такая запись уже существует",
+    "createdDate": "Дата создания",
+    "createdTime": "Время создания"
   },
   "crud": {
     "saved": {
@@ -27,6 +29,7 @@
   "employee": {
     "id": "Код",
     "firstName": "Имя",
+    "post": "Должность",
     "employeeGroup": "Группа",
     "rang": "Звание",
     "middleName": "Отчество",

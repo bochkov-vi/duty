@@ -8,7 +8,8 @@
                   no-filter
                   clearable
                   item-value="_links.self.href"
-                  :loading="loading">
+                  :loading="loading"
+                  :dense="dense">
     <template v-slot:selection="data">
       {{ data.item.fullName }}
     </template>
@@ -22,10 +23,21 @@
 import axios from "axios";
 
 export default {
+  directives: {
+    dense: {
+      inserted() {
+        return false
+      }
+    }
+  },
   props: {
     'value': null, 'errors': null, 'label': null, size: {
       default() {
         return 10
+      }
+    }, dense: {
+      default() {
+        return false;
       }
     }
   },
@@ -72,6 +84,7 @@ export default {
   created() {
     if (this.value)
       axios.get(this.value).then((resp) => this.items = [resp.data])
+    this.findByLike().then((data) => this.items = [...this.items, ...data._embedded.rangs])
   },
   name: "RangAutocomplete"
 }

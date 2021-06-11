@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <crud-page locale-prefix="rang"
-               item-name="rang"
-               resource="rangs"
+    <crud-page locale-prefix="group"
+               item-name="employeeGroup"
+               resource="employeeGroups"
                base-url="http://localhost:8080/duty/rest"
                :headers="headers">
 
@@ -13,14 +13,7 @@
           <v-text-field dense
                         v-model="item.name"
                         :error-messages="errors"
-                        :label="$i18n.t('rang.name')"/>
-        </validation-provider>
-        <validation-provider :rules="{required:true,uniqueFullName:{id:item.id}}"
-                             v-slot="{errors}">
-          <v-text-field v-model="item.fullName"
-                        :error-messages="errors"
-                        :label="$i18n.t('rang.fullName')"
-                        dense/>
+                        :label="$i18n.t('group.name')"/>
         </validation-provider>
       </template>
 
@@ -61,26 +54,6 @@ Validator.extend('uniqueName', {
     return i18n.t('label.fieldIsDuplicate')
   }
 })
-Validator.extend('uniqueFullName', {
-  params: ["id"],
-  validate: (value, args) => {
-    if (value) {
-      const currentID = args.id;
-      const result = axios.get("http://localhost:8080/duty/rest/rangs/search/findByFullName", {
-        params: {search: value}
-      }).then((resp) => {
-            const valid = !(resp.data._embedded.rangs.filter((item) => item.id !== currentID).length > 0);
-            const result = {valid: valid}
-            return result;
-          }
-      )
-      return result;
-    }
-  },
-  message: function () {
-    return i18n.t('label.fieldIsDuplicate')
-  }
-})
 
 export default {
   components: {CrudPage, ValidationProvider},
@@ -97,16 +70,11 @@ export default {
           align: 'start',
           sortable: true,
           value: 'name',
-        }, {
-          text: 'fullName',
-          align: 'start',
-          sortable: true,
-          value: 'fullName',
         }
       ],
     }
   },
-  name: "RangPage",
+  name: "EmployeeGroupPage",
   watch: {}
 }
 </script>

@@ -10,7 +10,8 @@
                   item-value="_links.self.href"
                   item-text="name"
                   :loading="loading"
-                  multiple></v-autocomplete>
+                  multiple
+                  :dense="dense"></v-autocomplete>
 </template>
 
 <script>
@@ -27,21 +28,14 @@ export default {
           size: 50
         }
       }).then((r) => {
-        return r.data
+        if (r.data._embedded)
+          return r.data._embedded.shiftTypes
+        return []
       }).finally(() => this.loading = false)
     },
     load() {
-      this.findByLike(this.search).then((page) => {
-        if (page) {
-          this.page = page
-          if (page._embedded) {
-            this.items = page._embedded.shiftTypes
-          } else {
-            this.items = []
-          }
-        } else {
-          this.items = []
-        }
+      this.findByLike(this.search).then(array => {
+        this.items = array
       })
     }
   },
@@ -55,11 +49,17 @@ export default {
   },
   mounted() {
     if (this.value)
-      Promise.all(this.value.map(href => axios.get(href).then((resp) => resp.data))).then(result => this.items = result)
+      Promise.all([...this.value.map(href => axios.get(href).then((resp) => resp.data)),
+        this.findByLike()])
+          .then(result => this.items = result)
   },
   props: {
     "value": null, "label": null, "errors": {
       type: Array
+    }, dense: {
+      default() {
+        return false;
+      }
     }
   },
   data() {

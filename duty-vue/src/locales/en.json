@@ -1,5 +1,6 @@
 {
   "lang": "English",
+  "post" : "Post",
   "home": "Home",
   "rangs": "Rangs",
   "employees": "Employees",
@@ -16,7 +17,9 @@
     "create": "Create",
     "confirmDelete": "Confirm Delete",
     "fieldIsRequired": "This field is required",
-    "fieldIsDuplicate": "This field is duplicate"
+    "fieldIsDuplicate": "This field is duplicate",
+    "createdDate": "Date of creation",
+    "createdTime": "Time of creation"
   },
   "crud": {
     "saved": {

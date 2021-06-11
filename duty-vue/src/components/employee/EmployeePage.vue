@@ -14,35 +14,49 @@
 
       <template #inputs="{item}">
         <validation-provider :rules="{required:true}" v-slot="{errors}">
-          <rang-autocomplete v-model="item.rang" :errors="errors" :label="$i18n.t('employee.rang')"/>
+          <rang-autocomplete v-model="item.rang"
+                             :errors="errors"
+                             :label="$i18n.t('employee.rang')"
+                             dense/>
+        </validation-provider>
+        <validation-provider :rules="{required:true}"
+                             v-slot="{errors}">
+          <v-text-field dense
+                        v-model="item.post"
+                        :error-messages="errors"
+                        :label="$i18n.t('employee.post')"/>
         </validation-provider>
         <validation-provider :rules="{required:true}"
                              v-slot="{errors}">
           <v-text-field v-model="item.firstName"
                         :error-messages="errors"
-                        :label="$i18n.t('employee.firstName')"/>
+                        :label="$i18n.t('employee.firstName')"
+                        dense/>
         </validation-provider>
         <validation-provider :rules="{required:true}"
                              v-slot="{errors}">
           <v-text-field v-model="item.middleName"
                         :error-messages="errors"
-                        :label="$i18n.t('employee.middleName')"/>
+                        :label="$i18n.t('employee.middleName')"
+                        dense/>
         </validation-provider>
         <validation-provider :rules="{required:true}" v-slot="{errors}">
           <v-text-field v-model="item.lastName"
                         :error-messages="errors"
-                        :label="$i18n.t('employee.lastName')"/>
+                        :label="$i18n.t('employee.lastName')"
+                        dense/>
         </validation-provider>
         <validation-provider :rules="{required:false}" v-slot="{errors}">
           <employee-group-select v-model="item.employeeGroup"
                                  :error-messages="errors"
-                                 :label="$i18n.t('employee.employeeGroup')"/>
+                                 :label="$i18n.t('employee.employeeGroup')"
+                                 dense/>
         </validation-provider>
         <validation-provider :rules="{required:true}" v-slot="{errors}">
           <ShiftTypeAutocomplete v-model="item.shiftTypes"
                                  :errors="errors"
                                  :label="$i18n.t('employee.shiftTypes')"
-          ></ShiftTypeAutocomplete>
+                                 dense/>
         </validation-provider>
       </template>
 
@@ -98,7 +112,7 @@ export default {
       ],
     }
   },
-  name: "Employee",
+  name: "EmployeePage",
   watch: {}
 }
 </script>
