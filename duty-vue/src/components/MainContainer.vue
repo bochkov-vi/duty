@@ -39,6 +39,9 @@
       <v-btn>
         <router-link :to="$i18nRoute({name:'employees'})">{{ $t('employees') }}</router-link>
       </v-btn>
+      <v-btn>
+        <router-link :to="$i18nRoute({name:'shiftTypes'})">{{ $t('shiftTypes') }}</router-link>
+      </v-btn>
       <v-btn @click="toggleLoading">
         <v-icon>mdi-cog-outline</v-icon>
       </v-btn>

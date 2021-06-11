@@ -44,6 +44,15 @@ const routes = [{
             meta: {
                 title: "employees"
             }
+        },
+        {
+            path: 'shiftType',
+            name: 'shiftTypes',
+            props: true,
+            component: () => import(/* webpackChunkName: "about" */ '../components/shiftType/ShiftTypePage.vue'),
+            meta: {
+                title: "shiftTypes"
+            }
         }
     ]
 }, {

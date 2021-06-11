@@ -1,10 +1,11 @@
 {
   "lang": "English",
-  "post" : "Post",
+  "post": "Post",
   "home": "Home",
   "rangs": "Rangs",
   "employees": "Employees",
   "groups": "Groups",
+  "shiftTypes":"Shift types",
   "title": "Time tracking and duty scheduling",
   "label": {
     "no-data": "Data Not Found",
@@ -60,5 +61,18 @@
     "fullName": "Full name",
     "createdDate": "Date of creation",
     "createdTime": "Time of creation"
+  },
+  "shiftType": {
+    "id": "ShiftType ID",
+    "name": "Shift Type Name",
+    "uiOptions": {
+      "label": "UI options",
+      "htmlClass": "Html class",
+      "plainText": "Text char",
+      "faIcon": "Icon name"
+    },
+    "daysToWeekend": "Day count to weekend",
+    "daysFromWeekend": "Day count from weekend",
+    "periods": "Periods of work"
   }
 }
