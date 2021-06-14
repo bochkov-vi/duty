@@ -46,6 +46,7 @@ public class ShiftType extends AbstractEntity<Integer> implements IPeriodContain
     @CollectionTable(name = "SHIFT_TYPE_PERIOD", joinColumns = {
             @JoinColumn(name = "ID_SHIFT_TYPE", referencedColumnName = "ID_SHIFT_TYPE", foreignKey = @ForeignKey(name = "SHIFT_TYPE_PERIOD_FQ"))
     })
+    @OrderBy("start")
     Set<Period> periods;
 
     public ShiftType(String name) {
@@ -59,7 +60,6 @@ public class ShiftType extends AbstractEntity<Integer> implements IPeriodContain
     }
 
 
-
     @Override
     public String toString() {
         return name;
@@ -68,8 +68,6 @@ public class ShiftType extends AbstractEntity<Integer> implements IPeriodContain
     public Integer getId() {
         return id;
     }
-
-
 
 
 }

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-dialog v-model="editMode" max-width="600">
+    <v-dialog v-model="editMode" >
       <ValidationObserver v-if="editMode"
                           v-slot="{ invalid }"
                           ref="validator">
@@ -94,12 +94,8 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item:row }">
-
         <v-icon @click="editItem(row)">mdi-pencil-box-outline</v-icon>
-
-
         <v-icon @click="itemToDelete=row">mdi-trash-can-outline</v-icon>
-
       </template>
     </v-data-table>
 
@@ -162,7 +158,11 @@ export default {
       return new Date(this.item.createdDate).toLocaleTimeString()
     }
   },
-  watch: {},
+  watch: {
+    item(val) {
+      this.$emit("update:item", val)
+    }
+  },
   components: {ValidationObserver}
 }
 </script>

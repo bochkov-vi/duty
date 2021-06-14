@@ -27,20 +27,20 @@
       </template>
     </v-snackbar>
     <v-app-bar>
-      <v-btn>
-        <router-link :to="$i18nRoute({name:'home'})">{{ $t('home') }}</router-link>
+      <v-btn :disabled="$route.name==='home'" @click="$router.push($i18nRoute({name:'home'}))">
+        {{ $t('home') }}
       </v-btn>
-      <v-btn>
-        <router-link :to="$i18nRoute({name:'rangs'})">{{ $t('rangs') }}</router-link>
+      <v-btn :disabled="$route.name==='rangs'" @click="$router.push($i18nRoute({name:'rangs'}))">
+        {{ $t('rangs') }}
       </v-btn>
-      <v-btn>
-        <router-link :to="$i18nRoute({name:'groups'})">{{ $t('groups') }}</router-link>
+      <v-btn :disabled="$route.name==='groups'" @click="$router.push($i18nRoute({name:'groups'}))">
+        {{ $t('groups') }}
       </v-btn>
-      <v-btn>
-        <router-link :to="$i18nRoute({name:'employees'})">{{ $t('employees') }}</router-link>
+      <v-btn :disabled="$route.name==='employees'" @click="$router.push($i18nRoute({name:'employees'}))">
+        {{ $t('employees') }}
       </v-btn>
-      <v-btn>
-        <router-link :to="$i18nRoute({name:'shiftTypes'})">{{ $t('shiftTypes') }}</router-link>
+      <v-btn :disabled="$route.name==='shiftTypes'" @click="$router.push($i18nRoute({name:'shiftTypes'}))">
+        {{ $t('shiftTypes') }}
       </v-btn>
       <v-btn @click="toggleLoading">
         <v-icon>mdi-cog-outline</v-icon>
