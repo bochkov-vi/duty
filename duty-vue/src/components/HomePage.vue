@@ -1,20 +1,23 @@
 <template>
   <v-container>
-    {{period}}
-    <period-input v-model="period"/>
+    {{periods}}
+    <periods-input v-model="periods"/>
   </v-container>
 </template>
 
 <script>
-import PeriodInput from "@/components/shiftType/PeriodInput";
+import PeriodsInput from "@/components/shiftType/PeriodsInput";
 export default {
-  components: {PeriodInput},
+  components: {PeriodsInput},
   data() {
     return {
-      period: {
+      periods: [{
         start: '09:00:00',
         duration: 'PT4H30M'
-      }
+      },{
+        start: '13:45:00',
+        duration: 'PT4H15M'
+      }]
     }
   },
   name: "HomePage"

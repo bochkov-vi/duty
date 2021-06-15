@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve --port 9090",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test-traverson": "jest"
+    "test-traverson": "jest",
+    "test-periods": "nodejs src/components/shiftType/test_period.js"
   },
   "dependencies": {
     "@fontsource/roboto": "^4.4.5",
