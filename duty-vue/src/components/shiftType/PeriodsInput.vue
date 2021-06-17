@@ -1,21 +1,31 @@
 <template>
 
   <v-input :messages="messages">
-    <v-card class="d-flex flex-column px-10">
+    <v-card>
       <v-card-actions>
+        {{messages}}
         <v-spacer/>
         <v-btn>
-          <v-icon :dense="dense">mdi-plus</v-icon>
+          <v-icon :dense="dense" @click="add()">mdi-plus</v-icon>
         </v-btn>
       </v-card-actions>
-      <div class="d-flex flex-nowrap"
-           v-for="p in Object.keys(periods)"
-           :key="p">
-        <period-input
-            :dense="dense"
-            v-model="periods[p]"/>
-        <v-icon @click="remove(p)" :dense="dense">mdi-trash-can-outline</v-icon>
-      </div>
+      <v-container>
+        <v-row
+            v-for="(key,index) in Object.keys(value)"
+            :key="key">
+          <v-col>
+            {{ index+1 }}
+          </v-col>
+          <v-col>
+            <period-input class="v-sheet--outlined" v-model="value[key]"/>
+          </v-col>
+          <v-col>
+            <v-btn @click="remove(key)" :dense="dense">
+              <v-icon :dense="dense">mdi-trash-can-outline</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-card>
   </v-input>
 </template>
@@ -38,40 +48,22 @@ export default {
     }
   },
   data() {
-    return {periods: null, messages: null}
+    return {periods: null}
   },
 
   methods: {
-    remove(start) {
-      const periods = this.periods
-      delete periods[start]
-      this.periods = {...periods}
-    },
-    load() {
-      if (this.value) {
-        const periods = {}
-        this.value.forEach((el) => periods[el.start] = el)
-        this.periods = periods
-      } else {
-        this.periods = []
+    remove(index) {
+      if (index > -1) {
+        this.value.splice(index, 1);
       }
     },
-    unload() {
-      const new_val = [];
-      for (const key in this.periods) {
-        new_val.push(this.periods[key])
-      }
-      this.messages = durationAsString(totalDuration(new_val))
-      this.$emit("input", new_val)
+    add() {
+      this.value.push({start: '09:00:00'})
     }
-  }, created() {
-    this.load()
-  }, watch: {
-    periods: {
-      deep: true,
-      handler: function () {
-        this.unload()
-      }
+  },
+  computed: {
+    messages() {
+      return "Общая продолжительность: " + durationAsString(totalDuration(this.value))
     }
   },
   name: "PeriodsInput"

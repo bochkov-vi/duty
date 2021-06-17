@@ -3,11 +3,13 @@
   <v-input :messages="messages" :dense="dense">
     <v-text-field type="time"
                   v-model="start"
-                  :dense="dense"/>
+                  :dense="dense"
+                  step="300"/>
     <v-spacer/>
     <v-text-field type="time"
                   :dense="dense"
-                  v-model="end"/>
+                  v-model="end"
+                  step="300"/>
     <v-spacer/>
     <v-checkbox label="Следующих суток"
                 v-model="nextDay"

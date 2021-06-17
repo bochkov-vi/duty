@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-dialog v-model="editMode" >
+    <v-dialog v-model="editMode">
       <ValidationObserver v-if="editMode"
                           v-slot="{ invalid }"
                           ref="validator">
@@ -9,9 +9,10 @@
             <v-container>
               <slot name="inputs" v-bind:item="item"></slot>
             </v-container>
+
             <div class="text-body-2 font-weight-thin d-flex flex-row justify-space-around">
               <div>{{ $i18n.t('label.createdDate') }} {{ createdDate }}</div>
-              <div>{{ $i18n.t('label.createdTime') }} {{ createdDate }}</div>
+              <div>{{ $i18n.t('label.createdTime') }} {{ createdTime }}</div>
             </div>
             <v-card-actions>
               <v-spacer/>

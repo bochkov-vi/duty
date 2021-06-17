@@ -48,7 +48,7 @@
             </v-chip>
           </template>
         </v-select>
-        <periods-input v-model="item.periods"/>
+        <periods-input :dense="true" v-model="item.periods"/>
 
       </template>
       <template #item.daysToWeekend="{item}">
