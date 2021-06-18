@@ -80,3 +80,23 @@ export function calculateDuration(start, end, nextDay) {
     }
     return duration
 }
+
+export function isPeriodIntersect(p1, p2) {
+    const s1 = getStartTime(p1).toSecondOfDay()
+    const s2 = getStartTime(p2).toSecondOfDay()
+    const e1 = getDuration(p1).toMillis() / 1000 + s1
+    const e2 = getDuration(p2).toMillis() / 1000 + s2
+    return s1 < e2 && s2 < e1
+}
+
+export function isPeriodsIntersects(periods) {
+    const result = []
+    for (let i = 0; i < periods.length - 1; i++) {
+        for (let j = i + 1; j < periods.length; j++) {
+            if (isPeriodIntersect(periods[i], periods[j])) {
+                result.push(i,j)
+            }
+        }
+    }
+    return result;
+}

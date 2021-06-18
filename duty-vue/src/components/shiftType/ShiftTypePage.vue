@@ -48,7 +48,13 @@
             </v-chip>
           </template>
         </v-select>
-        <periods-input :dense="true" v-model="item.periods"/>
+        <validation-provider rules="periodsIntersects"
+                             v-slot="{errors}">
+          <periods-input :dense="true"
+                         v-model="item.periods"
+                         :errors="errors"/>
+        </validation-provider>
+
 
       </template>
       <template #item.daysToWeekend="{item}">
@@ -74,6 +80,7 @@ import axios from "axios";
 import i18n from "@/i18n";
 import {DateTimeFormatter, Duration, LocalTime} from "@js-joda/core";
 import PeriodsInput from "@/components/shiftType/PeriodsInput";
+import {isPeriodsIntersects} from "@/components/shiftType/period";
 
 Validator.extend('required', {
   ...required,
@@ -97,6 +104,18 @@ Validator.extend('uniqueName', {
   },
   message: function () {
     return i18n.t('label.fieldIsDuplicate')
+  }
+})
+
+Validator.extend('periodsIntersects', {
+  validate: (value) => {
+    if (value) {
+      const result = {"valid": !isPeriodsIntersects(value).length};
+      return result;
+    }
+  },
+  message: function () {
+    return "Периоды пересекаются"
   }
 })
 export default {

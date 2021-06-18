@@ -1,6 +1,6 @@
 <template>
 
-  <v-input :messages="messages" :dense="dense">
+  <v-input :success-messages="messages" :dense="dense" :error="error">
     <v-text-field type="time"
                   v-model="start"
                   :dense="dense"
@@ -30,6 +30,10 @@ export default {
     dense: {
       default() {
         return false
+      }
+    },error:{
+      default() {
+        return false;
       }
     }
   },

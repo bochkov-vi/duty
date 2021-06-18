@@ -1,45 +1,51 @@
 <template>
 
-  <v-input :messages="messages">
-    <v-card>
-      <v-card-actions>
-        {{messages}}
-        <v-spacer/>
-        <v-btn>
-          <v-icon :dense="dense" @click="add()">mdi-plus</v-icon>
-        </v-btn>
-      </v-card-actions>
-      <v-container>
-        <v-row
-            v-for="(key,index) in Object.keys(value)"
-            :key="key">
-          <v-col>
-            {{ index+1 }}
-          </v-col>
-          <v-col>
-            <period-input class="v-sheet--outlined" v-model="value[key]"/>
-          </v-col>
-          <v-col>
-            <v-btn @click="remove(key)" :dense="dense">
-              <v-icon :dense="dense">mdi-trash-can-outline</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card>
+  <v-input append-icon="mdi-plus"
+           @click:append="add()"
+           :error-messages="errors">
+    <v-container fluid>
+      <v-row>
+        <v-col cols="12">
+          <div class="body-2">{{ duration }}</div>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col v-for="(key,index) in Object.keys(value)"
+               :key="key">
+          <v-card>
+            <v-card-actions>
+              {{ index + 1 }}
+              <v-spacer/>
+              <v-btn @click="remove(key)" :dense="dense">
+                <v-icon :dense="dense">mdi-trash-can-outline</v-icon>
+              </v-btn>
+            </v-card-actions>
+            <period-input :error="intersectedPeriodIndexes.includes(index)" v-model="value[key]" @input="valueChanged"/>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-input>
 </template>
 
 <script>
 import PeriodInput from "@/components/shiftType/PeriodInput";
-import {durationAsString, totalDuration} from "@/components/shiftType/period";
+import {durationAsString, isPeriodsIntersects, totalDuration} from "@/components/shiftType/period";
 
 export default {
   components: {PeriodInput},
   props: {
     value: {
       type: Array,
-      required: true
+      required: false,
+      default(){
+        return []
+      }
+    },
+    errors: {
+      default() {
+        return null
+      }
     },
     dense: {
       default() {
@@ -48,7 +54,9 @@ export default {
     }
   },
   data() {
-    return {periods: null}
+    return {
+      periods: null
+    }
   },
 
   methods: {
@@ -59,11 +67,17 @@ export default {
     },
     add() {
       this.value.push({start: '09:00:00'})
+    },
+    valueChanged() {
+      this.$emit('input', this.value)
     }
   },
   computed: {
-    messages() {
+    duration() {
       return "Общая продолжительность: " + durationAsString(totalDuration(this.value))
+    },
+    intersectedPeriodIndexes() {
+      return isPeriodsIntersects(this.value)
     }
   },
   name: "PeriodsInput"
