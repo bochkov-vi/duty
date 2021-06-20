@@ -2,11 +2,19 @@
   <v-autocomplete :dense="dense"
                   :items="items"
                   :value="value"
+                  :label="label"
+                  item-value="value"
+                  item-text="name"
                   @input="$emit('input',$event)">
-    <template v-slot:item="{item}">
-      <v-icon>mdi-{{ item }}</v-icon>
+    <template v-slot:selection="{item}">
+      <v-icon>{{ item.value }}</v-icon>
       <v-spacer/>
-      <span>{{ item }}</span>
+      <span>{{ item.name }}</span>
+    </template>
+    <template v-slot:item="{item}">
+      <v-icon>{{ item.value }}</v-icon>
+      <v-spacer/>
+      <span>{{ item.name }}</span>
     </template>
   </v-autocomplete>
 </template>
@@ -16,18 +24,20 @@ import {icons} from './icons.js';
 
 export default {
   props: {
+    label: null,
     dense: {
       default() {
         return true
       }
-    }, value: null
+    },
+    value: null
   },
   data() {
     return {
       items: icons
     }
   },
-  name: "SelectIcon"
+  name: "SelectMdiIcon"
 }
 </script>
 

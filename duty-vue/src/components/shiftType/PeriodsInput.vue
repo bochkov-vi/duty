@@ -1,17 +1,21 @@
 <template>
 
-  <v-input append-icon="mdi-plus"
-           @click:append="add()"
-           :error-messages="errors">
+  <v-input :error-messages="errors">
+    <template v-slot:append>
+      <v-btn @click="add()">
+        <v-icon :dense="dense">mdi-tab-plus</v-icon>
+      </v-btn>
+    </template>
     <v-container fluid>
       <v-row>
         <v-col cols="12">
           <div class="body-2">{{ duration }}</div>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col v-for="(key,index) in Object.keys(value)"
-               :key="key">
+      <v-row v-if="value && value.length>0">
+        <v-col
+            v-for="(key,index) in Object.keys(value)"
+            :key="key">
           <v-card>
             <v-card-actions>
               {{ index + 1 }}
@@ -20,7 +24,7 @@
                 <v-icon :dense="dense">mdi-trash-can-outline</v-icon>
               </v-btn>
             </v-card-actions>
-            <period-input :error="intersectedPeriodIndexes.includes(index)" v-model="value[key]" @input="valueChanged"/>
+            <period-input :error="intersectedPeriodIndexes.includes(index)" v-model="value[key]"/>
           </v-card>
         </v-col>
       </v-row>
@@ -37,10 +41,7 @@ export default {
   props: {
     value: {
       type: Array,
-      required: false,
-      default(){
-        return []
-      }
+      required: true
     },
     errors: {
       default() {
@@ -54,22 +55,17 @@ export default {
     }
   },
   data() {
-    return {
-      periods: null
-    }
+    return {}
   },
 
   methods: {
     remove(index) {
-      if (index > -1) {
-        this.value.splice(index, 1);
+      if (index >= 0) {
+        this.value.splice(index, 1)
       }
     },
     add() {
-      this.value.push({start: '09:00:00'})
-    },
-    valueChanged() {
-      this.$emit('input', this.value)
+      this.value.push({start:null,duration:null})
     }
   },
   computed: {
@@ -78,6 +74,11 @@ export default {
     },
     intersectedPeriodIndexes() {
       return isPeriodsIntersects(this.value)
+    }
+  },
+  watch: {
+    value(val) {
+      this.$emit('input', val)
     }
   },
   name: "PeriodsInput"

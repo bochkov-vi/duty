@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-dialog v-model="editMode">
+    <v-dialog v-model="editMode" max-width="900">
       <ValidationObserver v-if="editMode"
                           v-slot="{ invalid }"
                           ref="validator">

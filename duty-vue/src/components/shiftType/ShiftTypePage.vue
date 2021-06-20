@@ -48,13 +48,20 @@
             </v-chip>
           </template>
         </v-select>
-        <validation-provider rules="periodsIntersects"
+        <validation-provider rules="periodsIntersects|periodsEmpty"
                              v-slot="{errors}">
           <periods-input :dense="true"
                          v-model="item.periods"
                          :errors="errors"/>
         </validation-provider>
-
+        <select-mdi-icon :dense="true"
+                         :label="$i18n.t('shiftType.icon')"
+                         v-model="item.icon"/>
+        <v-text-field v-model="item.label"
+                      size="3"
+                      maxlength="3"
+                      :label="$i18n.t('shiftType.label')"
+                      dense/>
 
       </template>
       <template #item.daysToWeekend="{item}">
@@ -66,6 +73,10 @@
       <template #item.periods="{item}">
         {{ item.periods.map(period => formatPeriod(period)).join("; ") }}
       </template>
+      <template #item.icon="{item}">
+        <v-icon dense>{{ item.icon }}</v-icon>
+      </template>
+
     </crud-page>
   </v-container>
 </template>
@@ -78,9 +89,10 @@ import {ValidationProvider} from "vee-validate";
 import {required} from "vee-validate/dist/rules";
 import axios from "axios";
 import i18n from "@/i18n";
-import {DateTimeFormatter, Duration, LocalTime} from "@js-joda/core";
+import {DateTimeFormatter, Duration, LocalDate, LocalDateTime, LocalTime} from "@js-joda/core";
 import PeriodsInput from "@/components/shiftType/PeriodsInput";
 import {isPeriodsIntersects} from "@/components/shiftType/period";
+import SelectMdiIcon from "@/components/shiftType/SelectMdiIcon";
 
 Validator.extend('required', {
   ...required,
@@ -118,10 +130,25 @@ Validator.extend('periodsIntersects', {
     return "Периоды пересекаются"
   }
 })
+Validator.extend('periodsEmpty', {
+  validate: (value) => {
+    if (value) {
+      const result = {"valid": !value.find(p => !p.start || !p.duration)};
+      return result;
+    }
+  },
+  message: function () {
+    return "В наличии пустой период"
+
+  }
+})
 export default {
   methods: {
     formatPeriod(p) {
-      return this.formatTime(p.start) + "-" + this.formatDuration(p.duration)
+      const start = LocalDateTime.of(LocalDate.now(), LocalTime.parse(p.start))
+      const end = start.plus(Duration.parse(p.duration))
+      const formatter = DateTimeFormatter.ofPattern("HH:mm")
+      return start.format(formatter) + "-" + end.format(formatter)
     },
     formatTime(str) {
       const time = LocalTime.parse(str)
@@ -138,7 +165,7 @@ export default {
       return null
     }
   },
-  components: {PeriodsInput, CrudPage, ValidationProvider},
+  components: {SelectMdiIcon, PeriodsInput, CrudPage, ValidationProvider},
   data() {
     return {
       item: null,
@@ -154,10 +181,15 @@ export default {
           sortable: true,
           value: 'name',
         }, {
-          text: 'uiOptions.label',
+          text: 'icon',
           align: 'start',
           sortable: true,
-          value: 'uiOptions',
+          value: 'icon',
+        }, {
+          text: 'label',
+          align: 'start',
+          sortable: true,
+          value: 'label',
         }, {
           text: 'daysToWeekend',
           align: 'start',

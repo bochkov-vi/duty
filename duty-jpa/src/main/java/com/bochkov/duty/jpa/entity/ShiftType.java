@@ -27,9 +27,6 @@ public class ShiftType extends AbstractEntity<Integer> implements IPeriodContain
     @Column(name = "SHIFT_TYPE")
     String name;
 
-    @Embedded
-    UiOptions uiOptions;
-
     @ElementCollection
     @CollectionTable(name = "SHIFT_TYPE_DAYS_TO_WEEKEND", foreignKey = @ForeignKey(name = "DAYS_TO_WEEKEND_SHIFT_TYPE_FK"),
             joinColumns = @JoinColumn(name = "ID_SHIFT_TYPE", referencedColumnName = "ID_SHIFT_TYPE", foreignKey = @ForeignKey(name = "DAYS_TO_WEEKEND_SHIFT_TYPE_FK")))
@@ -59,6 +56,11 @@ public class ShiftType extends AbstractEntity<Integer> implements IPeriodContain
         setPeriods(Sets.newHashSet(period));
     }
 
+    @Column(name = "LABEL", length = 3)
+    String label;
+
+    @Column(name = "ICON")
+    String icon;
 
     @Override
     public String toString() {

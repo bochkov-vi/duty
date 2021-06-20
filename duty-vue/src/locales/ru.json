@@ -58,12 +58,8 @@
   "shiftType": {
     "id": "Код",
     "name": "Название дежурства",
-    "uiOptions": {
-      "label": "Настройка отображения",
-      "htmlClass": "Класс стиля",
-      "plainText": "Символ",
-      "faIcon": "Иконка"
-    },
+    "label": "Символ",
+    "icon": "Иконка",
     "daysToWeekend": "Дней до выходного",
     "daysFromWeekend": "Дней после выходного",
     "periods": "Периоды работы"

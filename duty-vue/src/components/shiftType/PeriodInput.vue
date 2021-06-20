@@ -26,12 +26,15 @@ import {calculateDuration, durationAsString, getEndTime, getStartTime} from "@/c
 
 export default {
   props: {
-    value: null,
+    value: {
+      required: true,
+      type: Object
+    },
     dense: {
       default() {
         return false
       }
-    },error:{
+    }, error: {
       default() {
         return false;
       }
@@ -46,23 +49,36 @@ export default {
       messages: null
     }
   },
-  created() {
-    if (this.value) {
-      if (this.value.start)
-        try {
-          const start = getStartTime(this.value);
-          const {end, nextDay} = getEndTime(this.value)
-          this.start = start ? start.format(DateTimeFormatter.ofPattern("HH:mm")) : null
-          this.end = end
-          this.nextDay = nextDay
-        } catch
-            (e) {
-          console.debug(e.message)
-        }
-    }
-  }
-  ,
+  mounted() {
+    this.load()
+  },
+
   methods: {
+    reset() {
+      this.start = null
+      this.end = null
+      this.nextDay = false
+    },
+    load() {
+      if (this.value) {
+        if (this.value.start) {
+          try {
+            const start = getStartTime(this.value);
+            const {end, nextDay} = getEndTime(this.value)
+            this.start = start ? start.format(DateTimeFormatter.ofPattern("HH:mm")) : null
+            this.end = end
+            this.nextDay = nextDay
+          } catch
+              (e) {
+            console.debug(e.message)
+          }
+        } else {
+          this.reset()
+        }
+      } else {
+        this.reset()
+      }
+    },
     periodChanged() {
       this.calculateDuration();
       const period = {}
@@ -88,11 +104,17 @@ export default {
     ,
     nextDay() {
       this.periodChanged()
-    }
-    ,
+    },
     start() {
       this.periodChanged()
+    },
+    value: {
+      deep: true,
+      handler() {
+        this.load()
+      }
     }
+
   }
   ,
   name: "PeriodInput"
