@@ -3,7 +3,6 @@
     <crud-page locale-prefix="shiftType"
                item-name="shiftType"
                resource="shiftTypes"
-               base-url="http://localhost:8080/duty/rest"
                :headers="headers"
                :item.sync="item">
       <template #inputs="{item}">
@@ -93,6 +92,7 @@ import {DateTimeFormatter, Duration, LocalDate, LocalDateTime, LocalTime} from "
 import PeriodsInput from "@/components/shiftType/PeriodsInput";
 import {isPeriodsIntersects} from "@/components/shiftType/period";
 import SelectMdiIcon from "@/components/shiftType/SelectMdiIcon";
+import {REST_BASE_URL} from "@/http_client";
 
 Validator.extend('required', {
   ...required,
@@ -103,7 +103,7 @@ Validator.extend('uniqueName', {
   validate: (value, args) => {
     if (value) {
       const currentID = args.id;
-      const result = axios.get("http://localhost:8080/duty/rest/shiftTypes/search/findByName", {
+      const result = axios.get(REST_BASE_URL + "/rest/shiftTypes/search/findByName", {
         params: {search: value}
       }).then((resp) => {
             const valid = !(resp.data._embedded.shiftTypes.filter((item) => item.id !== currentID).length > 0);

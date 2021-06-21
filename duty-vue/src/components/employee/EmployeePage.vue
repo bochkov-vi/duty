@@ -3,7 +3,6 @@
     <crud-page locale-prefix="employee"
                item-name="employee"
                resource="employees"
-               base-url="http://localhost:8080/duty/rest"
                :headers="headers">
       <template #item.fullName="{item}">
         {{ item.lastName }} {{ item.firstName.substr(0, 1) }}.{{ item.middleName.substr(0, 1) }}.
@@ -26,21 +25,25 @@
                         :error-messages="errors"
                         :label="$i18n.t('employee.post')"/>
         </validation-provider>
-        <validation-provider :rules="{required:true}"
-                             v-slot="{errors}">
+        <validation-provider
+            :rules="{required:true,fioUnique:{id:item.id,firstName:item.firstName,middleName:item.middleName,lastName:item.lastName}}"
+            v-slot="{errors}">
           <v-text-field v-model="item.firstName"
                         :error-messages="errors"
                         :label="$i18n.t('employee.firstName')"
                         dense/>
         </validation-provider>
-        <validation-provider :rules="{required:true}"
-                             v-slot="{errors}">
+        <validation-provider
+            :rules="{required:true,fioUnique:{id:item.id,firstName:item.firstName,middleName:item.middleName,lastName:item.lastName}}"
+            v-slot="{errors}">
           <v-text-field v-model="item.middleName"
                         :error-messages="errors"
                         :label="$i18n.t('employee.middleName')"
                         dense/>
         </validation-provider>
-        <validation-provider :rules="{required:true}" v-slot="{errors}">
+        <validation-provider
+            :rules="{required:true,fioUnique:{id:item.id,firstName:item.firstName,middleName:item.middleName,lastName:item.lastName}}"
+            v-slot="{errors}">
           <v-text-field v-model="item.lastName"
                         :error-messages="errors"
                         :label="$i18n.t('employee.lastName')"
@@ -73,10 +76,30 @@ import {required} from "vee-validate/dist/rules";
 import RangAutocomplete from "@/components/rang/RangAutocomplete";
 import ShiftTypeAutocomplete from "@/components/shiftType/ShiftTypeAutocomplete";
 import EmployeeGroupSelect from "@/components/employeeGroup/EmployeeGroupSelect";
+import axios from "axios";
+import {REST_BASE_URL} from "@/http_client";
 
 Validator.extend('required', {
   ...required,
   message: 'Это поле обязательно для заполнения'
+})
+
+Validator.extend('fioUnique', {
+  params: ["id", "firstName", "middleName", "lastName"],
+  validate(value, args) {
+    console.debug("fio validation" + args)
+    console.debug(args)
+    const currentID = args.id;
+    const result = axios.get(REST_BASE_URL + "/rest/employees/search/findByFIO", {
+      params: {...args}
+    }).then((resp) => {
+          const valid = !(resp.data._embedded.employees.filter((item) => item.id !== currentID).length > 0);
+          return {valid: valid};
+        }
+    )
+    return result;
+  },
+  message: 'Сотрудник с таким ФИО существует'
 })
 export default {
   components: {EmployeeGroupSelect, ShiftTypeAutocomplete, RangAutocomplete, CrudPage, ValidationProvider},

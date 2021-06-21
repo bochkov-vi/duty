@@ -10,7 +10,7 @@
               <slot name="inputs" v-bind:item="item"></slot>
             </v-container>
 
-            <div class="text-body-2 font-weight-thin d-flex flex-row justify-space-around">
+            <div v-if="item.createdDate" class="text-body-2 font-weight-thin d-flex flex-row justify-space-around">
               <div>{{ $i18n.t('label.createdDate') }} {{ createdDate }}</div>
               <div>{{ $i18n.t('label.createdTime') }} {{ createdTime }}</div>
             </div>

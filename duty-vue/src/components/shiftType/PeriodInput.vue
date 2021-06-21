@@ -12,6 +12,7 @@
                   step="300"/>
     <v-spacer/>
     <v-checkbox label="Следующих суток"
+                title="Следующих суток"
                 v-model="nextDay"
                 :dense="dense"/>
   </v-input>

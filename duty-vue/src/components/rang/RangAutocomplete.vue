@@ -21,6 +21,7 @@
 
 <script>
 import axios from "axios";
+import {REST_BASE_URL} from "@/http_client";
 
 export default {
   directives: {
@@ -55,7 +56,7 @@ export default {
     },
     findByLike() {
       this.loading = true;
-      return axios.get("http://localhost:8080/duty/rangs/findByLike", {
+      return axios.get(REST_BASE_URL+"/rangs/findByLike", {
         params: {
           search: this.search,
           page: this.page,

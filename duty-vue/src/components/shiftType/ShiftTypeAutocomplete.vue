@@ -11,17 +11,22 @@
                   item-text="name"
                   :loading="loading"
                   multiple
-                  :dense="dense"></v-autocomplete>
+                  deletable-chips
+                  small-chips
+                  counter
+                  :dense="dense">
+  </v-autocomplete>
 </template>
 
 <script>
 import axios from "axios";
+import {REST_BASE_URL} from "@/http_client";
 
 export default {
   methods: {
     findByLike() {
       this.loading = true;
-      return axios.get("http://localhost:8080/duty/shiftTypes/findByLike", {
+      return axios.get(REST_BASE_URL + "/shiftTypes/findByLike", {
         params: {
           search: this.search,
           page: this.pageNumber,
@@ -49,9 +54,10 @@ export default {
   },
   mounted() {
     if (this.value)
-      Promise.all([...this.value.map(href => axios.get(href).then((resp) => resp.data)),
+      Promise.all([...this.value.map(href => axios.get(href).then((resp) => [resp.data])),
         this.findByLike()])
-          .then(result => this.items = result)
+          .then(result => this.items = [].concat(...result)
+          )
   },
   props: {
     "value": null, "label": null, "errors": {

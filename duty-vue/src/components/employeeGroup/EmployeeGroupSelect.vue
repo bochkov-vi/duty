@@ -22,6 +22,7 @@
 <script>
 import axios from "axios";
 import {error} from "@/store/store";
+import {REST_BASE_URL} from "@/http_client";
 
 export default {
   props: {
@@ -50,7 +51,7 @@ export default {
       this.loading = true
 
 
-      axios.get("http://localhost:8080/duty/employeeGroups/findByLike", {
+      axios.get(REST_BASE_URL +"/employeeGroups/findByLike", {
         params: {
           search: this.search,
           page: this.page,
@@ -75,7 +76,7 @@ export default {
       axios.get(this.value).then(resp => this.items = [resp.data])
     else
       this.items =[]
-    axios.get("http://localhost:8080/duty/employeeGroups/findByLike", {
+    axios.get(REST_BASE_URL+"/employeeGroups/findByLike", {
       params: {
         search: this.search,
         page: this.page,

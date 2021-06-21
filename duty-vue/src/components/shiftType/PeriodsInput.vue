@@ -1,14 +1,17 @@
 <template>
 
   <v-input :error-messages="errors">
-    <template v-slot:append>
-      <v-btn @click="add()">
-        <v-icon :dense="dense">mdi-tab-plus</v-icon>
-      </v-btn>
-    </template>
+
+
     <v-container fluid>
-      <v-row>
-        <v-col cols="12">
+      <v-row >
+        <v-col>
+          <v-btn @click="add()">
+            <v-icon :dense="dense">mdi-tab-plus</v-icon>
+            <span class="d-none d-md-block">Еще период</span>
+          </v-btn>
+        </v-col>
+        <v-col>
           <div class="body-2">{{ duration }}</div>
         </v-col>
       </v-row>
@@ -65,7 +68,7 @@ export default {
       }
     },
     add() {
-      this.value.push({start:null,duration:null})
+      this.value.push({start: null, duration: null})
     }
   },
   computed: {

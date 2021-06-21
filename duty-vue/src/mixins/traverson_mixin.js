@@ -1,12 +1,10 @@
 import restService from "@/mixins/traverson_client";
 import {error, setLoading} from "@/store/store";
+import {REST_BASE_URL} from "@/http_client";
 
 export const traverson_mixin = {
     props: {
-        baseUrl: {
-            required: true,
-            type: String
-        },
+
         resource: {
             required: true,
             type: String
@@ -18,6 +16,7 @@ export const traverson_mixin = {
     },
     data() {
         return {
+            baseUrl: REST_BASE_URL+"/rest",
             item: null,
             page: null,
             rest: null,
@@ -57,7 +56,7 @@ export const traverson_mixin = {
                 this.confirmDelete = false
                 this.item = null
                 this.loadPage()
-            }).then(() => this.$t("crud.deleted.success")).finally(() => setLoading()).catch((resp)=>error(resp.data.message))
+            }).then(() => this.$t("crud.deleted.success")).finally(() => setLoading()).catch((resp) => error(resp.data.message))
         },
         editItem(item) {
             if (item && item._links && item._links.self) {

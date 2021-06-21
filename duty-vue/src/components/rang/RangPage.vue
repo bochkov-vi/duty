@@ -3,7 +3,6 @@
     <crud-page locale-prefix="rang"
                item-name="rang"
                resource="rangs"
-               base-url="http://localhost:8080/duty/rest"
                :headers="headers">
 
 
@@ -36,6 +35,7 @@ import {ValidationProvider} from "vee-validate";
 import {required} from "vee-validate/dist/rules";
 import axios from "axios";
 import i18n from "@/i18n";
+import {REST_BASE_URL} from "@/http_client";
 
 Validator.extend('required', {
   ...required,
@@ -46,7 +46,7 @@ Validator.extend('uniqueName', {
   validate: (value, args) => {
     if (value) {
       const currentID = args.id;
-      const result = axios.get("http://localhost:8080/duty/rest/rangs/search/findByName", {
+      const result = axios.get(REST_BASE_URL + "/rangs/search/findByName", {
         params: {search: value}
       }).then((resp) => {
             const valid = !(resp.data._embedded.rangs.filter((item) => item.id !== currentID).length > 0);
@@ -66,7 +66,7 @@ Validator.extend('uniqueFullName', {
   validate: (value, args) => {
     if (value) {
       const currentID = args.id;
-      const result = axios.get("http://localhost:8080/duty/rest/rangs/search/findByFullName", {
+      const result = axios.get(REST_BASE_URL+"/rest/rangs/search/findByFullName", {
         params: {search: value}
       }).then((resp) => {
             const valid = !(resp.data._embedded.rangs.filter((item) => item.id !== currentID).length > 0);
