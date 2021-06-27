@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const REST_BASE_URL = process.env.REST_BASE_URL || "http://192.168.1.125:8080/duty"
+export const REST_BASE_URL = "http://" + process.env.VUE_APP_REST_IP + ":8080/duty" || "http://localhost:8080/duty"
 const AXIOS = axios.create({
     baseURL: REST_BASE_URL,
     paramsSerializer(params) {

@@ -4,7 +4,6 @@ import {REST_BASE_URL} from "@/http_client";
 
 export const traverson_mixin = {
     props: {
-
         resource: {
             required: true,
             type: String

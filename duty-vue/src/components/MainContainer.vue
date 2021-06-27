@@ -43,6 +43,9 @@
         <v-btn :disabled="$route.name==='shiftTypes'" @click="$router.push($i18nRoute({name:'shiftTypes'}))">
           {{ $t('shiftTypes') }}
         </v-btn>
+        <v-btn :disabled="$route.name==='vacation'" @click="$router.push($i18nRoute({name:'vacation'}))">
+          {{ $t('vacations') }}
+        </v-btn>
       </div>
 
     </v-app-bar>
@@ -71,6 +74,9 @@
         </v-list-item>
         <v-list-item :disabled="$route.name==='shiftTypes'" @click="$router.push($i18nRoute({name:'shiftTypes'}))">
           <v-list-item-content>{{ $t('shiftTypes') }}</v-list-item-content>
+        </v-list-item>
+        <v-list-item :disabled="$route.name==='vacation'" @click="$router.push($i18nRoute({name:'vacation'}))">
+          <v-list-item-content>{{ $t('vacations') }}</v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>

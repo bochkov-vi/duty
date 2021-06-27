@@ -7,6 +7,7 @@
   "groups": "Groups",
   "shiftTypes": "Shift types",
   "title": "Time tracking and duty scheduling",
+  "vacations": "Vacations",
   "label": {
     "no-data": "Data Not Found",
     "new-item": "New row",
@@ -70,5 +71,15 @@
     "daysToWeekend": "Day count to weekend",
     "daysFromWeekend": "Day count from weekend",
     "periods": "Periods of work"
+  },
+  "vacation": {
+    "id": "Vacation ID",
+    "year": "Year",
+    "employee": "Employee",
+    "type": "Vacation Type",
+    "start": "Start Date",
+    "end": "End Date",
+    "note": "Note",
+    "dayCount": "Day Count"
   }
 }

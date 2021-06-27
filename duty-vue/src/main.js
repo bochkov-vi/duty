@@ -10,7 +10,7 @@ import "@fontsource/roboto";
 
 Vue.prototype.$i18nRoute = Trans.i18nRoute.bind(Trans)
 Vue.config.productionTip = false
-
+console.log(process.env)
 new Vue({
     vuetify,
     i18n,

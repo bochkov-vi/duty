@@ -3,6 +3,7 @@ package com.bochkov.duty.jpa.repository;
 import com.bochkov.duty.jpa.BaseRepository;
 import com.bochkov.duty.jpa.entity.Employee;
 import com.bochkov.duty.jpa.entity.ShiftType;
+import com.bochkov.findbylike.FindByLikeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface EmployeeRepository extends BaseRepository<Employee, Integer> {
+public interface EmployeeRepository extends BaseRepository<Employee, Integer>, FindByLikeRepository<Employee> {
 
     List<Employee> findByShiftTypesContaining(ShiftType shiftType);
 
