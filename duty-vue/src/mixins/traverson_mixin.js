@@ -11,11 +11,15 @@ export const traverson_mixin = {
         itemName: {
             required: true,
             type: String
+        },
+        onPageLoaded: {
+            type: Function,
+            default: null
         }
     },
     data() {
         return {
-            baseUrl: REST_BASE_URL+"/rest",
+            baseUrl: REST_BASE_URL + "/rest",
             item: null,
             page: null,
             rest: null,
@@ -46,7 +50,15 @@ export const traverson_mixin = {
                     result = result + ",desc";
                 return result;
             });
-            this.rest.getPage(this.options.page - 1, this.options.itemsPerPage, sorts, "full-data").then((data) => this.page = data).finally(() => setLoading())
+            this.rest.getPage(this.options.page - 1, this.options.itemsPerPage, sorts, "full-data")
+                .then((data) => {
+                    this.page = data;
+                    if (this.onPageLoaded) {
+                        this.onPageLoaded(data)
+                    }
+                    return data
+                })
+                .finally(() => setLoading())
         },
         deleteConfirmed() {
             if (this.item)

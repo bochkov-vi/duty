@@ -1,0 +1,10 @@
+POST http://192.168.0.217:8080/duty/rest/vacations
+Content-Type: application/json
+
+{
+  "employee": "http://192.168.0.217:8080/duty/rest/employees/180",
+  "end": "2021-06-30",
+  "start": "2021-06-01",
+  "type": "MAIN",
+  "year": 2022
+}

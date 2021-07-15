@@ -25,6 +25,7 @@
 import {getLoading, setLoading} from "@/store/store";
 import axios from "axios";
 import {REST_BASE_URL} from "@/http_client";
+import {getEmployeeFio} from "@/components/employee/employee";
 
 export default {
   props: {
@@ -32,12 +33,12 @@ export default {
       default() {
         return true
       }
-    }, label: null
+    }, label: null, value: null
   },
   name: "EmployeeAutocomplete",
   data() {
     return {
-      value: null, items: [], search: null
+      items: [], search: null
     }
   },
   computed: {
@@ -51,21 +52,27 @@ export default {
     }
   }, methods: {
     getFio(item) {
-
-      return item.rang.name + " " + item.lastName + " " + item.firstName + " " + item.middleName
+      return getEmployeeFio(item)
     },
     load() {
       setLoading(true)
       return axios.get(REST_BASE_URL + "/employees/findByLike", {
         params: {
-          search: this.search
+          search: this.search,
+          "projection": "full-data"
         }
       }).then((r) => {
         if (r.data._embedded) return r.data._embedded.employees
         return []
       }).then((array) => this.items = array
       ).then(() => {
-        if (this.value) this.items.unshift(this.value)
+        if (this.value) {
+          return axios.get(this.value, {
+            params: {
+              "projection": "full-data"
+            }
+          }).then(resp => this.items.unshift(resp.data))
+        }
       }).finally(() => setLoading()
       )
     }

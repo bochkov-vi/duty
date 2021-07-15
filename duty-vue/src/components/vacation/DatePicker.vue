@@ -14,6 +14,7 @@
           v-on="on"
           @click:clear="date = null"
           :dense="dense"
+          :error-messages="errors"
       ></v-text-field>
     </template>
     <v-date-picker
@@ -32,19 +33,22 @@ export default {
       default() {
         return true
       }
-    }
+    }, errors: null
   },
   data: () => ({
     menu: false,
     formatter: DateTimeFormatter.ofPattern("dd.MM.yy"),
-    date: null,
-    label: null
+    date: null
   }),
 
   computed: {
     formatedDate() {
       return this.date ? LocalDate.parse(this.date).format(this.formatter) : ''
     }
+  },
+  methods: {},
+  mounted() {
+    this.date = this.value
   },
   watch: {
     date() {

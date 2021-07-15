@@ -88,7 +88,7 @@
       <template v-slot:top>
         <v-toolbar flat>
           <v-btn small
-                 @click="item={}">
+                 @click="item=newitem">
             <v-icon>mdi-table-plus</v-icon>
             {{ $i18n.t('label.new-item') }}
           </v-btn>
@@ -140,6 +140,11 @@ export default {
     headers: {
       required: true,
       type: Array
+    },
+    newitem: {
+      default() {
+        return {}
+      }
     }
   },
   name: "CrudPage",
@@ -160,8 +165,11 @@ export default {
     }
   },
   watch: {
-    item(val) {
-      this.$emit("update:item", val)
+    item:{
+      deep:true,
+      handler(val) {
+        this.$emit("update:item", val)
+      }
     }
   },
   components: {ValidationObserver}

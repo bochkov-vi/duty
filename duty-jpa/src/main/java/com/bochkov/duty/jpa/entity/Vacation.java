@@ -29,6 +29,9 @@ public class Vacation extends AbstractEntity<Long> {
     @JoinColumn(name = "ID_EMPLOYEE", referencedColumnName = "ID_EMPLOYEE")
     Employee employee;
 
+    @Column(name = "YEAR")
+    Integer year;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "VACATION_TYPE")
     VacationType type = VacationType.MAIN;
